@@ -208,12 +208,51 @@ Priors on the positions come from the known ordering of French blocs and are
 anchored so the axis cannot reflect. The 2022 measured transfers
 (nsppolls `reports.csv`) are the empirical reference point.
 
-**This is the model's largest vulnerability, and it is a substantive one, not a
-technical one.** `δ` is estimated from polls taken in 2026 about a runoff in
-2027, and the willingness of left and centre voters to block the RN is exactly
-the quantity least likely to be stable over that period. If the front
-républicain is weaker in 2027 than the runoff polling implies, this model is
-wrong in a specific and predictable direction.
+### Anchored on what actually happened in 2022
+
+Fitting `δ` on 2026 polls about a 2027 runoff alone would be inferring the
+*front républicain* from stated intentions about a hypothetical. The model is
+therefore fitted on both cycles at once, adding **43 measured transfers** from
+`nsppolls/reports.csv` — institutes asking 2022 voters, during the real
+campaign between the two real finalists, where their first-round vote was
+going. Each institute contributes its final wave per candidate.
+
+The measurements are unambiguous: Zemmour's voters split 82% to Le Pen,
+Jadot's 63% to Macron, Mélenchon's 41% Macron / 20% Le Pen / 39% abstention.
+
+The effect on the forecast is not cosmetic. Anchoring moved Philippe against
+Le Pen from **44% to 53%** — into line with the runoff polls, which the
+unanchored model had been systematically under-reading.
+
+Bloc positions and each bloc's readiness to abstain are shared across cycles,
+as properties of French politics. Position priors were tightened from 0.25 to
+0.12 because loose positions and `δ` are confounded: moving the RN further
+right acts exactly like an RN-specific penalty.
+
+### The 2027 question is not a fitted parameter
+
+Whether left and centre voters will still cross the aisle in May 2027 is the
+model's largest substantive vulnerability, and it is genuinely unknowable
+today.
+
+It was first written as a fitted per-cycle `δ` with a drift between them. That
+failed, informatively: `delta_2022` came out at 0.064, essentially zero,
+because the quadratic distance term already accounts for 2022's transfers
+without needing an RN-specific penalty. A drift multiplying zero carries no
+uncertainty at all.
+
+More fundamentally, a *fitted* 2027 term gets fitted away — the 54 runoff
+hypotheses would pin it to whatever 2026 respondents currently say and report
+that as knowledge about 2027. So `front_republicain_2027_sd` is applied **per
+simulated world**, after fitting, exactly as election-day error is.
+
+Its size is chosen against the only cycle transition anyone has observed: the
+RN's runoff share moved from 34.1% in 2017 to 41.45% in 2022, +7.3 points.
+`scripts/check_runoff_sensitivity.py` translates the parameter into the same
+unit — at 0.45, one sigma is about 4 points of runoff share, so that observed
+transition sits near 1.8 sigma. At the 0.35 first tried it would have been a
+2.4 sigma event, which would have made the only thing that has actually
+happened look close to implausible.
 
 ### Checking it against the polls it was fitted to
 
@@ -237,7 +276,12 @@ negligible against a markedly harder sampling problem.
 
 Each simulated world takes one posterior draw, draws a ballot, applies
 **election-day error**, computes first-round shares, takes the top two, and
-runs the runoff.
+runs the runoff — with its own draw of the 2027 transfer term.
+
+The election-day error is fitted, not assumed: `presidentielle calibrate`
+scores each institute's final 2022 poll against the proclaimed result, giving a
+log-error SD of 0.201 for candidates at or above 5%, or 0.0376 on the share
+scale at p = 0.25. The previous value, 0.0220, was invented.
 
 Error is applied on the strength scale, before the softmax, and correlated
 within blocs (an institute that under-reads the RN under-reads every RN
@@ -251,11 +295,13 @@ ballot and report a 5th percentile of zero for half the field.
 
 ## 6. What is not done
 
-* **The error scales are not yet fitted.** `election_day_error.fitted` is
-  `false`. Fitting them against the nsppolls 2022 archive, scored on the real
-  result at 0–14 days out, is the next substantial piece of work. Until then
-  the intervals reflect the model's own uncertainty but are not calibrated
-  against how French polls have historically missed.
+* **`bloc_error_corr` is not fitted and cannot be** from 2022: the field
+  offers only two same-bloc pairs above the 2% noise floor. Kept at 0.30, down
+  from an asserted 0.55, and second-order in any case because arbitrations mean
+  the RN and Reconquête field one candidate at a time.
+* **`survey_weight_exponent` is asserted.** Fitting it needs the same institute
+  pricing the same field twice on independent samples, which the data do not
+  contain.
 * **No backtest** against 2022 or 2017 yet.
 * **No sub-national estimates**, deliberately. There is no département-level
   presidential polling. A map produced by uniform swing from 2022 would carry

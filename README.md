@@ -56,9 +56,10 @@ president includes the probability of being on the ballot at all.
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -e ".[dev]"
 
-presidentielle fetch     # refresh the cached poll file
-presidentielle audit     # what the data holds, and what the roster rejected
-presidentielle run       # fit, simulate, write site/data/forecast.json
+presidentielle fetch      # refresh the cached poll file
+presidentielle audit      # what the data holds, and what the roster rejected
+presidentielle calibrate  # fit the election-day error against the 2022 cycle
+presidentielle run        # fit, simulate, write site/data/forecast.json
 ```
 
 `run` takes 30–45 minutes. For a smoke test, `presidentielle run --draws 60`
@@ -114,22 +115,26 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
 4. **One survey is one sample**: each hypothesis's effective sample is scaled
    by `m^(−0.65)`. On the current file that is 311,461 raw → 117,529 effective.
 5. **Ballot simulation** from decayed testing frequency.
-6. **Runoff** by quadratic-proximity transfers with an estimated *front
-   républicain* term, checked against the 54 tested matchups it was fitted to
-   (2.03 points MAE, −0.47 bias).
-7. **Election-day error**, correlated within blocs, applied on the strength
-   scale before the softmax.
+6. **Runoff** by quadratic-proximity transfers, anchored on **43 measured 2022
+   vote transfers** as well as the 54 hypothetical 2027 matchups, and checked
+   against the matchups it was fitted to.
+7. **Election-day error**, fitted against the 2022 cycle
+   (`presidentielle calibrate`), applied on the strength scale before the
+   softmax.
+8. **2027 transfer uncertainty** applied per simulated world, so the runoff
+   polls cannot fit away the question of whether the *front républicain* still
+   holds.
 
 ---
 
 ## Known data-quality and modelling items
 
-* **The election-day error scales are not yet fitted** (the random-walk scale
-  is; these are different quantities).
-  `election_day_error.fitted` is `false`; the values are priors. Fitting them
-  against the 2022 archive is the next substantial piece of work. Until then
-  the intervals are honest about the model's own uncertainty but not
-  calibrated against how French polls have actually missed.
+* **`bloc_error_corr` and the survey-weight exponent are still asserted.** The
+  first-round election-day error is now fitted (`presidentielle calibrate`),
+  but within-bloc error correlation cannot be — the 2022 field offers only two
+  same-bloc pairs above the noise floor — and the survey-weight exponent would
+  need the same institute pricing one field twice on independent samples. Both
+  say so in the config.
 * **No backtest** against 2022 or 2017 yet.
 * **The `front républicain` term is the largest vulnerability**, and it is
   substantive rather than technical. It is estimated from 2026 polls about a

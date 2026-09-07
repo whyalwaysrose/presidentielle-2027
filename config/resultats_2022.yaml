@@ -1,0 +1,68 @@
+# Official results of the 2022 French presidential election.
+#
+# SOURCE: Ministère de l'Intérieur, via data.gouv.fr, "Résultats définitifs"
+# (the figures proclaimed by the Conseil constitutionnel).
+#
+#   R1  resultats-par-niveau-dpt-t1-france-entiere.txt   (2022-04-14)
+#       https://www.data.gouv.fr/datasets/election-presidentielle-des-10-et-24-avril-2022-resultats-definitifs-du-1er-tour
+#   R2  resultats-par-niveau-dpt-t2-france-entiere.txt   (2022-04-28)
+#       https://www.data.gouv.fr/datasets/election-presidentielle-des-10-et-24-avril-2022-resultats-definitifs-du-2nd-tour
+#
+# These are NATIONAL totals aggregated from the department-level files
+# (France entière, so overseas included). The aggregation was checked: the
+# summed candidate votes equal the summed exprimés exactly in both rounds.
+#
+# Only the derived totals are stored here rather than the Ministry's files
+# themselves, because the data.gouv.fr dataset metadata states no licence
+# (`license: notspecified`). Twelve vote counts are facts about a public
+# election, not a substantial extraction of anyone's database.
+#
+# `bloc` is this project's own grouping, applied to the 2022 field so poll
+# error can be measured within a bloc as well as overall. Lassalle is the
+# awkward one: a rural anti-system candidate with no real 2027 analogue,
+# placed with the souverainistes. He is flagged because he was also the
+# largest single polling miss of the cycle.
+
+premier_tour:
+  date: 2022-04-10
+  exprimes: 35132947
+  candidats:
+    # surname as it appears in the Ministry file : votes, bloc
+    MACRON:        { voix: 9783058, bloc: centre }
+    LE PEN:        { voix: 8133828, bloc: rn }
+    MÉLENCHON:     { voix: 7712520, bloc: gauche_radicale }
+    ZEMMOUR:       { voix: 2485226, bloc: reconquete }
+    PÉCRESSE:      { voix: 1679001, bloc: droite }
+    JADOT:         { voix: 1627853, bloc: ecologiste }
+    LASSALLE:      { voix: 1101387, bloc: souverainiste }
+    ROUSSEL:       { voix: 802422, bloc: gauche_radicale }
+    DUPONT-AIGNAN: { voix: 725176, bloc: souverainiste }
+    HIDALGO:       { voix: 616478, bloc: socialiste }
+    POUTOU:        { voix: 268904, bloc: extreme_gauche }
+    ARTHAUD:       { voix: 197094, bloc: extreme_gauche }
+
+second_tour:
+  date: 2022-04-24
+  exprimes: 32057325
+  candidats:
+    MACRON: { voix: 18768639, bloc: centre }
+    LE PEN: { voix: 13288686, bloc: rn }
+
+# How nsppolls names each candidate, so poll records join to the results
+# above. The join FAILS CLOSED: a polled name not listed here causes the whole
+# poll to be skipped rather than the candidate to be silently dropped, which
+# would renormalise everyone else.
+noms_sondages:
+  "Emmanuel Macron": MACRON
+  "Marine Le Pen": LE PEN
+  "Jean-Luc Mélenchon": MÉLENCHON
+  "Eric Zemmour": ZEMMOUR
+  "Éric Zemmour": ZEMMOUR
+  "Valérie Pécresse": PÉCRESSE
+  "Yannick Jadot": JADOT
+  "Jean Lassalle": LASSALLE
+  "Fabien Roussel": ROUSSEL
+  "Nicolas Dupont-Aignan": DUPONT-AIGNAN
+  "Anne Hidalgo": HIDALGO
+  "Philippe Poutou": POUTOU
+  "Nathalie Arthaud": ARTHAUD

@@ -60,7 +60,15 @@ anything in `src/presidentielle/model/`.
     sets the width of every interval on the site — the walk runs ~32 free
     weekly steps from the last poll to election day. If intervals look wrong,
     re-run the fit; do not nudge the prior and do not free the parameter.
-13. **Bump `SCHEMA_VERSION` in `outputs.py` and the matching constant in
+13. **Every polled candidate needs a first-round base, not just the ones on
+    the reference ballot.** `_reference_shares` prices arbitration alternatives
+    on the ballot they would actually be on. Read straight off the reference
+    ballot, Bardella came back at **zero** — the RN arbitration resolves to Le
+    Pen — so every Bardella runoff was fitted with him holding no first-round
+    votes. It cost 14.5 points on Bardella-versus-Mélenchon, pushed runoff MAE
+    from 1.97 to 3.54, and read as tension between the 2022 and 2027 evidence
+    rather than as a bug. `tests/test_field.py` guards it.
+14. **Bump `SCHEMA_VERSION` in `outputs.py` and the matching constant in
     `site/js/app.js` together.** The page checks it and shows a banner rather
     than rendering blanks.
 
@@ -166,18 +174,67 @@ than movement.
 ## The runoff model is checked against the polls it was fitted to
 
 `diagnostics.runoff_fit` reports MAE and bias of the transfer model against the
-54 tested matchups — currently **2.03 points MAE, −0.47 bias**. The runoff
-decides the presidency, so a transfer model that missed the tested matchups
-would be asserting something the polls contradict. Check this before believing
-any P(win) figure.
+54 tested matchups. The runoff decides the presidency, so a transfer model that
+missed them would be asserting something the polls contradict, and only P(win)
+would move — nothing else on the page would look wrong.
+
+That diagnostic is what caught invariant 13: MAE jumped 1.97 → 3.54 with a
+14.5-point miss on one matchup, which looked like the 2022 anchor fighting the
+2027 polls and was actually a zero first-round base. **Check it before
+believing any P(win) figure, and treat a jump as a bug until proven otherwise.**
+
+## Never write FITTED over a number you chose
+
+Three config comments once cited `presidentielle calibrate` as the provenance
+of `excess_sd_prior`, `survey_weight_exponent` and `election_day_error`. **That
+command did not exist.** The docs also called the 2022 transfers "the empirical
+anchor for the runoff model" while `reports.csv` was never loaded, and claimed
+ballot overrides came from `annonce_candidature` / `retrait_candidature`, which
+are still never read.
+
+A comment claiming provenance it does not have is worse than no comment,
+because it stops anyone checking. `calibrate` now exists and the transfers are
+now loaded; the remaining asserted numbers say **ASSERTED** and why. Keep it
+that way: if you cannot name the script that produced a number, it is not
+fitted.
+
+## The election-day error is fitted; the runoff's 2027 term cannot be
+
+`presidentielle calibrate` scores each institute's **final** 2022 poll against
+the proclaimed result. Using every poll in the closing fortnight instead gives
+0.310 log SD against 0.247 for finals alone — the gap is Mélenchon's late surge,
+which is movement the random walk already carries, not polling error.
+
+Fitted on candidates at or above 5% (log SD 0.201, against 0.247 for everyone
+above 2%), because the model applies one constant log-scale error while real
+error is not constant there. `r1_share_error_sd` went from an invented 0.0220
+to a measured **0.0376**.
+
+`bloc_error_corr` is **not** fitted and cannot be: the 2022 field has only two
+same-bloc pairs above the noise floor. It is kept at 0.30 rather than the 0.55
+originally asserted, and it is second-order anyway — arbitrations mean the RN
+and Reconquête field one candidate at a time, so it only bites in the centre.
+
+## Where the runoff's uncertainty lives, and why it is not a fitted parameter
+
+The transfer model is anchored on 43 measured 2022 transfers as well as the 54
+hypothetical 2027 matchups. That anchoring moved Philippe-vs-Le Pen from 44% to
+53% — into line with the runoff polls the model had been under-reading.
+
+The first attempt carried the 2027 question as a *fitted* per-cycle delta with a
+drift between cycles. It did not work: `delta_2022` came out at 0.064, because
+the quadratic distance term already explains 2022's transfers and delta is
+absorbed into the bloc positions. A drift multiplying zero expresses nothing.
+(Position priors were also tightened from 0.25 to 0.12 for the same confound.)
+
+So `front_republicain_2027_sd` is applied **per simulated world in
+simulate.py**, not fitted — because a fitted one is fitted away: the 54 runoff
+hypotheses would pin it to what 2026 respondents currently say and report that
+as knowledge about May 2027. Sized so the one observed cycle transition (the
+RN's runoff share moving 7.3 points from 2017 to 2022) is about 1.8 sigma;
+`scripts/check_runoff_sensitivity.py` translates it into points of runoff share.
 
 ## Known rough edges
-
-- **Election-day error scales are not yet fitted.** `election_day_error.fitted`
-  is `false` and the values are priors. `presidentielle calibrate` against the
-  nsppolls 2022 archive is the next substantial piece of work; until it exists,
-  the intervals are honest about the model's own uncertainty but not calibrated
-  against how French polls have actually missed.
 - **The runoff is a two-stage fit.** Justified in `runoff.py`, but a joint fit
   would be cleaner.
 - **No sub-national estimates**, deliberately. There is no département-level

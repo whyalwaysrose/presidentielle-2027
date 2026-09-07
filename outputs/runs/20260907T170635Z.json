@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated_at": "2026-09-07T17:24:26+00:00",
+ "generated_at": "2026-09-07T17:06:35+00:00",
  "as_of": "2026-09-02",
  "scenario": "modele",
  "model_fingerprint": "10ed266b379d",
@@ -66,7 +66,7 @@
    "bloc": "rn",
    "p_standing": 0.78021,
    "p_qualify": 0.77089,
-   "p_win": 0.55431,
+   "p_win": 0.56783,
    "share": {
     "q05": 0.22406,
     "q25": 0.2891,
@@ -82,7 +82,7 @@
    "bloc": "centre",
    "p_standing": 0.64884,
    "p_qualify": 0.34584,
-   "p_win": 0.1832,
+   "p_win": 0.16455,
    "share": {
     "q05": 0.08516,
     "q25": 0.12953,
@@ -98,7 +98,7 @@
    "bloc": "rn",
    "p_standing": 0.19853,
    "p_qualify": 0.19626,
-   "p_win": 0.14785,
+   "p_win": 0.15174,
    "share": {
     "q05": 0.2273,
     "q25": 0.30119,
@@ -108,29 +108,13 @@
    }
   },
   {
-   "id": "RG",
-   "nom": "Raphaël Glucksmann",
-   "parti": "Place publique",
-   "bloc": "socialiste",
-   "p_standing": 0.7205,
-   "p_qualify": 0.12111,
-   "p_win": 0.04176,
-   "share": {
-    "q05": 0.06357,
-    "q25": 0.09428,
-    "q50": 0.11876,
-    "q75": 0.14729,
-    "q95": 0.19878
-   }
-  },
-  {
    "id": "JLM",
    "nom": "Jean-Luc Mélenchon",
    "parti": "La France insoumise",
    "bloc": "gauche_radicale",
    "p_standing": 1.0,
    "p_qualify": 0.4535,
-   "p_win": 0.03936,
+   "p_win": 0.05519,
    "share": {
     "q05": 0.06642,
     "q25": 0.11615,
@@ -140,13 +124,29 @@
    }
   },
   {
+   "id": "RG",
+   "nom": "Raphaël Glucksmann",
+   "parti": "Place publique",
+   "bloc": "socialiste",
+   "p_standing": 0.7205,
+   "p_qualify": 0.12111,
+   "p_win": 0.03056,
+   "share": {
+    "q05": 0.06357,
+    "q25": 0.09428,
+    "q50": 0.11876,
+    "q75": 0.14729,
+    "q95": 0.19878
+   }
+  },
+  {
    "id": "GA",
    "nom": "Gabriel Attal",
    "parti": "Renaissance",
    "bloc": "centre",
    "p_standing": 0.50821,
    "p_qualify": 0.0749,
-   "p_win": 0.0291,
+   "p_win": 0.02614,
    "share": {
     "q05": 0.0358,
     "q25": 0.06379,
@@ -162,7 +162,7 @@
    "bloc": "droite",
    "p_standing": 0.99436,
    "p_qualify": 0.019,
-   "p_win": 0.00245,
+   "p_win": 0.00205,
    "share": {
     "q05": 0.04417,
     "q25": 0.0622,
@@ -178,7 +178,7 @@
    "bloc": "gauche_radicale",
    "p_standing": 0.89538,
    "p_qualify": 0.01196,
-   "p_win": 0.0008,
+   "p_win": 0.00101,
    "share": {
     "q05": 0.00504,
     "q25": 0.01423,
@@ -194,7 +194,7 @@
    "bloc": "socialiste",
    "p_standing": 0.19874,
    "p_qualify": 0.00225,
-   "p_win": 0.00056,
+   "p_win": 0.00036,
    "share": {
     "q05": 0.0061,
     "q25": 0.02123,
@@ -226,7 +226,7 @@
    "bloc": "centre",
    "p_standing": 0.22348,
    "p_qualify": 0.0012,
-   "p_win": 0.00025,
+   "p_win": 0.00022,
    "share": {
     "q05": 0.01073,
     "q25": 0.01953,
@@ -483,7 +483,7 @@
    "nom_a": "Jean-Luc Mélenchon",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.34124,
-   "p_a_wins": 0.08495
+   "p_a_wins": 0.11407
   },
   {
    "a": "EP",
@@ -491,7 +491,7 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.25838,
-   "p_a_wins": 0.52119
+   "p_a_wins": 0.47397
   },
   {
    "a": "MLP",
@@ -499,7 +499,7 @@
    "nom_a": "Marine Le Pen",
    "nom_b": "Raphaël Glucksmann",
    "p_matchup": 0.08883,
-   "p_a_wins": 0.67309
+   "p_a_wins": 0.77104
   },
   {
    "a": "JB",
@@ -507,7 +507,7 @@
    "nom_a": "Jordan Bardella",
    "nom_b": "Jean-Luc Mélenchon",
    "p_matchup": 0.08594,
-   "p_a_wins": 0.93207
+   "p_a_wins": 0.90604
   },
   {
    "a": "EP",
@@ -515,7 +515,7 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Jordan Bardella",
    "p_matchup": 0.06692,
-   "p_a_wins": 0.4619
+   "p_a_wins": 0.40848
   },
   {
    "a": "GA",
@@ -523,7 +523,7 @@
    "nom_a": "Gabriel Attal",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.05563,
-   "p_a_wins": 0.37955
+   "p_a_wins": 0.34337
   },
   {
    "a": "JB",
@@ -531,7 +531,7 @@
    "nom_a": "Jordan Bardella",
    "nom_b": "Raphaël Glucksmann",
    "p_matchup": 0.02249,
-   "p_a_wins": 0.71317
+   "p_a_wins": 0.79655
   },
   {
    "a": "EP",
@@ -539,7 +539,7 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Jean-Luc Mélenchon",
    "p_matchup": 0.01596,
-   "p_a_wins": 0.91699
+   "p_a_wins": 0.7455
   },
   {
    "a": "GA",
@@ -547,7 +547,7 @@
    "nom_a": "Gabriel Attal",
    "nom_b": "Jordan Bardella",
    "p_matchup": 0.0144,
-   "p_a_wins": 0.31771
+   "p_a_wins": 0.28299
   },
   {
    "a": "BR",
@@ -555,7 +555,7 @@
    "nom_a": "Bruno Retailleau",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.01305,
-   "p_a_wins": 0.11207
+   "p_a_wins": 0.0795
   },
   {
    "a": "FRo",
@@ -563,7 +563,7 @@
    "nom_a": "Fabien Roussel",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.00909,
-   "p_a_wins": 0.06327
+   "p_a_wins": 0.0729
   },
   {
    "a": "JLM",
@@ -571,7 +571,7 @@
    "nom_a": "Jean-Luc Mélenchon",
    "nom_b": "Raphaël Glucksmann",
    "p_matchup": 0.00515,
-   "p_a_wins": 0.24757
+   "p_a_wins": 0.34223
   }
  ],
  "ballot": {
@@ -2828,13 +2828,13 @@
    "reconquete": 0.333,
    "rn": 0.338
   },
-  "delta_front_republicain": 0.134,
+  "delta_front_republicain": 0.045,
   "n_transferts_2022": 43,
   "runoff_fit": {
-   "mae_points": 1.98,
-   "bias_points": -0.54,
-   "worst_matchup": "Jean-Luc Mélenchon vs Marine Le Pen",
-   "worst_error_points": -6.45
+   "mae_points": 3.54,
+   "bias_points": -0.7,
+   "worst_matchup": "Jordan Bardella vs Jean-Luc Mélenchon",
+   "worst_error_points": -14.52
   },
   "sigma_excess": 0.0034,
   "sigma_cand_per_day": 0.0114,
@@ -2849,7 +2849,7 @@
  },
  "n_simulations": 80000,
  "commentaire": {
-  "fr": "À 223 jours du premier tour, le modèle s'appuie sur 39 enquêtes (165 hypothèses de premier tour) publiées jusqu'au 2 septembre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (55 %), devant Édouard Philippe (18 %) et Jordan Bardella (15 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 77 %, Jean-Luc Mélenchon 45 %, Édouard Philippe 35 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (34 % des simulations) ; Marine Le Pen l'emporte dans 92 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
-  "en": "With 223 days to the first round, the model uses 39 surveys (165 first-round hypotheses) published up to 2 September 2026. Marine Le Pen is the most likely winner (55%), ahead of Édouard Philippe (18%) and Jordan Bardella (15%). Reaching the runoff is a separate question from winning it: Marine Le Pen 77%, Jean-Luc Mélenchon 45%, Édouard Philippe 35%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (34% of simulations), won by Marine Le Pen in 92% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
+  "fr": "À 223 jours du premier tour, le modèle s'appuie sur 39 enquêtes (165 hypothèses de premier tour) publiées jusqu'au 2 septembre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (57 %), devant Édouard Philippe (16 %) et Jordan Bardella (15 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 77 %, Jean-Luc Mélenchon 45 %, Édouard Philippe 35 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (34 % des simulations) ; Marine Le Pen l'emporte dans 89 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
+  "en": "With 223 days to the first round, the model uses 39 surveys (165 first-round hypotheses) published up to 2 September 2026. Marine Le Pen is the most likely winner (57%), ahead of Édouard Philippe (16%) and Jordan Bardella (15%). Reaching the runoff is a separate question from winning it: Marine Le Pen 77%, Jean-Luc Mélenchon 45%, Édouard Philippe 35%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (34% of simulations), won by Marine Le Pen in 89% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
  }
 }

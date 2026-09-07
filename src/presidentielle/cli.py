@@ -93,15 +93,54 @@ def cmd_audit(args) -> int:
     return 0
 
 
+def cmd_calibrate(args) -> int:
+    """Fit the election-day error against the 2022 cycle."""
+    from .calibration import calibrate
+
+    cfg = load_model_config()
+    res = calibrate()
+
+    print("2022 first round, each institute's final poll within 14 days of the vote")
+    print(f"  {res.n_polls} polls, {res.n_institutes} institutes, "
+          f"{res.n_observations} candidate observations")
+    print()
+    print(f"  log-share error SD        {res.log_error_sd:.4f}")
+    print(f"  mean signed log error     {res.mean_signed_log_error:+.4f}  "
+          f"(a whole-field bias would show here)")
+    print(f"  within-bloc correlation   {res.bloc_error_corr:.3f}")
+    print()
+    print("  largest average misses (log scale, + means the polls over-read):")
+    for name, err in res.worst:
+        print(f"    {name:16s} {err:+.3f}")
+    print()
+    print("FITTED VALUES for config/model.yaml -> election_day_error:")
+    print(f"  r1_share_error_sd: {res.r1_share_error_sd:.4f}")
+    print(f"  bloc_error_corr:   {res.bloc_error_corr:.3f}")
+    if res.r2_error_points is not None:
+        print()
+        print(f"  second round: {res.r2_n_polls} final polls, mean miss on the "
+              f"winner's share {res.r2_error_points:+.2f} points.")
+        print("  ONE cycle and ONE matchup - reported, not fitted. r2_margin_error_sd")
+        print("  stays a prior until a second cycle is available.")
+    print()
+    cur = cfg.election_day_error
+    drift = abs(cur.r1_share_error_sd - res.r1_share_error_sd)
+    print(f"config currently has r1_share_error_sd: {cur.r1_share_error_sd:.4f} "
+          f"({'matches' if drift < 5e-4 else 'DIFFERS from'} the fit)")
+    return 0
+
+
 def cmd_run(args) -> int:
     import arviz as az
 
+    from .calibration import load_results
     from .commentary import write_commentary
+    from .data.transfers import load as load_transfers
     from .model.design import build_model_data
     from .model.field import build_ballot_model, draw_fields, fixed_field
     from .model.hierarchical import build_model, sample
     from .model.runoff import build_runoff_data, build_runoff_model
-    from .model.simulate import nested_logit_shares, simulate
+    from .model.simulate import simulate
     from .outputs import build_forecast, model_fingerprint, write_json
 
     paths.ensure_dirs()
@@ -132,13 +171,9 @@ def cmd_run(args) -> int:
     # ballot (see runoff.py on why two stages is acceptable here).
     ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
     reference = _reference_field(ballot, data.candidate_ids)
-    ref_shares = nested_logit_shares(
-        strength_draws.mean(axis=0)[None, :],
-        lambda_draws.mean(axis=0)[None, :],
-        reference[None, :],
-        data.candidate_bloc,
-        data.n_blocs,
-    )[0]
+    ref_shares = _reference_shares(
+        reference, ballot, data, strength_draws, lambda_draws
+    )
 
     log.info("fitting runoff transfer model on %d hypotheses", len(data.runoffs))
     rdata = build_runoff_data(
@@ -149,7 +184,18 @@ def cmd_run(args) -> int:
         r1_shares=ref_shares,
         roster=roster,
     )
-    rmodel = build_runoff_model(rdata, cfg, data.bloc_keys)
+    # Anchor the transfer model on the 2022 measurements. Without them the
+    # front republicain is estimated only from hypothetical 2027 matchups.
+    try:
+        transfers, t_skipped = load_transfers(results=load_results())
+        for line in t_skipped:
+            log.warning("2022 transfers: %s", line)
+        log.info("anchoring runoff on %d measured 2022 transfers", len(transfers))
+    except FileNotFoundError as exc:
+        log.warning("no 2022 transfers (%s); runoff rests on 2027 polls alone", exc)
+        transfers = None
+
+    rmodel = build_runoff_model(rdata, cfg, data.bloc_keys, transfers=transfers)
     with rmodel:
         ridata = __import__("pymc").sample(
             draws=cfg.sampling.draws,
@@ -224,6 +270,7 @@ def cmd_run(args) -> int:
             for i, b in enumerate(data.bloc_keys)
         },
         "delta_front_republicain": round(float(rp["delta_front_republicain"].mean()), 3),
+        "n_transferts_2022": 0 if transfers is None else len(transfers),
         "runoff_fit": runoff_fit,
         "sigma_excess": round(float(post["sigma_excess"].mean()), 4),
         # Posterior walk scales, back on a per-day basis so they can be
@@ -311,6 +358,57 @@ def _reference_field(ballot, candidate_ids: list[str]) -> np.ndarray:
     return row
 
 
+def _reference_shares(
+    reference: np.ndarray, ballot, data, strength_draws, lambda_draws
+) -> np.ndarray:
+    """A first-round share for EVERY polled candidate, not just the ones on the
+    reference ballot.
+
+    The runoff stage needs a base for each finalist of each tested matchup, and
+    institutes test matchups involving candidates the reference ballot excludes
+    - Bardella above all, since the RN arbitration resolves to Le Pen.
+
+    Reading his share straight off the reference ballot gives ZERO, which is
+    what it did: every Bardella runoff was fitted with him holding no
+    first-round votes. It cost 14.5 points on Bardella-versus-Melenchon and
+    inflated the whole runoff MAE from 1.97 to 3.54, while looking like tension
+    between the 2022 and 2027 evidence.
+
+    So a candidate missing from the reference ballot is priced on the ballot he
+    would actually be on: his own arbitration resolved in his favour, or, for an
+    independent candidacy, simply added.
+    """
+    from .model.simulate import nested_logit_shares
+
+    strength = strength_draws.mean(axis=0)[None, :]
+    lam = lambda_draws.mean(axis=0)[None, :]
+
+    shares = nested_logit_shares(
+        strength, lam, reference[None, :], data.candidate_bloc, data.n_blocs
+    )[0]
+
+    index = {c: i for i, c in enumerate(data.candidate_ids)}
+    for j, cid in enumerate(data.candidate_ids):
+        if reference[j]:
+            continue
+        field = reference.copy()
+        # Drop whoever currently holds this candidate's arbitration slot, so
+        # the bloc still fields exactly one.
+        for arb in ballot.arbitrations:
+            if cid in arb.options:
+                for other in arb.options:
+                    k = index.get(other)
+                    if k is not None:
+                        field[k] = False
+                break
+        field[j] = True
+        alt = nested_logit_shares(
+            strength, lam, field[None, :], data.candidate_bloc, data.n_blocs
+        )[0]
+        shares[j] = alt[j]
+    return shares
+
+
 def _build_trend(post, reference: np.ndarray, data, cfg) -> dict:
     """Median share over time under the reference ballot."""
     from .model.simulate import nested_logit_shares
@@ -378,6 +476,9 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("audit", help="describe the data and the ballot model").set_defaults(
         fn=cmd_audit
     )
+    sub.add_parser(
+        "calibrate", help="fit the election-day error against the 2022 cycle"
+    ).set_defaults(fn=cmd_calibrate)
 
     run = sub.add_parser("run", help="fit, simulate and write the site JSON")
     run.add_argument("--refresh", action="store_true", help="re-download polls first")

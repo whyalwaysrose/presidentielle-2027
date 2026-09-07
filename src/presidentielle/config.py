@@ -68,7 +68,9 @@ class ObservationConfig:
 
 @dataclass(frozen=True)
 class ElectionDayErrorConfig:
-    fitted: bool
+    # Per-round, because only the first round is fitted. A single `fitted`
+    # flag would have to lie about one of them.
+    r1_fitted: bool
     r1_share_error_sd: float
     r2_margin_error_sd: float
     bloc_error_corr: float
@@ -78,6 +80,7 @@ class ElectionDayErrorConfig:
 class SecondTourConfig:
     transfer_concentration: float
     rn_transfer_extra_sd: float
+    front_republicain_2027_sd: float
 
 
 @dataclass(frozen=True)

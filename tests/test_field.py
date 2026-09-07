@@ -139,3 +139,46 @@ def test_recent_evidence_outweighs_old_evidence(setup):
     )
     if old_only and (as_of - old_only) > dt.timedelta(days=200):
         assert ballot.independent.get("GD", 0.0) < 0.05
+
+
+def test_arbitration_alternatives_get_a_real_first_round_share(setup):
+    """REGRESSION. The runoff stage needs a first-round base for every finalist
+    of every tested matchup, including candidates the reference ballot excludes.
+
+    The reference ballot resolves the RN arbitration to Le Pen, so Bardella is
+    absent from it - and reading his share straight off it returned ZERO. Every
+    Bardella runoff was then fitted with him holding no first-round votes,
+    which cost 14.5 points on Bardella-versus-Melenchon and pushed the runoff
+    MAE from 1.97 to 3.54. It looked like tension between the 2022 and 2027
+    evidence rather than a bug, which is what makes it worth a test.
+    """
+    import numpy as np
+
+    from presidentielle.cli import _reference_field, _reference_shares
+    from presidentielle.data.surveys import weight
+    from presidentielle.model.design import build_model_data
+
+    cfg, roster, hyps, as_of = setup
+    data = build_model_data(
+        weight(hyps, exponent=cfg.observation.survey_weight_exponent),
+        cfg=cfg,
+        roster=roster,
+    )
+    ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
+    reference = _reference_field(ballot, data.candidate_ids)
+
+    rng = np.random.default_rng(0)
+    strength = rng.normal(size=(4, data.n_candidates))
+    lam = np.repeat(
+        np.where(data.identified_blocs, 0.35, 1.0)[None, :], 4, axis=0
+    )
+    shares = _reference_shares(reference, ballot, data, strength, lam)
+
+    index = {c: i for i, c in enumerate(data.candidate_ids)}
+    assert "JB" in index and "MLP" in index
+    # Bardella is NOT on the reference ballot ...
+    assert not reference[index["JB"]]
+    # ... but must still be priced, on the ballot he would actually be on.
+    assert shares[index["JB"]] > 0.01, "arbitration alternative priced at zero"
+    # And every polled candidate gets something, not just the reference field.
+    assert (shares > 0).all()

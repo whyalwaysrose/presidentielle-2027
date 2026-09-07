@@ -154,6 +154,16 @@ def simulate(
     positions = runoff_draws["positions"][pick2]  # (S, K)
     gamma = runoff_draws["gamma"][pick2]
     delta = runoff_draws["delta"][pick2]
+    # THE 2027 FRONT REPUBLICAIN IS NOT KNOWN, and no amount of 2026 polling
+    # about a hypothetical runoff can make it known. Whether left and centre
+    # voters will still cross the aisle to block the RN in May 2027 is the
+    # single largest substantive uncertainty in this forecast.
+    #
+    # It is applied here, per simulated world, rather than as a fitted
+    # parameter - because a fitted one is fitted away: the 54 runoff
+    # hypotheses would pin it to whatever 2026 respondents currently say, and
+    # report that as certainty about 2027.
+    delta = delta + rng.standard_normal(S) * cfg.second_tour.front_republicain_2027_sd
     abstain = runoff_draws["abstain"][pick2]  # (S, K)
 
     pair_bloc = candidate_bloc[finalists]  # (S, 2)

@@ -103,7 +103,12 @@ house_effects:
 
 observation:
   # Non-sampling noise beyond what the stated sample size explains, on the
-  # share scale. FITTED - see `presidentielle calibrate`.
+  # share scale.
+  #
+  # ASSERTED, not fitted - this is only the prior scale, and the model
+  # estimates the parameter itself from the 2027 polls (posterior ~0.0034).
+  # `calibrate` fits the election-day error, not this one. Do not label it
+  # FITTED unless that changes.
   excess_sd_prior: 0.018
   # An institute testing 13 hypotheses has not run 13 surveys: it asked one
   # sample of ~1500 people about 13 candidate fields. Treating them as
@@ -113,7 +118,12 @@ observation:
   # scaled by m^-(this). 1.0 divides the sample evenly between hypotheses
   # (fully redundant); 0.0 treats each as a fresh survey (fully independent).
   # The truth is in between: the hypotheses share respondents but genuinely
-  # ask different questions. FITTED - see calibrate.
+  # ask different questions.
+  #
+  # ASSERTED, not fitted. Fitting it needs the same institute pricing the
+  # same field twice on independent samples, which the data do not contain.
+  # 0.65 sits between fully redundant and fully independent; the forecast's
+  # sensitivity to it is not yet measured.
   survey_weight_exponent: 0.65
   # Sample universe. French notices describe who was sampled ("population
   # francaise agee de 18 ans et plus", "residents de France metropolitaine"),
@@ -124,20 +134,58 @@ observation:
   reference_population: auto
 
 election_day_error:
-  # FITTED by `presidentielle calibrate` against the 2022 cycle (nsppolls
-  # archive) scored on the real result. DO NOT HAND-EDIT: tests/test_calibration.py
-  # asserts the config still matches the fit.
+  # How wrong the polls are on the day, over and above sampling noise.
   #
-  # Split, not stacked: this is the error of a poll taken 0-14 days out, where
-  # the miss is almost entirely systematic. Opinion change between now and
-  # April 2027 is already represented, by the random walk running to election
-  # day. Using a longer-horizon error figure would count drift twice.
-  fitted: false
-  r1_share_error_sd: 0.022
+  # Split, not stacked: this is the error of an institute's FINAL poll, where
+  # the miss is systematic. Opinion change between now and April 2027 is
+  # already carried by the random walk running to election day, so a
+  # longer-horizon figure would count drift twice. Measured on 2022: every
+  # poll in the closing fortnight gives a log-error SD of 0.310, final polls
+  # alone give 0.247 - the gap is Melenchon's late surge, which is movement,
+  # not polling error.
+  #
+  # --- FITTED by `presidentielle calibrate` --------------------------------
+  # 2022 cycle, 11 institutes' final polls, scored on the Ministry of the
+  # Interior's proclaimed result (config/resultats_2022.yaml).
+  #
+  #   log-error SD, candidates >= 5%      0.2007   <- sets the value below
+  #   log-error SD, everyone above 2%     0.2473
+  #   mean signed log error              -0.0064   (no whole-field bias)
+  #
+  # Stored on the share scale at p = 0.25, which is how simulate.py converts
+  # it back: 0.2007 * 0.25 * 0.75 = 0.0376. The previous value, 0.0220, was
+  # invented, under a comment claiming it had been fitted by a command that
+  # did not exist.
+  #
+  # Fitted on candidates at or above 5% because the model applies ONE constant
+  # error on the log scale while real error is not constant there: the
+  # proportional miss is larger for small candidates (0.247 against 0.201).
+  # The forecast turns on who reaches the runoff and who wins it, so the
+  # majors set the scale, and minor candidates' proportional uncertainty is
+  # understated - a stated simplification, not a discovery waiting to happen.
+  #
+  # ONE CYCLE. 2022 is all nsppolls covers, so this measures a single election
+  # rather than averaging several. Re-run `calibrate` when another exists.
+  r1_fitted: true
+  r1_share_error_sd: 0.0376
+  # --- NOT FITTED: a prior that nothing identifies -------------------------
+  # Errors ought to correlate inside a bloc - an institute under-reading the RN
+  # under-reads every RN candidate at once. The 2022 field cannot show it: only
+  # TWO same-bloc pairs clear the 2% floor (Melenchon/Roussel, Lassalle/
+  # Dupont-Aignan), and the measured excess correlation against those was zero.
+  # Zero here is an absence of data, not evidence of independence.
+  #
+  # Kept modest rather than at the 0.55 originally asserted. It is second-order
+  # either way: under the arbitration model the RN and Reconquete field ONE
+  # candidate at a time, so this only bites where a bloc runs two at once -
+  # currently just the centre. Higher values widen a bloc's combined total.
+  bloc_error_corr: 0.30
+  # --- NOT FITTED: informed by a single observation ------------------------
+  # 2022's final polls under-read Macron's runoff share by 3.94 points. That is
+  # one matchup in one cycle and cannot give a distribution, but a 3.9-point
+  # miss is an ordinary draw from an SD of 0.030, so the prior is at least not
+  # contradicted by the only evidence available.
   r2_margin_error_sd: 0.030
-  # Error is correlated within a bloc: institutes that under-read the RN
-  # under-read every RN candidate at once.
-  bloc_error_corr: 0.55
 
 second_tour:
   # Transfer rates: of the voters who chose a first-round candidate in bloc j,
@@ -145,10 +193,34 @@ second_tour:
   # transfers (nsppolls reports.csv); runoff hypothesis polls update them
   # wherever a matchup has actually been tested.
   transfer_concentration: 40.0
-  # The "front republicain" is weaker than it was, and assuming the 2022
-  # figures hold in 2027 would be the single biggest way this model could be
-  # wrong. This widens the prior on transfers into any RN finalist.
+  # Prior scale for the 2022 front republicain term, which the measured 2022
+  # transfers then pin down.
   rn_transfer_extra_sd: 0.08
+  # How far the 2027 front republicain may differ from the fitted value,
+  # applied per simulated world in simulate.py rather than fitted.
+  #
+  # ASSERTED, and unavoidably so: measuring it needs two cycles of transfers
+  # and only one exists. It is the honest home for the model's largest
+  # substantive uncertainty, and it is applied at simulation time precisely so
+  # that the 54 hypothetical 2027 matchups cannot fit it away and report
+  # today's stated intentions as knowledge about May 2027.
+  #
+  # Setting it to 0 asserts that 2027 will behave exactly as the polls say -
+  # which is the assumption this parameter exists to stop being made silently.
+  #
+  # CHOSEN AGAINST A YARDSTICK, not picked. The only evidence about how far
+  # this moves between cycles is how far it has moved: the RN's runoff share
+  # went 34.14% in 2017 to 41.45% in 2022, +7.3 points in one cycle. (The 2017
+  # figure is the Ministry's election-night publication, which is provisional;
+  # it is used here only to size a prior.)
+  #
+  # scripts/check_runoff_sensitivity.py translates this parameter into that
+  # same unit. At 0.45 a one-sigma move is about 4 points of runoff share, so
+  # the one cycle transition anyone has observed sits near 1.8 sigma - an
+  # ordinary draw rather than an extreme one. At the 0.35 first tried it would
+  # have been a 2.4 sigma event, i.e. the model would have called the only
+  # thing that has actually happened close to implausible.
+  front_republicain_2027_sd: 0.45
 
 field:
   # Who is actually on the ballot. Rather than invent probabilities, the

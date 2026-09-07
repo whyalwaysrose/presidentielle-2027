@@ -65,14 +65,49 @@ def test_the_horizon_implies_a_believable_interval(cfg):
     assert 0.40 <= hi <= 0.52, f"upper bound {hi:.1%} is implausible"
 
 
-def test_election_day_error_is_flagged_as_unfitted(cfg):
-    """These scales are still priors. The flag is what stops the README and the
-    site claiming otherwise; when `calibrate` lands, flip it and this test
-    should be replaced by a real comparison against the fit."""
-    assert cfg.election_day_error.fitted is False, (
-        "election_day_error.fitted is now true - replace this test with one "
-        "that checks the config against the calibration output"
-    )
+# From `presidentielle calibrate` against the 2022 cycle: 11 institutes' final
+# polls scored on the proclaimed result, log-error SD 0.2007 for candidates at
+# or above 5%, stored on the share scale at p = 0.25.
+FITTED_R1_SHARE_ERROR = 0.0376
+
+
+def test_first_round_error_matches_the_calibration(cfg):
+    assert cfg.election_day_error.r1_fitted is True
+    assert cfg.election_day_error.r1_share_error_sd == pytest.approx(
+        FITTED_R1_SHARE_ERROR, abs=5e-4
+    ), "re-run `presidentielle calibrate` and update the config together"
+
+
+def test_calibration_reproduces_the_committed_value():
+    """The fit itself, re-run against the committed 2022 archive and results.
+
+    This is what makes the config's `FITTED` comment checkable rather than a
+    claim. It runs in the suite because both inputs are committed, so it needs
+    no network."""
+    from presidentielle.calibration import calibrate
+
+    res = calibrate()
+    assert res.n_polls >= 8, f"only {res.n_polls} final polls found"
+    assert res.r1_share_error_sd == pytest.approx(FITTED_R1_SHARE_ERROR, abs=5e-4)
+    # Final polls must be less wrong than the whole fortnight, or the drift
+    # argument for using them is backwards.
+    assert res.log_error_sd < res.log_error_sd_all
+
+
+def test_second_round_error_is_still_a_prior(cfg):
+    """One matchup in one cycle cannot give a distribution. If this is ever
+    flipped, replace it with a comparison against a real multi-cycle fit."""
+    assert cfg.election_day_error.r2_margin_error_sd == pytest.approx(0.030)
+
+
+def test_bloc_correlation_is_not_overclaimed(cfg):
+    """The 2022 field has only two same-bloc pairs above the noise floor, so
+    this parameter is identified by nothing. It is kept modest deliberately;
+    the 0.55 originally asserted had no support."""
+    from presidentielle.calibration import calibrate
+
+    assert cfg.election_day_error.bloc_error_corr <= 0.35
+    assert calibrate().n_same_bloc_pairs <= 3
 
 
 def test_walk_scales_stay_pinned(cfg):

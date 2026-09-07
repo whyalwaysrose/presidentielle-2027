@@ -45,15 +45,30 @@ against — polls taken 0–14 days out, scored on the actual result.
 
 **`nsppolls/reports.csv`** additionally carries *measured second-round vote
 transfers* for 2022: for each first-round candidate, the share of their voters
-going to Macron, to Le Pen, or to abstention, as reported by Ipsos on the day.
-This is the empirical anchor for the runoff transfer model, and it is a real
-measurement rather than an assumption.
+going to Macron, to Le Pen, or to abstention. 609 rows across nine institutes,
+reduced to **43 observations** by taking each institute's final wave per
+candidate. This is the empirical anchor for the runoff transfer model — a real
+measurement of where votes went during the actual campaign, rather than an
+inference from hypothetical matchups.
 
 ## 3. Results — official
 
-**data.gouv.fr**, Ministère de l'Intérieur, under the **Licence Ouverte 2.0**.
-Used to score the historical polls, and available for any later work on
-sub-national estimates.
+**data.gouv.fr**, Ministère de l'Intérieur: the *résultats définitifs*
+proclaimed by the Conseil constitutionnel, aggregated from the department-level
+files to national totals in `config/resultats_2022.yaml`. The aggregation is
+checked — summed candidate votes equal summed *exprimés* exactly in both rounds.
+
+These are what `presidentielle calibrate` scores the 2022 polls against.
+
+Only the derived totals are committed, not the Ministry's files: the
+data.gouv.fr metadata for those datasets states `license: notspecified`, and
+twelve vote counts are facts about a public election rather than a substantial
+extraction of a database.
+
+The 2017 second-round figures are also used, once, to size a prior — see
+`second_tour.front_republicain_2027_sd`. That publication is the Ministry's
+election-night file and is explicitly **provisional**, which is why it is used
+only for an order of magnitude and not as a calibration target.
 
 ## 4. Election dates — official
 
@@ -86,10 +101,14 @@ it is a **proxy**: an institute testing Bardella is telling you the scenario is
 considered live, not that it has probability equal to its testing frequency.
 The site states this where the numbers appear.
 
-**The `front républicain` term.** Estimated from the runoff polls, but the
-quantity it is estimating — how far voters of eliminated candidates will go to
-block the RN in 2027 — is precisely the thing least likely to be stable. This
-is the model's largest single vulnerability and is named as such on the page.
+**The `front républicain` in 2027.** The transfer structure is now fitted on
+the 2022 *measurements* as well as the 2027 hypotheticals, so it is no longer
+an inference from stated intentions about a runoff two years away. What remains
+irreducibly mine is `front_republicain_2027_sd`: how far 2027 may differ. It is
+sized against the only cycle transition anyone has observed (the RN's runoff
+share moved 7.3 points between 2017 and 2022) and applied per simulated world,
+so the 2027 polls cannot fit it away. It is still the model's largest
+substantive vulnerability.
 
 **The two-stage fit.** The runoff transfer model is fitted after the
 first-round model rather than jointly. See `src/presidentielle/model/runoff.py`.

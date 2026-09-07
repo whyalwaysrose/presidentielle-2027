@@ -1,0 +1,610 @@
+﻿id,candidat_T1,choix_T2,part,id_sondage,debut_enquete,fin_enquete,nom_institut
+550,Jean-Luc Mélenchon,Emmanuel Macron,41.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+551,Jean-Luc Mélenchon,Marine Le Pen,21.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+552,Jean-Luc Mélenchon,Abstention,38.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+553,Fabien Roussel,Emmanuel Macron,43.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+554,Fabien Roussel,Marine Le Pen,13.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+555,Fabien Roussel,Abstention,44.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+556,Anne Hidalgo,Emmanuel Macron,67.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+557,Anne Hidalgo,Marine Le Pen,7.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+558,Anne Hidalgo,Abstention,26.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+559,Yannick Jadot,Emmanuel Macron,65.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+560,Yannick Jadot,Marine Le Pen,7.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+561,Yannick Jadot,Abstention,28.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+562,Emmanuel Macron,Emmanuel Macron,98.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+563,Emmanuel Macron,Marine Le Pen,1.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+564,Emmanuel Macron,Abstention,1.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+565,Valérie Pécresse,Emmanuel Macron,50.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+566,Valérie Pécresse,Marine Le Pen,22.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+567,Valérie Pécresse,Abstention,28.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+568,Jean Lassalle,Emmanuel Macron,30.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+569,Jean Lassalle,Marine Le Pen,32.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+570,Jean Lassalle,Abstention,38.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+571,Nicolas Dupont-Aignan,Emmanuel Macron,11.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+572,Nicolas Dupont-Aignan,Marine Le Pen,65.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+573,Nicolas Dupont-Aignan,Abstention,24.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+574,Marine Le Pen,Emmanuel Macron,3.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+575,Marine Le Pen,Marine Le Pen,93.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+576,Marine Le Pen,Abstention,4.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+577,Eric Zemmour,Emmanuel Macron,9.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+578,Eric Zemmour,Marine Le Pen,78.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+579,Eric Zemmour,Abstention,13.0,20220422_0422b_ips,22 avril 2022,22 avril 2022,Ipsos
+538,Jean-Luc Mélenchon,Emmanuel Macron,33.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+539,Jean-Luc Mélenchon,Marine Le Pen,19.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+540,Jean-Luc Mélenchon,Abstention,48.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+541,Yannick Jadot,Emmanuel Macron,63.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+542,Yannick Jadot,Marine Le Pen,5.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+543,Yannick Jadot,Abstention,32.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+544,Valérie Pécresse,Emmanuel Macron,48.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+545,Valérie Pécresse,Marine Le Pen,25.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+546,Valérie Pécresse,Abstention,27.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+547,Eric Zemmour,Emmanuel Macron,5.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+548,Eric Zemmour,Marine Le Pen,79.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+549,Eric Zemmour,Abstention,16.0,20220422_0422_ips,22 avril 2022,22 avril 2022,Ipsos
+508,Jean-Luc Mélenchon,Emmanuel Macron,42.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+509,Jean-Luc Mélenchon,Marine Le Pen,19.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+510,Jean-Luc Mélenchon,Abstention,39.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+511,Fabien Roussel,Emmanuel Macron,43.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+512,Fabien Roussel,Marine Le Pen,20.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+513,Fabien Roussel,Abstention,37.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+514,Anne Hidalgo,Emmanuel Macron,51.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+515,Anne Hidalgo,Marine Le Pen,14.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+516,Anne Hidalgo,Abstention,35.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+517,Yannick Jadot,Emmanuel Macron,50.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+518,Yannick Jadot,Marine Le Pen,14.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+519,Yannick Jadot,Abstention,36.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+520,Emmanuel Macron,Emmanuel Macron,97.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+521,Emmanuel Macron,Marine Le Pen,2.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+522,Emmanuel Macron,Abstention,1.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+523,Valérie Pécresse,Emmanuel Macron,45.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+524,Valérie Pécresse,Marine Le Pen,37.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+525,Valérie Pécresse,Abstention,18.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+526,Jean Lassalle,Emmanuel Macron,29.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+527,Jean Lassalle,Marine Le Pen,35.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+528,Jean Lassalle,Abstention,36.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+529,Nicolas Dupont-Aignan,Emmanuel Macron,16.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+530,Nicolas Dupont-Aignan,Marine Le Pen,68.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+531,Nicolas Dupont-Aignan,Abstention,16.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+532,Marine Le Pen,Emmanuel Macron,3.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+533,Marine Le Pen,Marine Le Pen,94.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+534,Marine Le Pen,Abstention,3.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+535,Eric Zemmour,Emmanuel Macron,10.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+536,Eric Zemmour,Marine Le Pen,81.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+537,Eric Zemmour,Abstention,9.0,20220421_0422_hi,21 avril 2022,22 avril 2022,Harris Interactive
+490,Jean-Luc Mélenchon,Emmanuel Macron,45.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+491,Jean-Luc Mélenchon,Marine Le Pen,24.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+492,Jean-Luc Mélenchon,Abstention,31.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+493,Yannick Jadot,Emmanuel Macron,63.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+494,Yannick Jadot,Marine Le Pen,12.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+495,Yannick Jadot,Abstention,25.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+505,Emmanuel Macron,Emmanuel Macron,97.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+506,Emmanuel Macron,Marine Le Pen,2.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+507,Emmanuel Macron,Abstention,1.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+496,Valérie Pécresse,Emmanuel Macron,42.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+497,Valérie Pécresse,Marine Le Pen,29.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+498,Valérie Pécresse,Abstention,29.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+499,Marine Le Pen,Emmanuel Macron,4.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+500,Marine Le Pen,Marine Le Pen,95.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+501,Marine Le Pen,Abstention,1.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+502,Eric Zemmour,Emmanuel Macron,14.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+503,Eric Zemmour,Marine Le Pen,82.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+504,Eric Zemmour,Abstention,5.0,20220421_0422_elb,21 avril 2022,22 avril 2022,Elabe
+616,Jean-Luc Mélenchon,Emmanuel Macron,33.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+617,Jean-Luc Mélenchon,Marine Le Pen,17.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+618,Jean-Luc Mélenchon,Abstention,50.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+619,Yannick Jadot,Emmanuel Macron,71.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+620,Yannick Jadot,Marine Le Pen,3.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+621,Yannick Jadot,Abstention,26.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+622,Emmanuel Macron,Emmanuel Macron,96.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+623,Emmanuel Macron,Marine Le Pen,2.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+624,Emmanuel Macron,Abstention,2.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+625,Valérie Pécresse,Emmanuel Macron,51.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+626,Valérie Pécresse,Marine Le Pen,17.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+627,Valérie Pécresse,Abstention,32.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+628,Marine Le Pen,Emmanuel Macron,2.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+629,Marine Le Pen,Marine Le Pen,88.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+630,Marine Le Pen,Abstention,9.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+631,Eric Zemmour,Emmanuel Macron,7.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+632,Eric Zemmour,Marine Le Pen,79.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+633,Eric Zemmour,Abstention,14.0,20220421_0422_clu,21 avril 2022,22 avril 2022,Cluster17
+447,Jean-Luc Mélenchon,Emmanuel Macron,43.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+448,Jean-Luc Mélenchon,Marine Le Pen,24.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+449,Jean-Luc Mélenchon,Abstention,33.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+450,Emmanuel Macron,Emmanuel Macron,97.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+451,Emmanuel Macron,Marine Le Pen,1.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+452,Emmanuel Macron,Abstention,2.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+453,Valérie Pécresse,Emmanuel Macron,46.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+454,Valérie Pécresse,Marine Le Pen,31.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+455,Valérie Pécresse,Abstention,23.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+456,Marine Le Pen,Emmanuel Macron,4.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+457,Marine Le Pen,Marine Le Pen,93.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+458,Marine Le Pen,Abstention,3.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+459,Eric Zemmour,Emmanuel Macron,13.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+460,Eric Zemmour,Marine Le Pen,81.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+461,Eric Zemmour,Abstention,6.0,20220421_0421_odx,21 avril 2022,21 avril 2022,Odoxa
+462,Jean-Luc Mélenchon,Emmanuel Macron,34.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+463,Jean-Luc Mélenchon,Marine Le Pen,18.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+464,Jean-Luc Mélenchon,Abstention,48.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+465,Yannick Jadot,Emmanuel Macron,65.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+466,Yannick Jadot,Marine Le Pen,5.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+467,Yannick Jadot,Abstention,30.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+468,Valérie Pécresse,Emmanuel Macron,49.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+469,Valérie Pécresse,Marine Le Pen,13.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+470,Valérie Pécresse,Abstention,38.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+471,Eric Zemmour,Emmanuel Macron,11.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+472,Eric Zemmour,Marine Le Pen,72.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+473,Eric Zemmour,Abstention,17.0,20220421_0421_ips,21 avril 2022,21 avril 2022,Ipsos
+475,Jean-Luc Mélenchon,Emmanuel Macron,54.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+476,Jean-Luc Mélenchon,Marine Le Pen,23.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+477,Jean-Luc Mélenchon,Abstention,23.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+478,Yannick Jadot,Emmanuel Macron,80.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+479,Yannick Jadot,Marine Le Pen,10.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+480,Yannick Jadot,Abstention,10.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+481,Valérie Pécresse,Emmanuel Macron,65.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+482,Valérie Pécresse,Marine Le Pen,20.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+483,Valérie Pécresse,Abstention,15.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+484,Eric Zemmour,Emmanuel Macron,6.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+485,Eric Zemmour,Marine Le Pen,88.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+486,Eric Zemmour,Abstention,6.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+487,Abstention,Emmanuel Macron,25.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+488,Abstention,Marine Le Pen,21.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+489,Abstention,Abstention,54.0,20220420_0422r_ow,20 avril 2022,22 avril 2022,Opinion Way
+431,Jean-Luc Mélenchon,Emmanuel Macron,47.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+432,Jean-Luc Mélenchon,Marine Le Pen,27.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+433,Jean-Luc Mélenchon,Abstention,26.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+434,Yannick Jadot,Emmanuel Macron,84.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+435,Yannick Jadot,Marine Le Pen,9.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+436,Yannick Jadot,Abstention,7.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+437,Valérie Pécresse,Emmanuel Macron,64.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+438,Valérie Pécresse,Marine Le Pen,24.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+439,Valérie Pécresse,Abstention,12.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+440,Eric Zemmour,Emmanuel Macron,7.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+441,Eric Zemmour,Marine Le Pen,88.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+442,Eric Zemmour,Abstention,5.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+443,Abstention,Emmanuel Macron,27.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+444,Abstention,Marine Le Pen,23.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+445,Abstention,Abstention,50.0,20220420_0421r_ow,20 avril 2022,21 avril 2022,Opinion Way
+598,Jean-Luc Mélenchon,Emmanuel Macron,30.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+599,Jean-Luc Mélenchon,Marine Le Pen,19.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+600,Jean-Luc Mélenchon,Abstention,51.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+601,Yannick Jadot,Emmanuel Macron,66.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+602,Yannick Jadot,Marine Le Pen,7.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+603,Yannick Jadot,Abstention,27.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+604,Emmanuel Macron,Emmanuel Macron,92.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+605,Emmanuel Macron,Marine Le Pen,1.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+606,Emmanuel Macron,Abstention,7.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+607,Valérie Pécresse,Emmanuel Macron,37.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+608,Valérie Pécresse,Marine Le Pen,23.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+609,Valérie Pécresse,Abstention,40.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+610,Marine Le Pen,Emmanuel Macron,1.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+611,Marine Le Pen,Marine Le Pen,92.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+612,Marine Le Pen,Abstention,7.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+613,Eric Zemmour,Emmanuel Macron,6.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+614,Eric Zemmour,Marine Le Pen,78.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+615,Eric Zemmour,Abstention,16.0,20220419_0420_clu,19 avril 2022,20 avril 2022,Cluster17
+419,Jean-Luc Mélenchon,Emmanuel Macron,39.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+420,Jean-Luc Mélenchon,Marine Le Pen,17.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+421,Jean-Luc Mélenchon,Abstention,44.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+422,Yannick Jadot,Emmanuel Macron,59.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+423,Yannick Jadot,Marine Le Pen,9.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+424,Yannick Jadot,Abstention,32.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+425,Valérie Pécresse,Emmanuel Macron,40.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+426,Valérie Pécresse,Marine Le Pen,25.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+427,Valérie Pécresse,Abstention,35.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+428,Eric Zemmour,Emmanuel Macron,7.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+429,Eric Zemmour,Marine Le Pen,78.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+430,Eric Zemmour,Abstention,15.0,20220418_0420r_ips,18 avril 2022,20 avril 2022,Ipsos
+306,Jean-Luc Mélenchon,Emmanuel Macron,42.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+307,Jean-Luc Mélenchon,Marine Le Pen,25.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+308,Jean-Luc Mélenchon,Abstention,33.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+309,Emmanuel Macron,Emmanuel Macron,99.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+310,Emmanuel Macron,Marine Le Pen,1.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+311,Emmanuel Macron,Abstention,0.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+312,Valérie Pécresse,Emmanuel Macron,47.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+313,Valérie Pécresse,Marine Le Pen,28.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+314,Valérie Pécresse,Abstention,25.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+315,Marine Le Pen,Emmanuel Macron,0.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+316,Marine Le Pen,Marine Le Pen,98.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+317,Marine Le Pen,Abstention,2.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+318,Eric Zemmour,Emmanuel Macron,8.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+319,Eric Zemmour,Marine Le Pen,86.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+320,Eric Zemmour,Abstention,6.0,20220418_0419_elb,18 avril 2022,19 avril 2022,Elabe
+373,Jean-Luc Mélenchon,Emmanuel Macron,44.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+374,Jean-Luc Mélenchon,Marine Le Pen,26.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+375,Jean-Luc Mélenchon,Abstention,30.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+376,Yannick Jadot,Emmanuel Macron,81.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+377,Yannick Jadot,Marine Le Pen,9.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+378,Yannick Jadot,Abstention,10.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+379,Valérie Pécresse,Emmanuel Macron,56.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+380,Valérie Pécresse,Marine Le Pen,26.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+381,Valérie Pécresse,Abstention,18.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+382,Eric Zemmour,Emmanuel Macron,8.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+383,Eric Zemmour,Marine Le Pen,85.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+384,Eric Zemmour,Abstention,7.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+385,Abstention,Emmanuel Macron,32.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+386,Abstention,Marine Le Pen,23.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+387,Abstention,Abstention,45.0,20220417_0420r_ow,17 avril 2022,20 avril 2022,Opinion Way
+294,Jean-Luc Mélenchon,Emmanuel Macron,39.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+295,Jean-Luc Mélenchon,Marine Le Pen,16.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+296,Jean-Luc Mélenchon,Abstention,45.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+297,Yannick Jadot,Emmanuel Macron,58.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+298,Yannick Jadot,Marine Le Pen,11.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+299,Yannick Jadot,Abstention,31.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+300,Valérie Pécresse,Emmanuel Macron,47.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+301,Valérie Pécresse,Marine Le Pen,24.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+302,Valérie Pécresse,Abstention,29.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+303,Eric Zemmour,Emmanuel Macron,8.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+304,Eric Zemmour,Marine Le Pen,77.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+305,Eric Zemmour,Abstention,15.0,20220417_0419r_ips,17 avril 2022,19 avril 2022,Ipsos
+580,Jean-Luc Mélenchon,Emmanuel Macron,29.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+581,Jean-Luc Mélenchon,Marine Le Pen,16.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+582,Jean-Luc Mélenchon,Abstention,55.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+583,Yannick Jadot,Emmanuel Macron,74.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+584,Yannick Jadot,Marine Le Pen,4.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+585,Yannick Jadot,Abstention,22.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+586,Emmanuel Macron,Emmanuel Macron,94.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+587,Emmanuel Macron,Marine Le Pen,1.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+588,Emmanuel Macron,Abstention,5.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+589,Valérie Pécresse,Emmanuel Macron,42.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+590,Valérie Pécresse,Marine Le Pen,25.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+591,Valérie Pécresse,Abstention,33.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+592,Marine Le Pen,Emmanuel Macron,2.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+593,Marine Le Pen,Marine Le Pen,91.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+594,Marine Le Pen,Abstention,7.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+595,Eric Zemmour,Emmanuel Macron,3.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+596,Eric Zemmour,Marine Le Pen,75.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+597,Eric Zemmour,Abstention,22.0,20220417_0418_clu,17 avril 2022,18 avril 2022,Cluster17
+279,Jean-Luc Mélenchon,Emmanuel Macron,40.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+280,Jean-Luc Mélenchon,Marine Le Pen,26.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+281,Jean-Luc Mélenchon,Abstention,34.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+282,Yannick Jadot,Emmanuel Macron,78.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+283,Yannick Jadot,Marine Le Pen,9.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+284,Yannick Jadot,Abstention,13.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+285,Valérie Pécresse,Emmanuel Macron,61.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+286,Valérie Pécresse,Marine Le Pen,21.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+287,Valérie Pécresse,Abstention,18.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+288,Eric Zemmour,Emmanuel Macron,9.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+289,Eric Zemmour,Marine Le Pen,84.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+290,Eric Zemmour,Abstention,7.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+291,Abstention,Emmanuel Macron,27.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+292,Abstention,Marine Le Pen,21.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+293,Abstention,Abstention,52.0,20220416_0419r_ow,16 avril 2022,19 avril 2022,Opinion Way
+201,Jean-Luc Mélenchon,Emmanuel Macron,38.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+202,Jean-Luc Mélenchon,Marine Le Pen,16.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+203,Jean-Luc Mélenchon,Abstention,46.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+204,Yannick Jadot,Emmanuel Macron,61.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+205,Yannick Jadot,Marine Le Pen,7.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+206,Yannick Jadot,Abstention,32.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+207,Valérie Pécresse,Emmanuel Macron,52.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+208,Valérie Pécresse,Marine Le Pen,17.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+209,Valérie Pécresse,Abstention,31.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+210,Eric Zemmour,Emmanuel Macron,11.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+211,Eric Zemmour,Marine Le Pen,73.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+212,Eric Zemmour,Abstention,16.0,20220415_0418r_ips,15 avril 2022,18 avril 2022,Ipsos
+352,Jean-Luc Mélenchon,Emmanuel Macron,51.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+353,Jean-Luc Mélenchon,Marine Le Pen,24.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+354,Jean-Luc Mélenchon,Abstention,25.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+367,Yannick Jadot,Emmanuel Macron,67.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+368,Yannick Jadot,Marine Le Pen,13.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+369,Yannick Jadot,Abstention,20.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+355,Emmanuel Macron,Emmanuel Macron,97.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+356,Emmanuel Macron,Marine Le Pen,2.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+357,Emmanuel Macron,Abstention,1.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+358,Valérie Pécresse,Emmanuel Macron,54.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+359,Valérie Pécresse,Marine Le Pen,32.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+360,Valérie Pécresse,Abstention,14.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+361,Marine Le Pen,Emmanuel Macron,4.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+362,Marine Le Pen,Marine Le Pen,95.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+363,Marine Le Pen,Abstention,1.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+364,Eric Zemmour,Emmanuel Macron,10.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+365,Eric Zemmour,Marine Le Pen,84.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+366,Eric Zemmour,Abstention,6.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+370,Abstention,Emmanuel Macron,31.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+371,Abstention,Marine Le Pen,24.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+372,Abstention,Abstention,45.0,20220415_0418_kat,15 avril 2022,18 avril 2022,Kantar Public
+321,Jean-Luc Mélenchon,Emmanuel Macron,36.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+322,Jean-Luc Mélenchon,Marine Le Pen,19.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+323,Jean-Luc Mélenchon,Abstention,45.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+324,Fabien Roussel,Emmanuel Macron,41.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+325,Fabien Roussel,Marine Le Pen,14.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+326,Fabien Roussel,Abstention,45.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+327,Anne Hidalgo,Emmanuel Macron,62.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+328,Anne Hidalgo,Marine Le Pen,6.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+329,Anne Hidalgo,Abstention,32.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+330,Yannick Jadot,Emmanuel Macron,66.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+331,Yannick Jadot,Marine Le Pen,6.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+332,Yannick Jadot,Abstention,28.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+333,Emmanuel Macron,Emmanuel Macron,98.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+334,Emmanuel Macron,Marine Le Pen,1.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+335,Emmanuel Macron,Abstention,1.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+336,Valérie Pécresse,Emmanuel Macron,50.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+337,Valérie Pécresse,Marine Le Pen,20.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+338,Valérie Pécresse,Abstention,30.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+339,Jean Lassalle,Emmanuel Macron,29.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+340,Jean Lassalle,Marine Le Pen,29.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+341,Jean Lassalle,Abstention,42.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+342,Nicolas Dupont-Aignan,Emmanuel Macron,11.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+343,Nicolas Dupont-Aignan,Marine Le Pen,67.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+344,Nicolas Dupont-Aignan,Abstention,22.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+345,Marine Le Pen,Emmanuel Macron,2.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+346,Marine Le Pen,Marine Le Pen,94.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+347,Marine Le Pen,Abstention,4.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+348,Eric Zemmour,Emmanuel Macron,6.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+349,Eric Zemmour,Marine Le Pen,78.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+350,Eric Zemmour,Abstention,16.0,20220415_0418_ips,15 avril 2022,18 avril 2022,Ipsos
+388,Jean-Luc Mélenchon,Emmanuel Macron,38.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+389,Jean-Luc Mélenchon,Marine Le Pen,21.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+390,Jean-Luc Mélenchon,Abstention,41.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+391,Fabien Roussel,Emmanuel Macron,35.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+392,Fabien Roussel,Marine Le Pen,23.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+393,Fabien Roussel,Abstention,42.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+394,Anne Hidalgo,Emmanuel Macron,57.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+395,Anne Hidalgo,Marine Le Pen,15.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+396,Anne Hidalgo,Abstention,28.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+397,Yannick Jadot,Emmanuel Macron,50.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+398,Yannick Jadot,Marine Le Pen,8.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+399,Yannick Jadot,Abstention,42.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+400,Emmanuel Macron,Emmanuel Macron,97.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+401,Emmanuel Macron,Marine Le Pen,2.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+402,Emmanuel Macron,Abstention,1.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+403,Valérie Pécresse,Emmanuel Macron,43.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+404,Valérie Pécresse,Marine Le Pen,24.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+405,Valérie Pécresse,Abstention,33.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+406,Jean Lassalle,Emmanuel Macron,19.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+407,Jean Lassalle,Marine Le Pen,39.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+408,Jean Lassalle,Abstention,42.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+409,Nicolas Dupont-Aignan,Emmanuel Macron,10.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+410,Nicolas Dupont-Aignan,Marine Le Pen,63.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+411,Nicolas Dupont-Aignan,Abstention,27.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+412,Marine Le Pen,Emmanuel Macron,2.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+413,Marine Le Pen,Marine Le Pen,95.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+414,Marine Le Pen,Abstention,3.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+415,Eric Zemmour,Emmanuel Macron,13.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+416,Eric Zemmour,Marine Le Pen,79.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+417,Eric Zemmour,Abstention,8.0,20220415_0418_hi,15 avril 2022,18 avril 2022,Harris Interactive
+213,Jean-Luc Mélenchon,Emmanuel Macron,33.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+214,Jean-Luc Mélenchon,Marine Le Pen,16.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+215,Jean-Luc Mélenchon,Abstention,51.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+216,Yannick Jadot,Emmanuel Macron,59.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+217,Yannick Jadot,Marine Le Pen,7.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+218,Yannick Jadot,Abstention,34.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+219,Valérie Pécresse,Emmanuel Macron,55.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+220,Valérie Pécresse,Marine Le Pen,21.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+221,Valérie Pécresse,Abstention,24.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+222,Eric Zemmour,Emmanuel Macron,9.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+223,Eric Zemmour,Marine Le Pen,76.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+224,Eric Zemmour,Abstention,15.0,20220414_0416r_ips,14 avril 2022,16 avril 2022,Ipsos
+186,Jean-Luc Mélenchon,Emmanuel Macron,31.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+187,Jean-Luc Mélenchon,Marine Le Pen,29.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+188,Jean-Luc Mélenchon,Abstention,40.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+189,Emmanuel Macron,Emmanuel Macron,95.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+190,Emmanuel Macron,Marine Le Pen,2.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+191,Emmanuel Macron,Abstention,3.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+192,Valérie Pécresse,Emmanuel Macron,48.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+193,Valérie Pécresse,Marine Le Pen,29.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+194,Valérie Pécresse,Abstention,23.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+195,Marine Le Pen,Emmanuel Macron,4.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+196,Marine Le Pen,Marine Le Pen,94.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+197,Marine Le Pen,Abstention,2.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+198,Eric Zemmour,Emmanuel Macron,10.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+199,Eric Zemmour,Marine Le Pen,70.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+200,Eric Zemmour,Abstention,20.0,20220414_0415_odx,14 avril 2022,15 avril 2022,Odoxa
+166,Jean-Luc Mélenchon,Emmanuel Macron,30.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+167,Jean-Luc Mélenchon,Marine Le Pen,18.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+168,Jean-Luc Mélenchon,Abstention,52.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+181,Yannick Jadot,Emmanuel Macron,46.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+182,Yannick Jadot,Marine Le Pen,14.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+183,Yannick Jadot,Abstention,40.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+169,Emmanuel Macron,Emmanuel Macron,90.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+170,Emmanuel Macron,Marine Le Pen,1.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+171,Emmanuel Macron,Abstention,9.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+172,Valérie Pécresse,Emmanuel Macron,39.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+173,Valérie Pécresse,Marine Le Pen,17.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+174,Valérie Pécresse,Abstention,44.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+175,Marine Le Pen,Emmanuel Macron,2.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+176,Marine Le Pen,Marine Le Pen,85.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+177,Marine Le Pen,Abstention,13.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+178,Eric Zemmour,Emmanuel Macron,11.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+179,Eric Zemmour,Marine Le Pen,79.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+180,Eric Zemmour,Abstention,10.0,20220413_0414_bva,13 avril 2022,14 avril 2022,BVA
+264,Jean-Luc Mélenchon,Emmanuel Macron,41.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+265,Jean-Luc Mélenchon,Marine Le Pen,21.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+266,Jean-Luc Mélenchon,Abstention,38.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+267,Yannick Jadot,Emmanuel Macron,65.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+268,Yannick Jadot,Marine Le Pen,20.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+269,Yannick Jadot,Abstention,15.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+270,Valérie Pécresse,Emmanuel Macron,53.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+271,Valérie Pécresse,Marine Le Pen,22.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+272,Valérie Pécresse,Abstention,25.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+273,Eric Zemmour,Emmanuel Macron,6.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+274,Eric Zemmour,Marine Le Pen,89.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+275,Eric Zemmour,Abstention,5.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+276,Abstention,Emmanuel Macron,28.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+277,Abstention,Marine Le Pen,24.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+278,Abstention,Abstention,48.0,20220412_0415r_ow,12 avril 2022,15 avril 2022,Opinion Way
+154,Jean-Luc Mélenchon,Emmanuel Macron,33.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+155,Jean-Luc Mélenchon,Marine Le Pen,18.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+156,Jean-Luc Mélenchon,Abstention,49.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+157,Yannick Jadot,Emmanuel Macron,61.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+158,Yannick Jadot,Marine Le Pen,12.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+159,Yannick Jadot,Abstention,27.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+160,Valérie Pécresse,Emmanuel Macron,48.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+161,Valérie Pécresse,Marine Le Pen,16.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+162,Valérie Pécresse,Abstention,36.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+163,Eric Zemmour,Emmanuel Macron,9.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+164,Eric Zemmour,Marine Le Pen,78.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+165,Eric Zemmour,Abstention,13.0,20220412_0414r_ips,12 avril 2022,14 avril 2022,Ipsos
+124,Jean-Luc Mélenchon,Emmanuel Macron,35.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+125,Jean-Luc Mélenchon,Marine Le Pen,27.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+126,Jean-Luc Mélenchon,Abstention,38.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+127,Emmanuel Macron,Emmanuel Macron,97.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+128,Emmanuel Macron,Marine Le Pen,2.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+129,Emmanuel Macron,Abstention,1.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+130,Valérie Pécresse,Emmanuel Macron,42.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+131,Valérie Pécresse,Marine Le Pen,29.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+132,Valérie Pécresse,Abstention,29.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+133,Marine Le Pen,Emmanuel Macron,5.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+134,Marine Le Pen,Marine Le Pen,95.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+135,Marine Le Pen,Abstention,0.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+136,Eric Zemmour,Emmanuel Macron,15.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+137,Eric Zemmour,Marine Le Pen,76.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+138,Eric Zemmour,Abstention,9.0,20220412_0413_elb,12 avril 2022,13 avril 2022,Elabe
+243,Jean-Luc Mélenchon,Emmanuel Macron,34.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+244,Jean-Luc Mélenchon,Marine Le Pen,21.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+245,Jean-Luc Mélenchon,Abstention,45.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+246,Yannick Jadot,Emmanuel Macron,62.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+247,Yannick Jadot,Marine Le Pen,5.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+248,Yannick Jadot,Abstention,33.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+249,Emmanuel Macron,Emmanuel Macron,97.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+250,Emmanuel Macron,Marine Le Pen,2.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+251,Emmanuel Macron,Abstention,1.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+252,Valérie Pécresse,Emmanuel Macron,43.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+253,Valérie Pécresse,Marine Le Pen,23.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+254,Valérie Pécresse,Abstention,34.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+255,Marine Le Pen,Emmanuel Macron,3.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+256,Marine Le Pen,Marine Le Pen,95.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+257,Marine Le Pen,Abstention,2.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+258,Eric Zemmour,Emmanuel Macron,8.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+259,Eric Zemmour,Marine Le Pen,82.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+260,Eric Zemmour,Abstention,10.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+261,Abstention,Emmanuel Macron,26.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+262,Abstention,Marine Le Pen,24.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+263,Abstention,Abstention,50.0,20220411_0414r_ifp,11 avril 2022,14 avril 2022,Ifop
+139,Jean-Luc Mélenchon,Emmanuel Macron,37.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+140,Jean-Luc Mélenchon,Marine Le Pen,18.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+141,Jean-Luc Mélenchon,Abstention,45.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+142,Yannick Jadot,Emmanuel Macron,59.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+143,Yannick Jadot,Marine Le Pen,7.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+144,Yannick Jadot,Abstention,34.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+145,Valérie Pécresse,Emmanuel Macron,47.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+146,Valérie Pécresse,Marine Le Pen,25.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+147,Valérie Pécresse,Abstention,28.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+151,Eric Zemmour,Emmanuel Macron,4.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+152,Eric Zemmour,Marine Le Pen,81.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+153,Eric Zemmour,Abstention,15.0,20220411_0413r_ips,11 avril 2022,13 avril 2022,Ipsos
+225,Jean-Luc Mélenchon,Emmanuel Macron,39.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+226,Jean-Luc Mélenchon,Marine Le Pen,20.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+227,Jean-Luc Mélenchon,Abstention,41.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+240,Yannick Jadot,Emmanuel Macron,39.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+241,Yannick Jadot,Marine Le Pen,18.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+242,Yannick Jadot,Abstention,43.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+228,Emmanuel Macron,Emmanuel Macron,98.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+229,Emmanuel Macron,Marine Le Pen,1.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+230,Emmanuel Macron,Abstention,1.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+231,Valérie Pécresse,Emmanuel Macron,43.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+232,Valérie Pécresse,Marine Le Pen,24.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+233,Valérie Pécresse,Abstention,33.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+234,Marine Le Pen,Emmanuel Macron,1.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+235,Marine Le Pen,Marine Le Pen,98.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+236,Marine Le Pen,Abstention,1.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+237,Eric Zemmour,Emmanuel Macron,4.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+238,Eric Zemmour,Marine Le Pen,85.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+239,Eric Zemmour,Abstention,11.0,20220410_0411r_ifp,10 avril 2022,11 avril 2022,Ifop
+1,Jean-Luc Mélenchon,Emmanuel Macron,34.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+2,Jean-Luc Mélenchon,Marine Le Pen,20.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+3,Jean-Luc Mélenchon,Abstention,46.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+6,Fabien Roussel,Emmanuel Macron,28.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+7,Fabien Roussel,Marine Le Pen,31.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+8,Fabien Roussel,Abstention,41.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+9,Anne Hidalgo,Emmanuel Macron,52.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+10,Anne Hidalgo,Marine Le Pen,12.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+11,Anne Hidalgo,Abstention,36.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+12,Yannick Jadot,Emmanuel Macron,54.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+13,Yannick Jadot,Marine Le Pen,11.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+14,Yannick Jadot,Abstention,35.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+15,Emmanuel Macron,Emmanuel Macron,96.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+16,Emmanuel Macron,Marine Le Pen,2.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+17,Emmanuel Macron,Abstention,2.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+18,Valérie Pécresse,Emmanuel Macron,46.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+19,Valérie Pécresse,Marine Le Pen,24.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+20,Valérie Pécresse,Abstention,30.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+30,Jean Lassalle,Emmanuel Macron,44.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+31,Jean Lassalle,Marine Le Pen,20.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+32,Jean Lassalle,Abstention,36.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+21,Nicolas Dupont-Aignan,Emmanuel Macron,26.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+22,Nicolas Dupont-Aignan,Marine Le Pen,56.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+23,Nicolas Dupont-Aignan,Abstention,18.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+24,Marine Le Pen,Emmanuel Macron,1.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+25,Marine Le Pen,Marine Le Pen,97.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+26,Marine Le Pen,Abstention,2.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+27,Eric Zemmour,Emmanuel Macron,8.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+28,Eric Zemmour,Marine Le Pen,82.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+29,Eric Zemmour,Abstention,10.0,20220410_0411_hi,10 avril 2022,11 avril 2022,Harris Interactive
+4,Jean-Luc Mélenchon,Emmanuel Macron,27.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+5,Jean-Luc Mélenchon,Marine Le Pen,21.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+33,Jean-Luc Mélenchon,Abstention,52.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+34,Yannick Jadot,Emmanuel Macron,59.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+35,Yannick Jadot,Marine Le Pen,8.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+36,Yannick Jadot,Abstention,33.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+37,Valérie Pécresse,Emmanuel Macron,43.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+38,Valérie Pécresse,Marine Le Pen,27.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+39,Valérie Pécresse,Abstention,30.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+40,Eric Zemmour,Emmanuel Macron,7.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+41,Eric Zemmour,Marine Le Pen,79.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+42,Eric Zemmour,Abstention,14.0,20220410_0410_ow,10 avril 2022,10 avril 2022,Opinion Way
+79,Jean-Luc Mélenchon,Emmanuel Macron,32.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+80,Jean-Luc Mélenchon,Marine Le Pen,22.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+81,Jean-Luc Mélenchon,Abstention,46.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+82,Emmanuel Macron,Emmanuel Macron,98.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+83,Emmanuel Macron,Marine Le Pen,1.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+84,Emmanuel Macron,Abstention,1.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+85,Valérie Pécresse,Emmanuel Macron,42.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+86,Valérie Pécresse,Marine Le Pen,16.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+87,Valérie Pécresse,Abstention,42.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+88,Marine Le Pen,Emmanuel Macron,0.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+89,Marine Le Pen,Marine Le Pen,97.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+90,Marine Le Pen,Abstention,3.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+91,Eric Zemmour,Emmanuel Macron,14.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+92,Eric Zemmour,Marine Le Pen,67.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+93,Eric Zemmour,Abstention,19.0,20220410_0410_odx,10 avril 2022,10 avril 2022,Odoxa
+94,Jean-Luc Mélenchon,Emmanuel Macron,34.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+95,Jean-Luc Mélenchon,Marine Le Pen,30.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+96,Jean-Luc Mélenchon,Abstention,36.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+103,Yannick Jadot,Emmanuel Macron,59.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+104,Yannick Jadot,Marine Le Pen,12.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+105,Yannick Jadot,Abstention,29.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+106,Emmanuel Macron,Emmanuel Macron,100.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+107,Emmanuel Macron,Marine Le Pen,0.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+108,Emmanuel Macron,Abstention,0.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+109,Valérie Pécresse,Emmanuel Macron,45.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+110,Valérie Pécresse,Marine Le Pen,28.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+111,Valérie Pécresse,Abstention,27.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+118,Marine Le Pen,Emmanuel Macron,1.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+119,Marine Le Pen,Marine Le Pen,98.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+120,Marine Le Pen,Abstention,1.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+121,Eric Zemmour,Emmanuel Macron,9.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+122,Eric Zemmour,Marine Le Pen,85.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+123,Eric Zemmour,Abstention,6.0,20220410_0410_ips,10 avril 2022,10 avril 2022,Ipsos
+43,Jean-Luc Mélenchon,Emmanuel Macron,33.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+44,Jean-Luc Mélenchon,Marine Le Pen,23.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+45,Jean-Luc Mélenchon,Abstention,44.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+47,Yannick Jadot,Emmanuel Macron,56.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+48,Yannick Jadot,Marine Le Pen,6.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+46,Yannick Jadot,Abstention,38.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+55,Emmanuel Macron,Emmanuel Macron,96.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+56,Emmanuel Macron,Marine Le Pen,1.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+57,Emmanuel Macron,Abstention,3.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+51,Valérie Pécresse,Emmanuel Macron,35.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+49,Valérie Pécresse,Marine Le Pen,35.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+50,Valérie Pécresse,Abstention,30.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+59,Marine Le Pen,Emmanuel Macron,1.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+58,Marine Le Pen,Marine Le Pen,99.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+60,Marine Le Pen,Abstention,0.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+52,Eric Zemmour,Emmanuel Macron,4.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+53,Eric Zemmour,Marine Le Pen,20.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+54,Eric Zemmour,Abstention,76.0,20220410_0410_ifp,10 avril 2022,10 avril 2022,Ifop
+61,Jean-Luc Mélenchon,Emmanuel Macron,35.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+62,Jean-Luc Mélenchon,Marine Le Pen,34.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+63,Jean-Luc Mélenchon,Abstention,31.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+67,Emmanuel Macron,Emmanuel Macron,98.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+68,Emmanuel Macron,Marine Le Pen,2.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+69,Emmanuel Macron,Abstention,0.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+70,Valérie Pécresse,Emmanuel Macron,44.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+71,Valérie Pécresse,Marine Le Pen,40.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+72,Valérie Pécresse,Abstention,16.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+73,Marine Le Pen,Emmanuel Macron,3.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+74,Marine Le Pen,Marine Le Pen,97.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+75,Marine Le Pen,Abstention,0.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+76,Eric Zemmour,Emmanuel Macron,9.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+78,Eric Zemmour,Marine Le Pen,86.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe
+77,Eric Zemmour,Abstention,6.0,20220410_0410_elb,10 avril 2022,10 avril 2022,Elabe

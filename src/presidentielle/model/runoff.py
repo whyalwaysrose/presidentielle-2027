@@ -178,28 +178,114 @@ def _predict(
     return to_a / (to_a + to_b)
 
 
-def build_runoff_model(data: RunoffData, cfg: ModelConfig, bloc_keys: list[str]) -> pm.Model:
+def _transfer_probs(positions, gamma, delta, abstain, bloc_a, bloc_b, rn_index):
+    """(K, 3) probabilities that each bloc's voters go to A, to B, or abstain.
+
+    The same arithmetic the aggregate predictor uses, exposed per bloc because
+    the 2022 measurements are per bloc: institutes asked Melenchon voters where
+    they were going, and that is a direct observation of this quantity rather
+    than of the aggregate it implies.
+    """
+    xa = positions[bloc_a]
+    xb = positions[bloc_b]
+    ua = -gamma * (positions - xa) ** 2 - delta * (1.0 if bloc_a == rn_index else 0.0)
+    ub = -gamma * (positions - xb) ** 2 - delta * (1.0 if bloc_b == rn_index else 0.0)
+    return pt.special.softmax(pt.stack([ua, ub, abstain], axis=1), axis=1)
+
+
+def build_runoff_model(
+    data: RunoffData,
+    cfg: ModelConfig,
+    bloc_keys: list[str],
+    transfers=None,
+) -> pm.Model:
+    """Fit the transfer model, optionally anchored on the 2022 measurements.
+
+    Two cycles, one structure. Bloc positions, the proximity weight and each
+    bloc's readiness to abstain are treated as properties of French politics
+    and shared. The front republicain is NOT: whether voters will still cross
+    the aisle to block the RN in 2027 as they did in 2022 is the open question,
+    so it gets one value per cycle and a prior linking them.
+    """
     rn_index = bloc_keys.index("rn")
+    centre_index = bloc_keys.index("centre")
     prior_x = np.array([PRIOR_POSITIONS[b] for b in bloc_keys])
 
-    with pm.Model(coords={"bloc": bloc_keys, "obs": data.labels}) as model:
+    coords = {"bloc": bloc_keys, "obs": data.labels}
+    if transfers is not None:
+        coords["transfert"] = [
+            f"{o.source_candidate} ({o.institut})" for o in transfers
+        ]
+
+    with pm.Model(coords=coords) as model:
         # Positions are anchored by an informative prior on the known ordering
         # and allowed to move; without an anchor the axis can reflect and every
         # distance is unchanged.
-        positions = pm.Normal("positions", mu=prior_x, sigma=0.25, dims="bloc")
+        # Tighter than the 0.25 first used. Loose positions and delta are
+        # partly confounded - moving the RN further right acts exactly like an
+        # RN penalty - and at 0.25 the positions simply absorbed it.
+        positions = pm.Normal("positions", mu=prior_x, sigma=0.12, dims="bloc")
         gamma = pm.HalfNormal("gamma", sigma=3.0)
-        # The front republicain. Positive means transferring to an RN finalist
-        # is harder than distance alone explains.
-        delta = pm.HalfNormal("delta_front_republicain", sigma=cfg.second_tour.rn_transfer_extra_sd * 20)
         abstain = pm.Normal("abstain", mu=0.0, sigma=1.0, dims="bloc")
 
+        # --- the front republicain --------------------------------------
+        # One value, fitted on both cycles at once: the 43 measured 2022
+        # transfers and the 54 hypothetical 2027 matchups.
+        #
+        # MEASURED, then restructured. This was first written as a per-cycle
+        # delta with a multiplicative drift between them, to carry the "will
+        # the front republicain still hold in 2027" question. That does not
+        # work: delta came out at 0.064, essentially zero, because the
+        # quadratic distance term already explains 2022's transfers on its own
+        # and delta is absorbed into the bloc positions. A drift multiplying
+        # zero expresses nothing.
+        #
+        # So the 2027 uncertainty is applied at SIMULATION time instead (see
+        # simulate.py), where the 2027 runoff polls cannot fit it away. Here
+        # delta only has to capture the RN-specific reluctance that distance
+        # does not.
+        delta = pm.HalfNormal(
+            "delta_front_republicain", sigma=cfg.second_tour.rn_transfer_extra_sd * 20
+        )
+        delta_2022 = delta
+
+        # --- 2022 measured transfers ------------------------------------
+        if transfers is not None and len(transfers):
+            t_bloc = np.array(
+                [bloc_keys.index(o.bloc) for o in transfers], dtype="int64"
+            )
+            t_a = np.array([o.to_a for o in transfers], dtype="float64")
+            t_b = np.array([o.to_b for o in transfers], dtype="float64")
+
+            probs_2022 = _transfer_probs(
+                positions, gamma, delta_2022, abstain, centre_index, rn_index, rn_index
+            )
+            sigma_t = pm.HalfNormal("sigma_transfert", sigma=0.08)
+            pm.Normal(
+                "obs_transferts_2022_a",
+                mu=probs_2022[t_bloc, 0],
+                sigma=sigma_t,
+                observed=t_a,
+                dims="transfert",
+            )
+            pm.Normal(
+                "obs_transferts_2022_b",
+                mu=probs_2022[t_bloc, 1],
+                sigma=sigma_t,
+                observed=t_b,
+                dims="transfert",
+            )
+
+        # --- 2027 hypothetical matchups ---------------------------------
         mu = _predict(
             positions, gamma, delta, abstain,
             data.pair_bloc, data.source_shares, data.finalist_own, rn_index,
         )
         mu = pm.Deterministic("mu", pt.clip(mu, 1e-4, 1 - 1e-4), dims="obs")
 
-        sigma_excess = pm.HalfNormal("sigma_excess", sigma=cfg.election_day_error.r2_margin_error_sd)
+        sigma_excess = pm.HalfNormal(
+            "sigma_excess", sigma=cfg.election_day_error.r2_margin_error_sd
+        )
         sd = pt.sqrt(mu * (1 - mu) / data.n + sigma_excess**2)
         pm.Normal("obs_runoff", mu=mu, sigma=sd, observed=data.y, dims="obs")
 
