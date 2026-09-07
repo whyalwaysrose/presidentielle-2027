@@ -66,12 +66,18 @@ jobs:
             git push
           fi
 
+  # Deploys the forecast this run just committed. pages.yml cannot do it: a
+  # commit made with GITHUB_TOKEN does not trigger other workflows. Shares the
+  # `pages` concurrency group with that file so the two never collide.
   pages:
     needs: forecast
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}

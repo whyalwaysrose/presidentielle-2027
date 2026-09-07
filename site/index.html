@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Présidentielle 2027 — prévision bayésienne</title>
 <meta name="description" content="Prévision bayésienne de l'élection présidentielle française de 2027, à partir des sondages déposés auprès de la Commission des sondages.">
-<link rel="stylesheet" href="css/style.css?v=6">
+<link rel="canonical" href="https://whyalwaysrose.github.io/presidentielle-2027/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://whyalwaysrose.github.io/presidentielle-2027/">
+<meta property="og:title" content="Présidentielle 2027 — prévision bayésienne">
+<meta property="og:description" content="Modèle bayésien de l'élection présidentielle de 2027 : premier tour, qualification, seconds tours possibles. À partir des sondages déposés auprès de la Commission des sondages. Site personnel, non officiel.">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
+<meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
+<link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 
@@ -174,8 +184,22 @@
   </div>
 </footer>
 
-<script src="js/i18n.js?v=6"></script>
-<script src="js/charts.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<!-- Visit counting, hosted page only.
+     Cookieless and aggregate: totals, countries and referrers, nothing that
+     identifies a person, and no cross-site tracking. Because it sets no
+     cookie and stores no personal data it needs no consent banner, which is
+     the point - a page about a French election should not open with one.
+     count.js ignores localhost, so local development never reaches the stats.
+
+     This page is a single document with no routing, so the automatic on-load
+     count is correct and `no_onload` is NOT wanted here (unlike the
+     naturalisation site, which is a single-page app and counts screens
+     itself). -->
+<script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<script src="js/i18n.js?v=7"></script>
+<script src="js/charts.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
 </body>
 </html>

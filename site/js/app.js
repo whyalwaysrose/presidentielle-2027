@@ -16,7 +16,7 @@
   'use strict';
 
   var SCHEMA_VERSION = 1;
-  var BUILD = '2026-09-07.6';
+  var BUILD = '2026-09-07.7';
 
   var state = { data: null };
 
@@ -390,6 +390,28 @@
     );
   }
 
+  /* An aggregate count of deliberate language switches, so the one thing
+     worth knowing about a bilingual page - whether the English half is read
+     at all, and so whether it is worth maintaining - is answerable. It fires
+     only on a real click, never on the default, so it measures a choice
+     rather than a page load.
+
+     Everything is guarded: if the counter is blocked, absent, or throws, the
+     toggle itself must still work. Analytics is never allowed to be on the
+     critical path of the page functioning. */
+  function countLanguageSwitch(lang) {
+    try {
+      if (!window.goatcounter || typeof window.goatcounter.count !== 'function') return;
+      window.goatcounter.count({
+        path: 'lang-switch-' + lang,
+        title: 'Language switched to ' + lang,
+        event: true
+      });
+    } catch (e) {
+      /* never let counting break the toggle */
+    }
+  }
+
   /* --- boot ------------------------------------------------------------- */
   function boot() {
     I18n.apply();
@@ -398,7 +420,9 @@
     var btns = document.querySelectorAll('.lang-btn');
     for (var i = 0; i < btns.length; i++) {
       btns[i].addEventListener('click', function () {
-        I18n.set(this.getAttribute('data-lang'));
+        var lang = this.getAttribute('data-lang');
+        I18n.set(lang);
+        countLanguageSwitch(lang);
       });
     }
     I18n.onChange(renderAll);

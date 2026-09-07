@@ -4,6 +4,8 @@ A hierarchical Bayesian forecast of the French presidential election of
 **18 April / 2 May 2027**, built from the polls filed with the Commission des
 sondages. Static site, no backend, no build step.
 
+**Live: <https://whyalwaysrose.github.io/presidentielle-2027/>**
+
 *Le site est en français par défaut, avec un basculement FR/EN.*
 
 ---
@@ -152,5 +154,12 @@ uncertainty is large — and the page says so in both languages.
 
 A personal project, unaffiliated with any polling institute, party or news
 organisation.
+
+**Privacy.** The hosted page counts visits with
+[GoatCounter](https://www.goatcounter.com/): cookieless, aggregate, no personal
+data and no cross-site tracking. It stores nothing that identifies a reader,
+which is why the site has no consent banner. Nothing is collected anywhere
+else — the page has no backend, and the language preference is kept in the
+reader's own browser.
 
 MIT licensed.
