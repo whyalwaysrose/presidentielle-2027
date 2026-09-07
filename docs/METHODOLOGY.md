@@ -177,8 +177,33 @@ half-life reports 78/20.
 
 This is a **proxy and not a measurement of intent**. An institute testing a
 candidate is saying the scenario is considered live, not that its probability
-equals the testing frequency. The site says so where the numbers appear, and
-`field.overrides` exists for hard facts (a withdrawal, a validated candidacy).
+equals the testing frequency.
+
+### Where a fact exists, the fact wins
+
+`candidats.csv` records declarations and withdrawals, and those override the
+proxy. It matters most in the single most consequential place on this ballot:
+**Bardella withdrew on 2026-07-07**, the day Le Pen's ineligibility was cut to
+15 months. On testing frequency alone the model gave him a 20% chance of
+standing and about 14% of the presidency, after he had stood down.
+
+A community-maintained field is trusted here because a second and completely
+independent signal agrees with it: institutes stopped testing Bardella from that
+same month. The test suite asserts the agreement and fails if it breaks.
+
+Withdrawal is decisive. Declaring is only a floor — a declared candidate still
+needs 500 validated *parrainages*, and Darmanin declared on 2026-08-17 and
+withdrew eight days later. Precedence runs: testing frequency, then recorded
+facts, then the manual `field.overrides` pin.
+
+### Institutes are not weighted by accuracy
+
+The sibling US model scales each poll's noise by its pollster's published
+record. Doing the same here was measured and rejected: **87% of the 2022 miss
+was common to every institute**, and once the shared miss is removed the
+spread between them is indistinguishable from chance (permutation p = 0.85, on
+eleven institutes and four major candidates). `scripts/fit_pollster_quality.py`
+reproduces it.
 
 ## 4. The runoff
 

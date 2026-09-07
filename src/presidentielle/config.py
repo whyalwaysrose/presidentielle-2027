@@ -88,6 +88,7 @@ class FieldConfig:
     source: str
     half_life_days: float
     shrinkage_pseudocounts: float
+    declared_floor: float = 0.85
     overrides: dict = field(default_factory=dict)
 
 

@@ -264,8 +264,19 @@ field:
   # Shrink towards even odds so a thin recent window cannot produce a
   # near-certainty. Pseudo-counts added to each option in an arbitration.
   shrinkage_pseudocounts: 1.0
-  # Presence probabilities the data cannot know, keyed by candidate id. Use
-  # only for facts, with the source in the comment - never to express a hunch.
+  # Declared candidacies and withdrawals from candidats.csv are applied
+  # automatically and beat the frequency proxy - see
+  # src/presidentielle/data/candidacies.py. This matters: Bardella withdrew on
+  # 2026-07-07, the day Le Pen's ban was cut, and the frequency estimate alone
+  # still gave him a 20% chance of standing.
+  #
+  # A withdrawal is decisive. A declaration only sets this floor, because a
+  # declared candidate still needs 500 parrainages and can change their mind -
+  # Darmanin declared on 2026-08-17 and withdrew eight days later.
+  declared_floor: 0.85
+  # Presence probabilities the data cannot know, keyed by candidate id. These
+  # win over everything, including the declarations above. Use only for facts,
+  # with the source in the comment - never to express a hunch.
   overrides: {}
     # Example, after the Conseil constitutionnel publishes the parrainages:
     # JB: 0.0   # withdrew in favour of Le Pen, [source]

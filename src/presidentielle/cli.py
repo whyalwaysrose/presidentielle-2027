@@ -43,10 +43,41 @@ def _load(cfg, roster, *, force: bool = False):
     return hyps, weighted, skipped
 
 
+def _candidacy_facts(cfg, as_of, *, quiet: bool = False):
+    """Ballot probabilities implied by declared candidacies and withdrawals.
+
+    Returns (overrides, notes). Missing or unreadable data is not fatal - the
+    forecast falls back to the testing-frequency proxy - but it IS reported,
+    because a silently absent withdrawal would leave someone on the ballot who
+    has stood down.
+    """
+    from .data.candidacies import hard_overrides, load
+
+    try:
+        candidacies = load()
+    except Exception as exc:  # noqa: BLE001 - fall back, but say so
+        log.warning("no candidacy data (%s); using testing frequency alone", exc)
+        return {}, []
+    facts, notes = hard_overrides(
+        candidacies, as_of=as_of, declared_floor=cfg.field_.declared_floor
+    )
+    if notes and not quiet:
+        for line in notes:
+            log.info("candidacy: %s", line)
+    return facts, notes
+
+
 def cmd_fetch(args) -> int:
     cfg = load_model_config()
     roster = load_roster()
     hyps, weighted, skipped = _load(cfg, roster, force=True)
+    try:
+        from .data.candidacies import fetch as fetch_candidacies
+
+        fetch_candidacies(force=True)
+        print("refreshed candidats.csv (declarations and withdrawals)")
+    except Exception as exc:  # noqa: BLE001
+        print(f"warning: could not refresh candidats.csv ({exc})")
     s = surveys.summarise(weighted)
     print(f"{s['surveys']} surveys, {s['hypotheses']} hypotheses "
           f"({s['hypotheses_tour1']} first round, {s['hypotheses_tour2']} second)")
@@ -72,7 +103,15 @@ def cmd_audit(args) -> int:
     print(f"instituts: {', '.join(s['instituts'])}")
     print()
 
-    ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
+    facts, fact_notes = _candidacy_facts(cfg, as_of, quiet=True)
+    ballot = build_ballot_model(
+        hyps, cfg=cfg, roster=roster, as_of=as_of, facts=facts
+    )
+    if fact_notes:
+        print("Declared candidacies and withdrawals (these beat the frequency proxy):")
+        for line in fact_notes:
+            print(f"  {line}")
+        print()
     print("Ballot arbitrations (mutually exclusive candidacies):")
     for a in ballot.arbitrations:
         opts = ", ".join(
@@ -206,7 +245,16 @@ def cmd_backtest(args) -> int:
     strength_draws = post["strength_election"].stack(d=("chain", "draw")).values.T
     lambda_draws = post["lambda_bloc"].stack(d=("chain", "draw")).values.T
 
-    ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
+    # NO LOOKAHEAD here either: only declarations and withdrawals dated on or
+    # before the cutoff are applied. The 2022 roster uses its own ids, so in
+    # practice nothing matches and the backtest runs on the frequency proxy
+    # alone - which is honest, since no equivalent candidacy feed exists for
+    # 2022.
+    bt_facts, _ = _candidacy_facts(cfg, as_of, quiet=True)
+    bt_facts = {k: v for k, v in bt_facts.items() if k in set(data.candidate_ids)}
+    ballot = build_ballot_model(
+        hyps, cfg=cfg, roster=roster, as_of=as_of, facts=bt_facts
+    )
     reference = _reference_field(ballot, data.candidate_ids)
     ref_shares = _reference_shares(
         reference, ballot, data, strength_draws, lambda_draws
@@ -344,7 +392,10 @@ def cmd_run(args) -> int:
 
     # Runoff stage, on posterior-mean first-round shares under the reference
     # ballot (see runoff.py on why two stages is acceptable here).
-    ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
+    facts, fact_notes = _candidacy_facts(cfg, as_of)
+    ballot = build_ballot_model(
+        hyps, cfg=cfg, roster=roster, as_of=as_of, facts=facts
+    )
     reference = _reference_field(ballot, data.candidate_ids)
     ref_shares = _reference_shares(
         reference, ballot, data, strength_draws, lambda_draws
@@ -446,6 +497,7 @@ def cmd_run(args) -> int:
         },
         "delta_front_republicain": round(float(rp["delta_front_republicain"].mean()), 3),
         "n_transferts_2022": 0 if transfers is None else len(transfers),
+        "candidacy_facts": fact_notes,
         "runoff_fit": runoff_fit,
         "sigma_excess": round(float(post["sigma_excess"].mean()), 4),
         # Posterior walk scales, back on a per-day basis so they can be

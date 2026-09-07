@@ -31,6 +31,14 @@ RN will nominate one of them. Exactly one option is drawn, or none.
 
 *Independent candidacies* are everyone else. Philippe and Attal appear together
 17 times, so they are not alternatives - each stands or does not, on its own.
+
+FACTS BEAT THE PROXY
+--------------------
+Where a candidate has actually declared or actually withdrawn, that is not a
+scenario institutes find interesting - it is a fact, and it overrides the
+frequency estimate. See :mod:`presidentielle.data.candidacies`. Withdrawal is
+decisive; declaring only sets a floor, because a declared candidate still needs
+500 parrainages and can still change their mind.
 """
 
 from __future__ import annotations
@@ -98,6 +106,7 @@ def build_ballot_model(
     cfg: ModelConfig,
     roster: Roster,
     as_of: dt.date,
+    facts: dict[str, float] | None = None,
 ) -> BallotModel:
     """Derive arbitrations and independent candidacies from testing behaviour."""
     first = [h for h in hypotheses if h.tour == 1]
@@ -174,30 +183,53 @@ def build_ballot_model(
         p = freq[c] / total_w if total_w else 0.0
         independent[c] = float(np.clip(p, 0.0, 1.0))
 
-    overrides = cfg.field_.overrides or {}
-    for cid, value in overrides.items():
+    # Order of precedence, weakest first:
+    #   1. testing frequency        (a proxy for who is expected to stand)
+    #   2. declared / withdrawn     (facts, from candidats.csv)
+    #   3. config field.overrides   (a deliberate human pin, so it wins)
+    #
+    # A withdrawal SETS the probability to zero. A declaration only raises it to
+    # a floor, and never lowers it: the frequency estimate may already be higher
+    # for someone institutes test constantly, and a declaration is not stronger
+    # evidence than that.
+    adjustments: dict[str, tuple[str, float]] = {}
+    for cid, value in (facts or {}).items():
+        adjustments[cid] = ("set" if value <= 0.0 else "floor", float(value))
+    for cid, value in (cfg.field_.overrides or {}).items():
+        adjustments[cid] = ("set", float(value))
+
+    for cid, (mode, value) in adjustments.items():
         if cid in independent:
-            independent[cid] = float(value)
-        else:
-            for i, arb in enumerate(arbitrations):
-                if cid in arb.options:
-                    probs = list(arb.probabilities)
-                    j = arb.options.index(cid)
-                    probs[j] = float(value)
-                    # Renormalise the rest of the arbitration around the pinned
-                    # value so the options still form a distribution.
-                    rest = 1.0 - float(value)
-                    others = sum(p for m, p in enumerate(probs) if m != j) + arb.p_none
-                    scale = (rest / others) if others > 0 else 0.0
-                    probs = [p if m == j else p * scale for m, p in enumerate(probs)]
-                    arbitrations[i] = Arbitration(
-                        bloc=arb.bloc,
-                        options=arb.options,
-                        probabilities=probs,
-                        p_none=arb.p_none * scale,
-                    )
-                    break
-        log.info("field override applied: %s -> %.3f", cid, value)
+            current = independent[cid]
+            independent[cid] = value if mode == "set" else max(current, value)
+            log.info(
+                "ballot %s: %s %s -> %.3f (was %.3f)",
+                cid, mode, value, independent[cid], current,
+            )
+            continue
+        for i, arb in enumerate(arbitrations):
+            if cid not in arb.options:
+                continue
+            probs = list(arb.probabilities)
+            j = arb.options.index(cid)
+            target = value if mode == "set" else max(probs[j], value)
+            if target == probs[j]:
+                break
+            probs[j] = target
+            # Renormalise the rest of the arbitration around the pinned value
+            # so the options still form a distribution.
+            rest = 1.0 - target
+            others = sum(p for m, p in enumerate(probs) if m != j) + arb.p_none
+            scale = (rest / others) if others > 0 else 0.0
+            probs = [p if m == j else p * scale for m, p in enumerate(probs)]
+            arbitrations[i] = Arbitration(
+                bloc=arb.bloc,
+                options=arb.options,
+                probabilities=probs,
+                p_none=arb.p_none * scale,
+            )
+            log.info("ballot %s: %s %.3f within the %s arbitration", cid, mode, target, arb.bloc)
+            break
 
     for arb in arbitrations:
         log.info(

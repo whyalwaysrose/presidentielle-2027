@@ -307,6 +307,55 @@ as knowledge about May 2027. Sized so the one observed cycle transition (the
 RN's runoff share moving 7.3 points from 2017 to 2022) is about 1.8 sigma;
 `scripts/check_runoff_sensitivity.py` translates it into points of runoff share.
 
+## Facts beat the proxy, and the two agree
+
+Ballot probabilities come from testing frequency, which is a proxy. Where
+`candidats.csv` records an actual declaration or withdrawal, that fact wins -
+`src/presidentielle/data/candidacies.py`.
+
+This is not a marginal correction. **Bardella withdrew on 2026-07-07**, the day
+Le Pen's ineligibility was cut. On frequency alone the model gave him a 20%
+chance of being on the ballot and roughly 14% of the presidency, after he had
+stood down.
+
+The reason a community-maintained CSV field is trusted here is that a second,
+independent signal agrees with it: institutes stopped testing Bardella entirely
+from July 2026, the same month. `tests/test_candidacies.py` asserts that
+agreement, and will fail if the two ever diverge - which is the point at which
+the CSV should stop being trusted.
+
+Precedence, weakest to strongest: testing frequency, then declarations and
+withdrawals, then `field.overrides` in the config. A withdrawal SETS the
+probability to zero; a declaration only sets a FLOOR, because a declared
+candidate still needs 500 parrainages and can change their mind - Darmanin
+declared on 2026-08-17 and withdrew eight days later.
+
+## Measured, then rejected
+
+Keep these unless new evidence overturns them. Each cost real time to establish
+and each has a script that reproduces it.
+
+- **Weighting institutes by accuracy** (`scripts/fit_pollster_quality.py`).
+  Raw 2022 accuracy looks like it discriminates: RMS log error ranges from
+  0.137 (Harris) to 0.280 (Atlasintel), a factor of two. It does not.
+  **87% of the 2022 miss was common to every institute** - all of them missed
+  Melenchon low and Pecresse high. Strip the per-candidate mean and the spread
+  between institutes is indistinguishable from chance, permutation **p = 0.85**.
+  Eleven institutes times four major candidates means a house's record is four
+  numbers that are not independent draws but one correlated story about one
+  campaign. The only institute that stands apart, Atlasintel, is not in the
+  2027 field. Weighting on this would rank institutes by fit to 2022 and call
+  it quality.
+
+  The negative result is informative about structure: since the miss is
+  per-candidate rather than per-institute, election-day error belongs at the
+  candidate level, which is where the model puts it.
+
+- **A fatter-tailed election-day error.** The 30-day backtest has calibrated
+  50% intervals and thin 90% ones, so the tails are probably too light. Twelve
+  candidates in one cycle, whose misses are one correlated story about *vote
+  utile*, cannot support fitting a tail parameter. See the backtest section.
+
 ## Known rough edges
 - **The runoff is a two-stage fit.** Justified in `runoff.py`, but a joint fit
   would be cleaner.

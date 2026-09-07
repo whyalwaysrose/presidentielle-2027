@@ -115,7 +115,8 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
 3. **House effects** per institute × bloc, sum-to-zero across institutes.
 4. **One survey is one sample**: each hypothesis's effective sample is scaled
    by `m^(−0.65)`. On the current file that is 311,461 raw → 117,529 effective.
-5. **Ballot simulation** from decayed testing frequency.
+5. **Ballot simulation** from decayed testing frequency, overridden by
+   recorded declarations and withdrawals where they exist.
 6. **Runoff** by quadratic-proximity transfers, anchored on **43 measured 2022
    vote transfers** as well as the 54 hypothetical 2027 matchups, and checked
    against the matchups it was fitted to.
@@ -152,6 +153,9 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
   apparent authority than its inputs support.
 * **De Villepin's bloc is the weakest roster call** — he polls as an
   anti-system figure drawing from both centre and left.
+* **Institutes are not weighted by accuracy.** Measured and rejected: 87% of
+  the 2022 miss was common to every institute, and the remaining spread is
+  indistinguishable from chance (p = 0.85). `scripts/fit_pollster_quality.py`.
 
 ---
 

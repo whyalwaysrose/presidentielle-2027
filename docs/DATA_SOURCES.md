@@ -28,6 +28,13 @@ record in the compiled file carries the filename of its notice, and the site
 surfaces it, so any individual figure can be traced back to the regulator's own
 document rather than to a newspaper's summary of it.
 
+The same repository's **`candidats.csv`** records declared candidacies and
+withdrawals. These are treated as facts that override the testing-frequency
+proxy — see `src/presidentielle/data/candidacies.py`. It is community
+maintained, so it is trusted only because the polling record independently
+corroborates its most consequential entry: Bardella's withdrawal on 2026-07-07
+coincides exactly with institutes ceasing to test him.
+
 This project is affiliated with neither, and says so on the page.
 
 **Why not nsppolls.** <https://github.com/nsppolls/nsppolls> was the
@@ -96,10 +103,16 @@ groups is an assumption. How strong it is inside each group is estimated from
 the data, not assumed.
 
 **Ballot probabilities.** Derived from how often institutes test each
-candidate, with exponential decay. This is reproducible and updates itself, but
-it is a **proxy**: an institute testing Bardella is telling you the scenario is
-considered live, not that it has probability equal to its testing frequency.
-The site states this where the numbers appear.
+candidate, with exponential decay, *except* where a declaration or withdrawal
+is recorded — those are facts and take precedence. The frequency part remains a
+**proxy**: an institute testing a candidate says the scenario is considered
+live, not that its probability equals the testing frequency. The site states
+this where the numbers appear.
+
+**The declared-candidacy floor** (0.85) is mine. Withdrawal is treated as
+decisive, which is close to a fact; the floor for a declaration is a judgement
+about how much a declaration is worth given that *parrainages* still have to be
+collected.
 
 **The `front républicain` in 2027.** The transfer structure is now fitted on
 the 2022 *measurements* as well as the 2027 hypotheticals, so it is no longer
