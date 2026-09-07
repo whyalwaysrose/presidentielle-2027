@@ -59,6 +59,7 @@ python -m venv .venv
 presidentielle fetch      # refresh the cached poll file
 presidentielle audit      # what the data holds, and what the roster rejected
 presidentielle calibrate  # fit the election-day error against the 2022 cycle
+presidentielle backtest --as-of 2021-09-01   # score the model on 2022
 presidentielle run        # fit, simulate, write site/data/forecast.json
 ```
 
@@ -135,7 +136,10 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
   same-bloc pairs above the noise floor — and the survey-weight exponent would
   need the same institute pricing one field twice on independent samples. Both
   say so in the config.
-* **No backtest** against 2022 or 2017 yet.
+* **The backtest's coverage check is partly circular.** Both parameters that
+  set interval width are fitted on the 2022 cycle, which is the cycle the
+  backtest scores. Its point predictions and structural results are clean; its
+  coverage numbers are not an independent validation.
 * **The `front républicain` term is the largest vulnerability**, and it is
   substantive rather than technical. It is estimated from 2026 polls about a
   2027 runoff, and voters' willingness to block the RN is exactly the quantity

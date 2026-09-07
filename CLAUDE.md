@@ -128,6 +128,79 @@ unchanged. When testing a front-end fix, load `index.html?bust=<something>` or
 hard-reload; when a deployed change appears not to have landed, check
 `Array.from(document.scripts).map(s => s.src)` before touching the JS again.
 
+## The backtest is what catches overconfidence
+
+`presidentielle backtest --as-of DATE` reruns the whole pipeline on the 2022
+cycle using only what existed on that date, and scores it against the
+proclaimed result.
+
+It found the thing nothing else would have. At 221 days out - the horizon the
+live forecast sits at - the model put the right pair in the runoff and had a
+median absolute error of 2.85 points, but its **90% intervals covered 67% of
+outcomes and its 50% intervals covered 25%**. The point predictions were fine
+and the uncertainty was a fiction.
+
+The cause was the walk scale being fitted at 7-60 day gaps and applied over 221
+days (see below). After the horizon-matched refit:
+
+| | 221d before -> after | 30d before -> after |
+|---|---|---|
+| 90% coverage | 67% -> **83%** | 67% -> **75%** |
+| 50% coverage | 25% -> **42%** | 50% -> 50% |
+| MAE (points) | 2.85 -> 2.82 | 2.80 -> 2.71 |
+
+Coverage improved at both horizons while point accuracy held, which is what a
+fix to an uncertainty parameter should look like. Re-run the backtest after
+touching anything that sets interval width, and treat coverage far below
+nominal as a bug rather than as noise. Scores live in `outputs/backtests/`.
+
+**Do not tune the tails on this.** The residual gap is concentrated at 30 days,
+where the 50% intervals are exactly right and the 90% ones are not - thin tails,
+from a final month in which Melenchon gained ten points and Pecresse lost six.
+Twelve candidates in one cycle, whose misses are one correlated story about
+*vote utile*, cannot support fitting a tail parameter. Fitting one would fit the
+2022 campaign, not French elections.
+
+**No lookahead.** Polls are filtered by fieldwork end date, the 2022 measured
+transfers are excluded (they were published during the April campaign), and the
+2022 roster is separate because a candidate's bloc can differ between cycles -
+Ciotti stood for LR in 2022 and leads the RN-allied UDR in 2027.
+
+**The one leak that cannot be closed:** the walk scale and the election-day
+error are both fitted on the 2022 cycle, so coverage measured on 2022 is partly
+circular. With one cycle of French polling there is no way around it. The
+backtest says so in its own output, and the non-circular parts - point
+predictions, ballot simulation, which pair reaches the runoff - are what it can
+genuinely validate.
+
+## The walk is not a random walk, and the horizon matters
+
+A Gaussian random walk implies movement scales as sqrt(time), so sigma/day must
+be the same at every gap length. Measured on 2022, excluding rolling polls:
+
+| gap (days) | sigma/day | implied over 221 days |
+|---|---|---|
+| 7-21 | 0.0157 | 0.234 |
+| 22-45 | 0.0307 | 0.457 |
+| 46-90 | 0.0290 | 0.431 |
+| 91-150 | 0.0261 | 0.388 |
+| **151-260** | **0.0222** | **0.329** |
+
+Short gaps understate because an institute reuses panels and methods, so two
+readings a fortnight apart are more alike than two independent draws on the
+same opinion. Long gaps come back down: mean reversion.
+
+The fit is therefore **horizon-matched** to the 151-260 band, the distance from
+the last poll to election day. Same principle as the election-day error, fitted
+on final polls because that is where it is applied. If the forecast horizon
+ever changes materially, change the band with it.
+
+This also overturned a judgement made earlier in the project. A 0.020 scale was
+once rejected because it produced a 90% interval of [14.6%, 57.0%] for Le Pen,
+which "looked absurd". The backtest says the aesthetic judgement was wrong: at
+the narrower scale the model covered 67% of outcomes where it claimed 90%. 2022
+really did move that much - Melenchon 12% to 22%, Hidalgo 6.5% to 1.75%.
+
 ## The walk absorbs observation noise unless you pin it
 
 Worth reading before touching anything about uncertainty, because the first

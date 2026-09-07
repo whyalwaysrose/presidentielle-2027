@@ -293,7 +293,75 @@ First-round intervals on the site are **conditional on the candidate standing**.
 An unconditional interval would fold in every world where they are not on the
 ballot and report a 5th percentile of zero for half the field.
 
-## 6. What is not done
+## 6. Backtest
+
+`presidentielle backtest --as-of DATE` reruns the entire pipeline on the 2022
+cycle from only what existed on that date, and scores it on the Ministry's
+proclaimed result. It is the only end-to-end check that the nested logit, the
+ballot simulation and the runoff work *together*.
+
+Nothing from after the cutoff is used: polls are filtered by fieldwork end
+date, and the 2022 measured transfers are excluded because they were published
+during the April campaign. The 2022 roster is separate, since a candidate's
+bloc can differ between cycles.
+
+### What it found, and what changed because of it
+
+Two cutoffs, both scored on the proclaimed result. "before" is the walk scale
+fitted on 7-60 day gaps; "after" is the horizon-matched refit in §2.1.1.
+
+| | 221 days out | | 30 days out | |
+|---|---|---|---|---|
+| | before | after | before | after |
+| median absolute error | 2.85 pts | 2.82 pts | 2.80 pts | 2.71 pts |
+| **90% interval coverage** | 67% | **83%** | 67% | **75%** |
+| **50% interval coverage** | 25% | **42%** | 50% | 50% |
+| model's own top two | correct | correct | correct | correct |
+| P(Macron reaches runoff) | 89% | 82% | 100% | 99% |
+| P(Le Pen reaches runoff) | 87% | 80% | 75% | 75% |
+| P(Macron elected) | 69% | 60% | 93% | 92% |
+
+The structure was never the problem: at both horizons the model put the right
+pair in the runoff and the right man in the Elysee, with a median error under
+three points. The **uncertainty** was the problem, and the horizon-matched
+refit is what fixed most of it — coverage improved at both cutoffs while the
+point predictions barely moved, which is what a correction to an uncertainty
+parameter should look like rather than a fudge to the central estimate.
+
+Scores are archived in `outputs/backtests/`.
+
+### What is still wrong, and why it is not being tuned away
+
+Coverage is still short of nominal, and the 30-day case shows where. There the
+50% intervals are exactly right while the 90% intervals cover 75%: the middle
+of the distribution is calibrated and the **tails are too thin**. That is not
+about the walk, which contributes almost nothing over a month.
+
+It is the final month of 2022 being genuinely extraordinary — Melenchon gained
+about ten points, Pecresse lost six, Zemmour five, as the left consolidated
+behind the one candidate who could reach the runoff and the right fragmented.
+A Gaussian election-day error cannot cover a ten-point miss.
+
+The obvious response is a fatter-tailed error, and it is deliberately **not**
+being made. There are twelve candidates in one cycle here; four of them missing
+their 90% interval is the entire evidence base, and the misses are not
+independent draws but one correlated story about *vote utile*. Fitting a tail
+parameter to that would be fitting the model to the 2022 campaign rather than to
+French elections. The honest position is that the tails are probably too thin,
+that one cycle cannot say by how much, and that the forecast's own page should
+not claim more precision than that supports.
+
+### What it cannot tell you
+
+Both parameters that set interval width — the walk scale and the election-day
+error — are themselves fitted on the 2022 cycle, so coverage measured on 2022
+is partly circular. There is one cycle of French polling available and no way
+around this. What is *not* circular, and is what the backtest genuinely
+validates: the point predictions, the ballot simulation on a field that was
+still unsettled (Zemmour had not declared in September 2021), and which pair
+the model puts into the runoff.
+
+## 7. What is not done
 
 * **`bloc_error_corr` is not fitted and cannot be** from 2022: the field
   offers only two same-bloc pairs above the 2% noise floor. Kept at 0.30, down

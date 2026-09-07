@@ -1,0 +1,73 @@
+# Roster for the 2022 cycle, used ONLY by `presidentielle backtest`.
+#
+# Separate from candidats_2027.yaml on purpose. The same person can belong in a
+# different nest in a different cycle: Eric Ciotti stood for Les Republicains
+# in 2022 and sits with the droite here, whereas in 2027 he leads the UDR in
+# alliance with the RN and sits with the national right. Merging the two files
+# would force one of those to be wrong.
+#
+# Bloc DEFINITIONS are not repeated here - they are loaded from
+# candidats_2027.yaml so there is one source of truth for the nest structure
+# and its colours. This file supplies only the mapping from 2022 candidates to
+# those blocs.
+#
+# Ids are local to this file; nsppolls identifies candidates by name, so `nom`
+# is the join key here rather than display-only. It must match the name string
+# in the archive exactly, accents included.
+#
+# Coverage is deliberately complete: every candidate the 2021-22 archive names
+# appears, down to those tested once, because the roster FAILS CLOSED and a
+# missing name silently costs a whole hypothesis. The one thing not covered is
+# the archive's 33 records with a null candidate name (party "ext. gauche"),
+# which cannot be resolved to a person and correctly cause those hypotheses to
+# be skipped.
+
+candidats:
+  # --- actually on the 2022 ballot -------------------------------------
+  EM:    { nom: "Emmanuel Macron",         parti: "LREM",                     bloc: centre }
+  MLP:   { nom: "Marine Le Pen",           parti: "Rassemblement national",   bloc: rn }
+  JLM:   { nom: "Jean-Luc Mélenchon",      parti: "La France insoumise",      bloc: gauche_radicale }
+  EZ:    { nom: "Eric Zemmour",            parti: "Reconquête",               bloc: reconquete }
+  VP:    { nom: "Valérie Pécresse",        parti: "Les Républicains",         bloc: droite }
+  YJ:    { nom: "Yannick Jadot",           parti: "EELV",                     bloc: ecologiste }
+  # Lassalle is the awkward one: a rural anti-system candidate with no clean
+  # nest. Placed with the souverainistes, consistently with resultats_2022.yaml,
+  # and flagged there as the cycle's largest single polling miss.
+  JL:    { nom: "Jean Lassalle",           parti: "Résistons!",               bloc: souverainiste }
+  FRo:   { nom: "Fabien Roussel",          parti: "Parti communiste",         bloc: gauche_radicale }
+  NDA:   { nom: "Nicolas Dupont-Aignan",   parti: "Debout la France",         bloc: souverainiste }
+  AH:    { nom: "Anne Hidalgo",            parti: "Parti socialiste",         bloc: socialiste }
+  PP:    { nom: "Philippe Poutou",         parti: "NPA",                      bloc: extreme_gauche }
+  NA:    { nom: "Nathalie Arthaud",        parti: "Lutte ouvrière",           bloc: extreme_gauche }
+
+  # --- tested but never on the ballot -----------------------------------
+  AM:    { nom: "Arnaud Montebourg",       parti: "Divers gauche",            bloc: socialiste }
+  CT:    { nom: "Christiane Taubira",      parti: "Divers gauche",            bloc: socialiste }
+  OF:    { nom: "Olivier Faure",           parti: "Parti socialiste",         bloc: socialiste }
+  FH:    { nom: "François Hollande",       parti: "Parti socialiste",         bloc: socialiste }
+  SRo:   { nom: "Ségolène Royal",          parti: "Parti socialiste",         bloc: socialiste }
+  SR:    { nom: "Sandrine Rousseau",       parti: "EELV",                     bloc: ecologiste }
+  EP:    { nom: "Eric Piolle",             parti: "EELV",                     bloc: ecologiste }
+  # The animalist party has no natural nest. Its voters are drawn
+  # disproportionately from the green electorate, so it sits there.
+  HT:    { nom: "Hélène Thouy",            parti: "Parti animaliste",         bloc: ecologiste }
+  XB:    { nom: "Xavier Bertrand",         parti: "Les Républicains",         bloc: droite }
+  MBa:   { nom: "Michel Barnier",          parti: "Les Républicains",         bloc: droite }
+  PJ:    { nom: "Philippe Juvin",          parti: "Les Républicains",         bloc: droite }
+  LW:    { nom: "Laurent Wauquiez",        parti: "Les Républicains",         bloc: droite }
+  FBa:   { nom: "François Baroin",         parti: "Les Républicains",         bloc: droite }
+  BR:    { nom: "Bruno Retailleau",        parti: "Les Républicains",         bloc: droite }
+  RD:    { nom: "Rachida Dati",            parti: "Les Républicains",         bloc: droite }
+  DP:    { nom: "Denis Payre",             parti: "Divers droite",            bloc: droite }
+  # In 2022 Ciotti was an LR figure who lost that party's congress to Pecresse.
+  # His 2027 entry sits in the national right instead - see the header.
+  EC:    { nom: "Eric Ciotti",             parti: "Les Républicains",         bloc: droite }
+  JCL:   { nom: "Jean-Christophe Lagarde", parti: "UDI",                      bloc: centre }
+  # Sovereigntists of various stripes: Frexit (Asselineau), the ex-FN split
+  # that opposed the RN (Philippot), and Cheminade's idiosyncratic movement.
+  FA:    { nom: "François Asselineau",     parti: "UPR",                      bloc: souverainiste }
+  FP:    { nom: "Florian Philippot",       parti: "Les Patriotes",            bloc: souverainiste }
+  JC:    { nom: "Jacques Cheminade",       parti: "Solidarité et progrès",    bloc: souverainiste }
+  # Poisson's PCD backed Zemmour, and his electorate is the Catholic
+  # traditionalist right rather than the LR mainstream.
+  JFP:   { nom: "Jean-Frédéric Poisson",   parti: "PCD",                      bloc: reconquete }

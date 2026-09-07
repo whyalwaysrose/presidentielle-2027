@@ -19,10 +19,15 @@ def cfg():
     return load_model_config()
 
 
-# From scripts/fit_walk_scale.py against the nsppolls 2022 archive:
-#   0.0142, 90% CI [0.0025, 0.0206], 787 same-institute non-rolling pairs.
-FITTED_TOTAL = 0.0142
-FIT_CI = (0.0025, 0.0206)
+# From scripts/fit_walk_scale.py against the nsppolls 2022 archive, fitted on
+# gaps of 151-260 days to match the forecast's own horizon: 0.0222, 90% CI
+# [0.0215, 0.0227], 2049 same-institute non-rolling pairs.
+#
+# The earlier 0.0142, fitted on 7-60 day gaps, produced 67% coverage of 90%
+# intervals in the 2022 backtest. sigma/day is not constant across gap lengths,
+# so the band has to match the distance the walk is asked to cover.
+FITTED_TOTAL = 0.0222
+FIT_CI = (0.0215, 0.0227)
 
 
 def test_walk_split_reconciles_to_the_measured_total(cfg):
@@ -61,8 +66,11 @@ def test_the_horizon_implies_a_believable_interval(cfg):
     s = cfg.latent.fitted_total_rw_sd_per_day * math.sqrt(horizon)
     lo = 0.33 * math.exp(-1.645 * s)
     hi = 0.33 * math.exp(1.645 * s)
-    assert 0.20 <= lo <= 0.27, f"lower bound {lo:.1%} is implausible"
-    assert 0.40 <= hi <= 0.52, f"upper bound {hi:.1%} is implausible"
+    # Wide, and deliberately so: 2022 saw Melenchon go 12% to 22% and Hidalgo
+    # 6.5% to 1.75% over this horizon. The bounds that looked "sensible" before
+    # produced 67% coverage where 90% was claimed.
+    assert 0.15 <= lo <= 0.24, f"lower bound {lo:.1%} is implausible"
+    assert 0.48 <= hi <= 0.62, f"upper bound {hi:.1%} is implausible"
 
 
 # From `presidentielle calibrate` against the 2022 cycle: 11 institutes' final

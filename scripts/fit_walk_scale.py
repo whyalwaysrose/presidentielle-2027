@@ -36,6 +36,34 @@ Two restrictions matter:
   because of it. Dropping `rolling` records and requiring a seven-day gap
   leaves comparisons between genuinely distinct samples.
 
+THE WALK IS NOT A RANDOM WALK, AND THE HORIZON MATTERS
+-----------------------------------------------------
+A Gaussian random walk implies that movement scales as sqrt(time), so the
+per-day sigma must be the SAME whatever gap it is measured over. Measured on
+2022, excluding rolling polls, it is not:
+
+    gap (days)   sigma/day   implied over 221 days
+      7-21        0.0157           0.234
+     22-45        0.0307           0.457
+     46-90        0.0290           0.431
+     91-150       0.0261           0.388
+    151-260       0.0222           0.329
+
+Short gaps understate: even between separate surveys an institute reuses
+panels and methods, so two readings a fortnight apart are more alike than two
+independent draws on the same opinion. Long gaps then come down again, which is
+mean reversion - a candidate who surges tends to give some of it back.
+
+This was not a curiosity. Fitting on 7-60 day gaps gave 0.0142/day, and the
+2022 backtest at 221 days out then covered **67% of outcomes in its 90%
+intervals and 25% in its 50% intervals**. The forecast was overconfident
+because the walk was calibrated at a horizon it is not used at.
+
+So the fit is horizon-matched: the band used is the one closest to the distance
+from the last poll to election day, which for this project is 151-260 days.
+That is the same principle already applied to the election-day error, which is
+fitted on final polls because that is when it is applied.
+
 Run:  python scripts/fit_walk_scale.py
 """
 
@@ -43,6 +71,7 @@ from __future__ import annotations
 
 import json
 import math
+import random
 import statistics
 import sys
 from collections import defaultdict
@@ -60,6 +89,15 @@ MIN_SHARE = 0.04
 # than two independent samples, which biases the estimator downwards - to
 # negative excess variance, in the first attempt at this fit.
 MIN_GAP_DAYS = 7
+
+# The band the committed value is taken from: gaps of a length comparable to
+# the forecast's own horizon. See the docstring - sigma/day is not constant, so
+# the band has to match the distance the walk is actually asked to cover.
+FIT_BAND = (151, 260)
+
+# Every band reported, so the departure from sqrt(time) stays visible rather
+# than being a claim in a comment.
+BANDS = [(7, 21), (22, 45), (46, 90), (91, 150), (151, 260)]
 
 
 def load() -> list[dict]:
@@ -117,34 +155,39 @@ def main() -> int:
     payload = load()
     data = series(payload)
 
-    contributions: list[float] = []
-    pairs = 0
-    for (_inst, _cand), points in data.items():
-        for (d1, p1, n1), (d2, p2, n2) in zip(points, points[1:], strict=False):
-            dt_days = days_between(d1, d2)
-            # Too short a gap means overlapping panels; too long a gap spans
-            # events the walk is not trying to model.
-            if not MIN_GAP_DAYS <= dt_days <= 60:
-                continue
-            d = math.log(p2) - math.log(p1)
-            var1 = (1 - p1) / (n1 * p1)
-            var2 = (1 - p2) / (n2 * p2)
-            excess = d * d - var1 - var2
-            contributions.append(excess / dt_days)
-            pairs += 1
+    def sigma_for(lo: int, hi: int) -> tuple[float, int, list[float]]:
+        vals: list[float] = []
+        for points in data.values():
+            for i in range(len(points)):
+                for j in range(i + 1, len(points)):
+                    (d1, p1, n1), (d2, p2, n2) = points[i], points[j]
+                    gap = days_between(d1, d2)
+                    if not lo <= gap <= hi:
+                        continue
+                    d = math.log(p2) - math.log(p1)
+                    var1 = (1 - p1) / (n1 * p1)
+                    var2 = (1 - p2) / (n2 * p2)
+                    vals.append((d * d - var1 - var2) / gap)
+        if not vals:
+            return 0.0, 0, []
+        return math.sqrt(max(statistics.mean(vals), 1e-9)), len(vals), vals
 
+    horizon = 221
+    print("A random walk implies ONE sigma/day at every gap length.")
+    print(f"{'gap (days)':>12s} {'pairs':>7s} {'sigma/day':>11s} {'over 221d':>11s}")
+    for lo, hi in BANDS:
+        sd, n, _ = sigma_for(lo, hi)
+        if n < 25:
+            print(f"{f'{lo}-{hi}':>12s} {n:>7d}   (too few)")
+            continue
+        mark = "  <- fitted" if (lo, hi) == FIT_BAND else ""
+        print(
+            f"{f'{lo}-{hi}':>12s} {n:>7d} {sd:>11.4f} {sd * math.sqrt(horizon):>11.3f}{mark}"
+        )
+
+    sigma, pairs, contributions = sigma_for(*FIT_BAND)
     if pairs < 50:
-        sys.exit(f"only {pairs} usable pairs - not enough to fit")
-
-    mean_var = statistics.mean(contributions)
-    # Individual terms are noisy and can be negative (a pair that moved less
-    # than sampling noise alone would predict); the MEAN is the estimator, and
-    # it is the mean that has to be positive.
-    sigma = math.sqrt(max(mean_var, 1e-9))
-
-    # Bootstrap for an interval, so the number can be quoted with its own
-    # uncertainty rather than to three false decimal places.
-    import random
+        sys.exit(f"only {pairs} pairs in the fitted band - not enough")
 
     rng = random.Random(0)
     boots = []
@@ -152,23 +195,22 @@ def main() -> int:
         sample = [contributions[rng.randrange(len(contributions))] for _ in contributions]
         boots.append(math.sqrt(max(statistics.mean(sample), 1e-9)))
     boots.sort()
-    lo, hi = boots[int(0.05 * len(boots))], boots[int(0.95 * len(boots))]
+    lo_ci, hi_ci = boots[int(0.05 * len(boots))], boots[int(0.95 * len(boots))]
 
-    print(f"pairs used                 {pairs}")
-    print(f"candidates x institutes    {len(data)}")
     print()
-    print(f"rw_sd_per_day (log share)  {sigma:.4f}   90% CI [{lo:.4f}, {hi:.4f}]")
+    print(f"FITTED on gaps of {FIT_BAND[0]}-{FIT_BAND[1]} days, matching the forecast horizon:")
+    print(f"  rw_sd_per_day  {sigma:.4f}   90% CI [{lo_ci:.4f}, {hi_ci:.4f}]   ({pairs} pairs)")
     print()
-    horizon = 223
-    print(f"implied SD over {horizon} days   {sigma * math.sqrt(horizon):.3f} log units")
+    s_h = sigma * math.sqrt(horizon)
+    print(f"  implied SD over {horizon} days: {s_h:.3f} log units")
     for base in (0.33, 0.15):
-        s = sigma * math.sqrt(horizon)
         print(
-            f"  a candidate on {base:.0%} today -> 90% interval "
-            f"[{base * math.exp(-1.645 * s):.1%}, {base * math.exp(1.645 * s):.1%}]"
+            f"    a candidate on {base:.0%} today -> 90% interval "
+            f"[{base * math.exp(-1.645 * s_h):.1%}, {base * math.exp(1.645 * s_h):.1%}]"
         )
     print()
-    print("Set config/model.yaml latent.rw_sd_per_day_prior to the fitted value.")
+    print("Split in quadrature between latent.rw_sd_per_day_prior and")
+    print("latent.bloc_rw_sd_per_day_prior, and update fitted_total_rw_sd_per_day.")
     return 0
 
 

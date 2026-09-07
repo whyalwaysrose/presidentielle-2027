@@ -1,0 +1,164 @@
+{
+ "as_of": "2022-03-11",
+ "days_out": 30,
+ "n_polls": 233,
+ "n_hypotheses": 401,
+ "mae_points": 2.71,
+ "coverage_90": 0.75,
+ "coverage_50": 0.5,
+ "p_qualify_actual": {
+  "EM": 0.994,
+  "MLP": 0.747
+ },
+ "p_win_actual": 0.92,
+ "predicted_top2": [
+  "EM",
+  "MLP"
+ ],
+ "rows": [
+  {
+   "id": "EM",
+   "nom": "Emmanuel Macron",
+   "actual": 0.27846,
+   "q05": 0.20833,
+   "q50": 0.28846,
+   "q95": 0.38708,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.9944,
+   "p_win": 0.9201
+  },
+  {
+   "id": "MLP",
+   "nom": "Marine Le Pen",
+   "actual": 0.23152,
+   "q05": 0.12132,
+   "q50": 0.17419,
+   "q95": 0.24461,
+   "inside_90": true,
+   "inside_50": false,
+   "p_qualify": 0.7471,
+   "p_win": 0.0618
+  },
+  {
+   "id": "JLM",
+   "nom": "Jean-Luc Mélenchon",
+   "actual": 0.21952,
+   "q05": 0.07231,
+   "q50": 0.11636,
+   "q95": 0.17809,
+   "inside_90": false,
+   "inside_50": false,
+   "p_qualify": 0.1005,
+   "p_win": 0.0101
+  },
+  {
+   "id": "EZ",
+   "nom": "Eric Zemmour",
+   "actual": 0.07074,
+   "q05": 0.08102,
+   "q50": 0.12049,
+   "q95": 0.17503,
+   "inside_90": false,
+   "inside_50": false,
+   "p_qualify": 0.1007,
+   "p_win": 0.0036
+  },
+  {
+   "id": "VP",
+   "nom": "Valérie Pécresse",
+   "actual": 0.04779,
+   "q05": 0.06837,
+   "q50": 0.11,
+   "q95": 0.16134,
+   "inside_90": false,
+   "inside_50": false,
+   "p_qualify": 0.053,
+   "p_win": 0.004
+  },
+  {
+   "id": "YJ",
+   "nom": "Yannick Jadot",
+   "actual": 0.04633,
+   "q05": 0.03387,
+   "q50": 0.05247,
+   "q95": 0.07981,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  },
+  {
+   "id": "JL",
+   "nom": "Jean Lassalle",
+   "actual": 0.03135,
+   "q05": 0.01053,
+   "q50": 0.01872,
+   "q95": 0.03181,
+   "inside_90": true,
+   "inside_50": false,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  },
+  {
+   "id": "FRo",
+   "nom": "Fabien Roussel",
+   "actual": 0.02284,
+   "q05": 0.01973,
+   "q50": 0.03869,
+   "q95": 0.07139,
+   "inside_90": true,
+   "inside_50": false,
+   "p_qualify": 0.0001,
+   "p_win": 0.0
+  },
+  {
+   "id": "NDA",
+   "nom": "Nicolas Dupont-Aignan",
+   "actual": 0.02064,
+   "q05": 0.00916,
+   "q50": 0.01673,
+   "q95": 0.02912,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  },
+  {
+   "id": "AH",
+   "nom": "Anne Hidalgo",
+   "actual": 0.01755,
+   "q05": 0.01102,
+   "q50": 0.01921,
+   "q95": 0.03176,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  },
+  {
+   "id": "PP",
+   "nom": "Philippe Poutou",
+   "actual": 0.00765,
+   "q05": 0.00396,
+   "q50": 0.00992,
+   "q95": 0.01859,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  },
+  {
+   "id": "NA",
+   "nom": "Nathalie Arthaud",
+   "actual": 0.00561,
+   "q05": 0.00161,
+   "q50": 0.00556,
+   "q95": 0.013,
+   "inside_90": true,
+   "inside_50": true,
+   "p_qualify": 0.0,
+   "p_win": 0.0
+  }
+ ]
+}

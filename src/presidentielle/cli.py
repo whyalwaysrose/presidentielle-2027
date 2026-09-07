@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import logging
 import os
 import sys
@@ -127,6 +128,180 @@ def cmd_calibrate(args) -> int:
     drift = abs(cur.r1_share_error_sd - res.r1_share_error_sd)
     print(f"config currently has r1_share_error_sd: {cur.r1_share_error_sd:.4f} "
           f"({'matches' if drift < 5e-4 else 'DIFFERS from'} the fit)")
+    return 0
+
+
+def _fail(message: str) -> int:
+    print(f"error: {message}", file=sys.stderr)
+    return 2
+
+
+def cmd_backtest(args) -> int:
+    """Run the pipeline on the 2022 cycle and score it on the real result."""
+    import datetime as _dt
+
+    import arviz as az
+    import numpy as _np
+
+    from .backtest import (
+        R1_2022,
+        config_for_2022,
+        load_archive,
+        load_roster_2022,
+        parse_nsppolls,
+        score,
+    )
+    from .calibration import load_results
+    from .data.surveys import weight as weight_surveys
+    from .model.design import build_model_data
+    from .model.field import build_ballot_model, draw_fields
+    from .model.hierarchical import build_model, sample
+    from .model.runoff import build_runoff_data, build_runoff_model
+    from .model.simulate import simulate
+
+    as_of = _dt.date.fromisoformat(args.as_of)
+    if as_of >= R1_2022:
+        return _fail(f"--as-of must be before the 2022 first round ({R1_2022})")
+
+    cfg = load_model_config()
+    if args.draws:
+        from dataclasses import replace
+
+        cfg = replace(
+            cfg,
+            sampling=replace(
+                cfg.sampling, draws=args.draws, tune=args.draws,
+                chains=2, sims_per_draw=4,
+            ),
+        )
+        log.warning("SMOKE TEST: draws=%d", args.draws)
+
+    history_start = _dt.date.fromisoformat(args.history_start)
+    cfg = config_for_2022(cfg, history_start)
+    roster = load_roster_2022()
+
+    hyps, skipped = parse_nsppolls(
+        load_archive(), roster=roster, as_of=as_of, history_start=history_start
+    )
+    if skipped:
+        log.info("%d hypotheses skipped (unrecognised candidate)", len(skipped))
+    first = [h for h in hyps if h.tour == 1]
+    if len(first) < 20:
+        return _fail(f"only {len(first)} first-round hypotheses before {as_of}")
+
+    weighted = weight_surveys(hyps, exponent=cfg.observation.survey_weight_exponent)
+    data = build_model_data(weighted, cfg=cfg, roster=roster)
+
+    print(f"backtest as of {as_of} - {(R1_2022 - as_of).days} days before the vote")
+    print(
+        f"  {len(first)} first-round hypotheses, "
+        f"{len({h.survey_key for h in first})} surveys, "
+        f"{len(data.institut_names)} institutes"
+    )
+    print()
+
+    model = build_model(data, cfg)
+    idata = sample(model, cfg, progressbar=not args.quiet)
+    post = idata.posterior
+    strength_draws = post["strength_election"].stack(d=("chain", "draw")).values.T
+    lambda_draws = post["lambda_bloc"].stack(d=("chain", "draw")).values.T
+
+    ballot = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=as_of)
+    reference = _reference_field(ballot, data.candidate_ids)
+    ref_shares = _reference_shares(
+        reference, ballot, data, strength_draws, lambda_draws
+    )
+
+    # NO LOOKAHEAD. The 2022 measured transfers were published during the April
+    # campaign, so a forecast dated before it cannot use them. The runoff here
+    # is the unanchored model, and therefore weaker than what runs in production.
+    rdata = build_runoff_data(
+        data.runoffs,
+        candidate_ids=data.candidate_ids,
+        bloc_keys=data.bloc_keys,
+        candidate_bloc=data.candidate_bloc,
+        r1_shares=ref_shares,
+        roster=roster,
+    )
+    rmodel = build_runoff_model(rdata, cfg, data.bloc_keys, transfers=None)
+    import pymc as pm
+
+    with rmodel:
+        ridata = pm.sample(
+            draws=cfg.sampling.draws,
+            tune=cfg.sampling.tune,
+            chains=cfg.sampling.chains,
+            target_accept=cfg.sampling.target_accept,
+            random_seed=cfg.sampling.seed + 2,
+            progressbar=not args.quiet,
+            nuts_sampler="nutpie",
+        )
+    rp = ridata.posterior
+    runoff_draws = {
+        "positions": rp["positions"].stack(d=("chain", "draw")).values.T,
+        "gamma": rp["gamma"].stack(d=("chain", "draw")).values,
+        "delta": rp["delta_front_republicain"].stack(d=("chain", "draw")).values,
+        "abstain": rp["abstain"].stack(d=("chain", "draw")).values.T,
+    }
+
+    rng = _np.random.default_rng(cfg.sampling.seed)
+    n_sims = strength_draws.shape[0] * cfg.sampling.sims_per_draw
+    fields = draw_fields(ballot, data.candidate_ids, n_sims, rng)
+    result = simulate(
+        strength_draws=strength_draws,
+        lambda_draws=lambda_draws,
+        runoff_draws=runoff_draws,
+        fields=fields,
+        candidate_bloc=data.candidate_bloc,
+        n_blocs=data.n_blocs,
+        rn_index=data.bloc_keys.index("rn"),
+        cfg=cfg,
+        rng=rng,
+        candidate_ids=data.candidate_ids,
+    )
+
+    sc = score(result, roster, load_results(), as_of)
+    sc.n_polls = len({h.survey_key for h in first})
+    sc.n_hypotheses = len(first)
+
+    print(f"{'candidate':24s} {'actual':>7s} {'forecast':>9s} {'90% interval':>18s}  in90")
+    for r in sc.rows:
+        mark = "yes" if r["inside_90"] else "NO"
+        print(
+            f"  {r['nom']:22s} {100 * r['actual']:6.2f}% {100 * r['q50']:8.2f}% "
+            f"  [{100 * r['q05']:5.1f}%, {100 * r['q95']:5.1f}%]  {mark}"
+        )
+    print()
+    print(f"  median absolute error   {sc.mae_points:.2f} points")
+    print(f"  90% interval coverage   {sc.coverage_90:.0%}  (nominal 90%)")
+    print(f"  50% interval coverage   {sc.coverage_50:.0%}  (nominal 50%)")
+    print()
+    print("  the two who actually reached the runoff:")
+    for cid, p in sc.p_qualify_actual.items():
+        print(f"    {roster.candidats[cid].nom:22s} P(round 2) = {p:.0%}")
+    print(f"  P(Macron elected) = {sc.p_win_actual:.0%}   (he was)")
+    top2 = ", ".join(roster.candidats[c].nom for c in sc.predicted_top2)
+    print(f"  model's own top two: {top2}")
+    print()
+    rhat = float(
+        az.rhat(idata, var_names=["strength_election"])["strength_election"].max()
+    )
+    print(f"  max R-hat {rhat:.3f}")
+    print()
+    print("  CAVEAT: the random-walk scale and the election-day error are both")
+    print("  fitted on this same cycle, so interval coverage here is partly")
+    print("  circular. What is NOT circular: the point predictions, the ballot")
+    print("  simulation, and which pair the model puts into the runoff.")
+
+    if args.json:
+        from pathlib import Path
+
+        out = Path(args.json)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(
+            json.dumps(sc.as_dict(), ensure_ascii=False, indent=1), encoding="utf-8"
+        )
+        print(f"  wrote {out}")
     return 0
 
 
@@ -479,6 +654,16 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser(
         "calibrate", help="fit the election-day error against the 2022 cycle"
     ).set_defaults(fn=cmd_calibrate)
+
+    bt = sub.add_parser(
+        "backtest", help="run the pipeline on the 2022 cycle and score it"
+    )
+    bt.add_argument("--as-of", required=True, help="cutoff date, e.g. 2021-09-01")
+    bt.add_argument("--history-start", default="2021-01-01")
+    bt.add_argument("--draws", type=int, help="override draws/tune for a smoke test")
+    bt.add_argument("--quiet", action="store_true")
+    bt.add_argument("--json", help="write the score to this path")
+    bt.set_defaults(fn=cmd_backtest)
 
     run = sub.add_parser("run", help="fit, simulate and write the site JSON")
     run.add_argument("--refresh", action="store_true", help="re-download polls first")

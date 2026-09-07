@@ -27,42 +27,58 @@ polls:
 latent:
   # Innovation SD per day on the log-strength scale.
   #
-  # FITTED, not asserted. `scripts/fit_walk_scale.py` measures how much a
-  # candidate's log share actually moved between consecutive polls by the SAME
-  # institute in the 2022 cycle, net of sampling noise:
+  # FITTED, and horizon-matched. scripts/fit_walk_scale.py measures how much a
+  # candidate's log share moved between polls by the SAME institute in the 2022
+  # cycle, net of sampling noise, non-rolling polls only.
   #
-  #     total rw_sd_per_day = 0.0142   90% CI [0.0025, 0.0206]   (787 pairs)
+  # THE WALK IS NOT A RANDOM WALK. A Gaussian walk implies movement scales as
+  # sqrt(time), so sigma/day must be identical at every gap length. It is not:
   #
-  # This one number sets the width of every interval on the site, because the
-  # walk runs ~32 free weekly steps from the last poll to election day. The
-  # first run used an asserted 0.020 and reported Le Pen at 32.4% with a 90%
-  # interval of [14.6%, 57.0%] - a 42-point interval, which is not caution but
-  # a mis-specified prior. At the fitted value a candidate on 33% spans
-  # [23.3%, 46.8%] over 223 days, which is what the 2022 cycle actually did.
+  #     gap (days)   sigma/day   implied over 221 days
+  #       7-21        0.0157           0.234
+  #      22-45        0.0307           0.457
+  #      46-90        0.0290           0.431
+  #      91-150       0.0261           0.388
+  #     151-260       0.0222           0.329   <- fitted
   #
-  # The total is split in quadrature between the bloc walk and the candidate
-  # walk, since a candidate's movement is the sum of the two:
-  #     sqrt(0.0114^2 + 0.0085^2) = 0.0142
-  # tests/test_calibration.py asserts the split still matches the fit. If you
-  # re-run the script, update both numbers together.
-  rw_sd_per_day_prior: 0.0114
+  # Short gaps understate, because an institute reuses panels and methods and
+  # two readings a fortnight apart are more alike than two independent draws on
+  # the same opinion. Long gaps come back down: mean reversion, a candidate who
+  # surges gives some of it back.
+  #
+  # MEASURED CONSEQUENCE. The first fit used 7-60 day gaps and gave 0.0142/day.
+  # The 2022 backtest at 221 days out then covered only 67% of outcomes in its
+  # 90% intervals and 25% in its 50% intervals - the forecast was overconfident
+  # because the walk had been calibrated at a horizon it is never used at.
+  #
+  # So the band is matched to the distance the walk actually has to cover, from
+  # the last poll to election day. Same principle as the election-day error,
+  # which is fitted on final polls because that is where it is applied.
+  #
+  #     total rw_sd_per_day = 0.0222   90% CI [0.0215, 0.0227]   (2049 pairs)
+  #
+  # Split in quadrature between the bloc walk and the candidate walk:
+  #     sqrt(0.0178^2 + 0.0133^2) = 0.0222
+  # tests/test_calibration.py asserts the split still reconciles. Re-run the
+  # script and update all three numbers together.
+  rw_sd_per_day_prior: 0.0178
   # Prior SD on a candidate's strength at the start of the window.
   initial_sd: 1.50
   # Blocs move together: a bloc-level walk shared by its members, plus each
   # candidate's own deviation. Set the bloc term to 0 to make candidates
   # independent (and see the ESS collapse - the common component has to live
   # somewhere).
-  bloc_rw_sd_per_day_prior: 0.0085
+  bloc_rw_sd_per_day_prior: 0.0133
   # The measured total the two above must reconcile to. Documentation for the
   # test, not a model input.
-  fitted_total_rw_sd_per_day: 0.0142
+  fitted_total_rw_sd_per_day: 0.0222
   # Hold the walk scales AT the measured values instead of sampling them.
   #
   # MEASURED, then decided. Left free, the posterior walk was 0.0337/day
-  # against a measured 0.0142, while sigma_excess collapsed to 0.0011 - the
-  # walk was absorbing observation noise, because a 146-node grid is far more
-  # flexible than a single noise term and 39 surveys cannot separate them.
-  # Set this false to reproduce that.
+  # against a measured value less than half that, while sigma_excess collapsed
+  # to 0.0011 - the walk was absorbing observation noise, because a 146-node
+  # grid is far more flexible than a single noise term and 39 surveys cannot
+  # separate them. Set this false to reproduce that.
   pin_walk_scales: true
 
 nesting:
