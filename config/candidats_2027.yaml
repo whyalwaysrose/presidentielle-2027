@@ -1,0 +1,147 @@
+# Roster for the 2027 presidential election.
+#
+# Every politician a pollster has tested must appear here with a bloc. The
+# roster FAILS CLOSED: a name the resolver does not recognise is dropped and
+# the whole hypothesis is skipped (see src/presidentielle/data/roster.py).
+# Guessing a bloc is worse than losing a poll, because a wrong bloc changes
+# the substitution structure for every candidate in that nest.
+#
+# `candidate_id` matches MieuxVoter/presidentielle2027 `candidats.csv`. Those
+# ids are the join key; `nom` is for display only and is never matched on.
+#
+# BLOCS are nests in the nested-logit model, not a left-right ranking. Two
+# candidates belong in the same bloc when a voter losing one would
+# overwhelmingly go to the other, NOT when their politics merely resemble
+# each other. That is why Reconquete is separate from the RN: in 2022
+# Zemmour's electorate was substantially recruited from the mainstream right,
+# and it did not revert to Le Pen one-for-one.
+
+blocs:
+  extreme_gauche:
+    nom_fr: "Extrême gauche"
+    nom_en: "Far left"
+    couleur: "#8B1A1A"
+  gauche_radicale:
+    nom_fr: "Gauche radicale"
+    nom_en: "Radical left"
+    couleur: "#C1272D"
+  socialiste:
+    nom_fr: "Gauche sociale-démocrate"
+    nom_en: "Social democrats"
+    couleur: "#E8567C"
+  ecologiste:
+    nom_fr: "Écologistes"
+    nom_en: "Greens"
+    couleur: "#2E9B57"
+  centre:
+    nom_fr: "Centre"
+    nom_en: "Centre"
+    couleur: "#E8A33D"
+  droite:
+    nom_fr: "Droite républicaine"
+    nom_en: "Republican right"
+    couleur: "#3B7DD8"
+  souverainiste:
+    nom_fr: "Souverainistes"
+    nom_en: "Sovereigntists"
+    couleur: "#7E6BB0"
+  reconquete:
+    nom_fr: "Droite nationale"
+    nom_en: "National right"
+    couleur: "#4A2B6B"
+  rn:
+    nom_fr: "Rassemblement national"
+    nom_en: "National Rally"
+    couleur: "#1D2C4E"
+
+candidats:
+  # --- Extrême gauche ---------------------------------------------------
+  NA:   { nom: "Nathalie Arthaud",        parti: "Lutte ouvrière",                bloc: extreme_gauche }
+  PP:   { nom: "Philippe Poutou",         parti: "Nouveau Parti anticapitaliste", bloc: extreme_gauche }
+
+  # --- Gauche radicale (LFI et scissions) -------------------------------
+  JLM:  { nom: "Jean-Luc Mélenchon",      parti: "La France insoumise",           bloc: gauche_radicale }
+  FR:   { nom: "François Ruffin",         parti: "Divers gauche",                 bloc: gauche_radicale }
+  MP:   { nom: "Mathilde Panot",          parti: "La France insoumise",           bloc: gauche_radicale }
+  MB:   { nom: "Manuel Bompard",          parti: "La France insoumise",           bloc: gauche_radicale }
+  RH:   { nom: "Rima Hassan",             parti: "La France insoumise",           bloc: gauche_radicale }
+  CA:   { nom: "Clémentine Autain",       parti: "L'Après",                       bloc: gauche_radicale }
+  # The PCF runs its own candidate, but its electorate overlaps LFI's far more
+  # than the PS's: in 2022 Roussel's measured second-round transfers sat closer
+  # to Mélenchon's than to Hidalgo's (nsppolls reports.csv).
+  FRo:  { nom: "Fabien Roussel",          parti: "Parti communiste français",     bloc: gauche_radicale }
+
+  # --- Sociaux-démocrates -----------------------------------------------
+  RG:   { nom: "Raphaël Glucksmann",      parti: "Place publique",                bloc: socialiste }
+  OF:   { nom: "Olivier Faure",           parti: "Parti socialiste",              bloc: socialiste }
+  BV:   { nom: "Boris Vallaud",           parti: "Parti socialiste",              bloc: socialiste }
+  FH:   { nom: "François Hollande",       parti: "Parti socialiste",              bloc: socialiste }
+  BC:   { nom: "Bernard Cazeneuve",       parti: "Parti socialiste",              bloc: socialiste }
+  AH:   { nom: "Anne Hidalgo",            parti: "Parti socialiste",              bloc: socialiste }
+  SRo:  { nom: "Ségolène Royal",          parti: "Parti socialiste",              bloc: socialiste }
+
+  # --- Écologistes -------------------------------------------------------
+  MT:   { nom: "Marine Tondelier",        parti: "Les Écologistes",               bloc: ecologiste }
+  YJ:   { nom: "Yannick Jadot",           parti: "Les Écologistes",               bloc: ecologiste }
+  SR:   { nom: "Sandrine Rousseau",       parti: "Les Écologistes",               bloc: ecologiste }
+
+  # --- Centre / majorité sortante ----------------------------------------
+  EP:   { nom: "Édouard Philippe",        parti: "Horizons",                      bloc: centre }
+  GA:   { nom: "Gabriel Attal",           parti: "Renaissance",                   bloc: centre }
+  EB:   { nom: "Élisabeth Borne",         parti: "Renaissance",                   bloc: centre }
+  AB:   { nom: "Aurore Bergé",            parti: "Renaissance",                   bloc: centre }
+  FB:   { nom: "François Bayrou",         parti: "MoDem",                         bloc: centre }
+  SL:   { nom: "Sébastien Lecornu",       parti: "Renaissance",                   bloc: centre }
+  GD:   { nom: "Gérald Darmanin",         parti: "Renaissance",                   bloc: centre }
+  BLM:  { nom: "Bruno Le Maire",          parti: "Renaissance",                   bloc: centre }
+  MV:   { nom: "Manuel Valls",            parti: "Divers centre",                 bloc: centre }
+  EM:   { nom: "Emmanuel Macron",         parti: "Renaissance",                   bloc: centre }
+  JNB:  { nom: "Jean-Noël Barrot",        parti: "MoDem",                         bloc: centre }
+  AdM:  { nom: "Amélie de Montchalin",    parti: "Renaissance",                   bloc: centre }
+  APR:  { nom: "Agnès Pannier-Runacher",  parti: "Renaissance",                   bloc: centre }
+  LSM:  { nom: "Laurent Saint-Martin",    parti: "Renaissance",                   bloc: centre }
+  AOC:  { nom: "Amélie Oudéa-Castéra",    parti: "Renaissance",                   bloc: centre }
+  CV:   { nom: "Catherine Vautrin",       parti: "Divers centre",                 bloc: centre }
+  EL:   { nom: "Éric Lombard",            parti: "Divers centre",                 bloc: centre }
+  EDM:  { nom: "Éric Dupond-Moretti",     parti: "Divers centre",                 bloc: centre }
+  YBP:  { nom: "Yaël Braun-Pivet",        parti: "Renaissance",                   bloc: centre }
+  LB:   { nom: "Laurent Berger",          parti: "Divers centre",                 bloc: centre }
+  JYLD: { nom: "Jean-Yves Le Drian",      parti: "Divers centre",                 bloc: centre }
+  FRe:  { nom: "François Rebsamen",       parti: "Divers centre",                 bloc: centre }
+  # De Villepin polls as an anti-system figure drawing from the centre and the
+  # left at once. His own positioning puts him nearest the centre nest, but
+  # this is the least certain assignment in the file - see METHODOLOGY.md §4.
+  DV:   { nom: "Dominique de Villepin",   parti: "Divers",                        bloc: centre }
+
+  # --- Droite républicaine ------------------------------------------------
+  BR:   { nom: "Bruno Retailleau",        parti: "Les Républicains",              bloc: droite }
+  LW:   { nom: "Laurent Wauquiez",        parti: "Les Républicains",              bloc: droite }
+  XB:   { nom: "Xavier Bertrand",         parti: "Les Républicains",              bloc: droite }
+  VP:   { nom: "Valérie Pécresse",        parti: "Les Républicains",              bloc: droite }
+  RD:   { nom: "Rachida Dati",            parti: "Les Républicains",              bloc: droite }
+  DL:   { nom: "David Lisnard",           parti: "Les Républicains",              bloc: droite }
+  GL:   { nom: "Gérard Larcher",          parti: "Les Républicains",              bloc: droite }
+  MBa:  { nom: "Michel Barnier",          parti: "Les Républicains",              bloc: droite }
+  FXB:  { nom: "François-Xavier Bellamy", parti: "Les Républicains",              bloc: droite }
+  JC:   { nom: "Jean Castex",             parti: "Divers droite",                 bloc: droite }
+  NS:   { nom: "Nicolas Sarkozy",         parti: "Les Républicains",              bloc: droite }
+  FBa:  { nom: "François Baroin",         parti: "Les Républicains",              bloc: droite }
+
+  # --- Souverainistes ------------------------------------------------------
+  NDA:  { nom: "Nicolas Dupont-Aignan",   parti: "Debout la France",              bloc: souverainiste }
+  PdV:  { nom: "Philippe de Villiers",    parti: "Divers droite souverainiste",   bloc: souverainiste }
+
+  # --- Droite nationale (Reconquête et alliés) -----------------------------
+  EZ:   { nom: "Éric Zemmour",            parti: "Reconquête",                    bloc: reconquete }
+  SK:   { nom: "Sarah Knafo",             parti: "Reconquête",                    bloc: reconquete }
+  MM:   { nom: "Marion Maréchal",         parti: "Identité-Libertés",             bloc: reconquete }
+  RM:   { nom: "Robert Ménard",           parti: "Divers droite nationale",       bloc: reconquete }
+  # Ciotti's UDR is allied with the RN, but he has never been tested as a
+  # presidential candidate alongside Le Pen or Bardella, so there is no
+  # substitution evidence either way. Placed in the nearest non-RN nest.
+  EC:   { nom: "Éric Ciotti",             parti: "UDR",                           bloc: reconquete }
+
+  # --- Rassemblement national -----------------------------------------------
+  MLP:  { nom: "Marine Le Pen",           parti: "Rassemblement national",        bloc: rn }
+  JB:   { nom: "Jordan Bardella",         parti: "Rassemblement national",        bloc: rn }
+  JPT:  { nom: "Jean-Philippe Tanguy",    parti: "Rassemblement national",        bloc: rn }

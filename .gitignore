@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.env
+
+# data/cache/presidentielle2027.json is deliberately COMMITTED.
+# The upstream file is MIT-licensed and small, and committing it makes a run
+# reproducible offline, keeps `pytest` hermetic (the suite asserts the roster
+# covers every polled candidate, and would otherwise have to hit the network),
+# and gives the daily workflow a previous state to diff against.

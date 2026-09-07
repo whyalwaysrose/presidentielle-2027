@@ -1,0 +1,382 @@
+/* =========================================================================
+   Présidentielle 2027 — dashboard styles
+   No framework, no build step. Dark by default, light via prefers-color-scheme.
+
+   Bloc colours come from config/candidats_2027.yaml and are injected as
+   custom properties at runtime, so the palette has one home rather than two
+   that drift apart.
+   ========================================================================= */
+
+:root {
+  --bg: #0e1116;
+  --bg-elev: #161b22;
+  --bg-elev-2: #1c232c;
+  --border: #262d38;
+  --border-strong: #39434f;
+  --text: #e6edf3;
+  --text-dim: #9aa7b4;
+  --text-faint: #7d8894;
+  --accent: #f0b429;
+  --track: #232a34;
+
+  --radius: 10px;
+  --wrap: 1120px;
+
+  /* Type scale. Twelve steps and nothing off them: when the only choice is
+     the step above or below, relationships between elements stay legible
+     instead of drifting apart half a pixel at a time. */
+  --fs-3xs: 10px;
+  --fs-2xs: 11px;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-base: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 21px;
+  --fs-2xl: 26px;
+  --fs-3xl: 34px;
+  --fs-4xl: 44px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f8fa;
+    --bg-elev: #ffffff;
+    --bg-elev-2: #f0f2f5;
+    --border: #dde1e7;
+    --border-strong: #c3cad4;
+    --text: #161c24;
+    --text-dim: #5a6675;
+    --text-faint: #7b8593;
+    --track: #e6e9ee;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--fs-base)/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--sp-4); }
+
+a { color: inherit; text-decoration-color: var(--border-strong); text-underline-offset: 2px; }
+a:hover { text-decoration-color: currentColor; }
+
+/* --- header -------------------------------------------------------------- */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-top: var(--sp-3);
+  padding-bottom: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+#site-title { font-size: var(--fs-xl); margin: 0; letter-spacing: -0.01em; }
+.subtitle { margin: 2px 0 0; color: var(--text-dim); font-size: var(--fs-sm); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.lang-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  font: 600 var(--fs-xs)/1 inherit;
+  letter-spacing: 0.04em;
+  padding: 7px 13px;
+  cursor: pointer;
+  min-height: 32px;
+}
+.lang-btn + .lang-btn { border-left: 1px solid var(--border-strong); }
+.lang-btn.is-active { background: var(--accent); color: #16130a; }
+.lang-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.updated { font-size: var(--fs-xs); color: var(--text-dim); text-align: right; }
+.updated strong { color: var(--text); font-weight: 600; }
+.countdown { display: block; color: var(--text-faint); }
+
+/* --- error banner -------------------------------------------------------- */
+
+.error-banner {
+  margin-top: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid #a33;
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: rgba(200, 60, 60, 0.12);
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+.error-banner code { font-size: var(--fs-2xs); color: var(--text-dim); display: block; margin-top: 4px; }
+
+/* --- cards --------------------------------------------------------------- */
+
+main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
+
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-5);
+}
+
+.card-head { margin-bottom: var(--sp-4); }
+.card-head h2 { margin: 0; font-size: var(--fs-lg); letter-spacing: -0.005em; }
+.card-note {
+  margin: var(--sp-2) 0 0;
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  max-width: 68ch;
+}
+
+/* --- hero: probability of winning --------------------------------------- */
+
+.win-list { display: flex; flex-direction: column; gap: var(--sp-3); }
+
+.win-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-1);
+}
+
+.win-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.win-name { font-weight: 600; font-size: var(--fs-base); min-width: 0; }
+.win-party { color: var(--text-faint); font-size: var(--fs-xs); font-weight: 400; margin-left: var(--sp-2); }
+/* The value must never break across lines. On a 375px screen the French
+   "40 %" was splitting after the number, leaving a bare "%" on its own row. */
+.win-value {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.win-row:first-child .win-value { font-size: var(--fs-3xl); }
+.win-row:first-child .win-name { font-size: var(--fs-lg); }
+
+.bar-track {
+  height: 10px;
+  background: var(--track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 999px; }
+
+/* --- generic charts ------------------------------------------------------ */
+
+.chart { width: 100%; overflow-x: auto; }
+.chart svg { display: block; max-width: 100%; height: auto; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 12px; height: 3px; border-radius: 2px; }
+
+/* --- duels --------------------------------------------------------------- */
+
+.duels { display: flex; flex-direction: column; gap: var(--sp-3); }
+
+.duel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg-elev-2);
+}
+
+.duel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+  flex-wrap: wrap;
+}
+.duel-names { font-weight: 600; font-size: var(--fs-md); }
+.duel-prob { font-size: var(--fs-xs); color: var(--text-dim); }
+
+.duel-bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; }
+.duel-side {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  padding: 0 var(--sp-2);
+  white-space: nowrap;
+  color: #0e1116;
+}
+.duel-side.right { justify-content: flex-end; }
+
+/* --- ballot -------------------------------------------------------------- */
+
+.ballot { display: grid; gap: var(--sp-5); grid-template-columns: 1fr; }
+@media (min-width: 760px) { .ballot { grid-template-columns: 1fr 1fr; } }
+
+.ballot h3 {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.arb { margin-bottom: var(--sp-4); }
+.arb-bloc { font-size: var(--fs-xs); color: var(--text-dim); margin-bottom: var(--sp-1); }
+.arb-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; }
+.arb-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-3xs); font-weight: 700; color: #0e1116;
+  white-space: nowrap; overflow: hidden;
+}
+.arb-labels { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); margin-top: var(--sp-1); font-size: var(--fs-2xs); color: var(--text-dim); }
+
+.stand-row {
+  display: grid;
+  grid-template-columns: 1fr 46px;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: 3px 0;
+  font-size: var(--fs-sm);
+}
+.stand-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stand-val { text-align: right; color: var(--text-dim); font-size: var(--fs-xs); }
+.stand-track { grid-column: 1 / -1; height: 4px; background: var(--track); border-radius: 999px; overflow: hidden; margin-top: -2px; }
+.stand-fill { height: 100%; }
+
+/* --- polls table --------------------------------------------------------- */
+
+.polls { overflow-x: auto; }
+.polls table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); min-width: 520px; }
+.polls th {
+  text-align: left;
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 600;
+  padding: 0 var(--sp-3) var(--sp-2) 0;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.polls td { padding: var(--sp-2) var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.polls tr:last-child td { border-bottom: 0; }
+.poll-inst { font-weight: 600; }
+.poll-client { color: var(--text-faint); font-size: var(--fs-2xs); display: block; }
+.poll-top { color: var(--text-dim); font-size: var(--fs-xs); }
+.poll-notice { font-size: var(--fs-2xs); color: var(--text-faint); }
+
+/* --- method -------------------------------------------------------------- */
+
+.commentary {
+  font-size: var(--fs-base);
+  line-height: 1.65;
+  padding: var(--sp-4);
+  background: var(--bg-elev-2);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  margin-bottom: var(--sp-5);
+}
+
+.method-grid { display: grid; gap: var(--sp-5); grid-template-columns: 1fr; }
+@media (min-width: 760px) { .method-grid { grid-template-columns: repeat(3, 1fr); } }
+.method-grid h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+.method-grid p { margin: 0; font-size: var(--fs-sm); color: var(--text-dim); }
+
+.diagnostics {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-2xs);
+  color: var(--text-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+/* --- footer -------------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--sp-5) 0 var(--sp-7);
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+}
+.site-footer p { margin: 0 0 var(--sp-2); }
+.site-footer code { font-size: var(--fs-2xs); }
+.disclaimer { color: var(--text-faint); }
+
+/* --- mobile -------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .card { padding: var(--sp-4); }
+  /* Long party names ("Rassemblement national") hang awkwardly when they wrap
+     mid-phrase beside a large name. Give them their own line instead. */
+  .win-party { display: block; margin-left: 0; margin-top: 1px; }
+  .header-inner { align-items: flex-start; }
+  .updated { text-align: left; }
+  .win-row:first-child .win-value { font-size: var(--fs-2xl); }
+  .win-value { font-size: var(--fs-lg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

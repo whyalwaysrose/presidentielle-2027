@@ -1,0 +1,193 @@
+# Model configuration. Nothing in src/ hard-codes a prior or a hyperparameter:
+# if a number governs the arithmetic, it lives here.
+
+schema_version: 1
+
+election:
+  # Dates set by the decret de convocation (Constitution art. 7). The second
+  # round is always the 14th day after the first.
+  premier_tour: 2027-04-18
+  second_tour: 2027-05-02
+  # Candidacies close once the Conseil constitutionnel has validated the 500
+  # parrainages. Before this date the ballot is genuinely uncertain and the
+  # field simulation carries that; after it, the field is known and the
+  # arbitrations collapse to their observed outcome.
+  cloture_candidatures: 2027-03-12
+
+polls:
+  # The 2024 snap legislative election reset the party system: Renaissance
+  # lost its majority, the RN became the largest single party, and the
+  # candidate field for 2027 only starts being tested afterwards. Polls before
+  # this are about a different question.
+  history_start: 2024-07-08
+  # A grid step. Weekly is enough for a 30-month horizon and keeps the latent
+  # state small; the random-walk variance scales with the step length.
+  grid_days: 7
+
+latent:
+  # Innovation SD per day on the log-strength scale.
+  #
+  # FITTED, not asserted. `scripts/fit_walk_scale.py` measures how much a
+  # candidate's log share actually moved between consecutive polls by the SAME
+  # institute in the 2022 cycle, net of sampling noise:
+  #
+  #     total rw_sd_per_day = 0.0142   90% CI [0.0025, 0.0206]   (787 pairs)
+  #
+  # This one number sets the width of every interval on the site, because the
+  # walk runs ~32 free weekly steps from the last poll to election day. The
+  # first run used an asserted 0.020 and reported Le Pen at 32.4% with a 90%
+  # interval of [14.6%, 57.0%] - a 42-point interval, which is not caution but
+  # a mis-specified prior. At the fitted value a candidate on 33% spans
+  # [23.3%, 46.8%] over 223 days, which is what the 2022 cycle actually did.
+  #
+  # The total is split in quadrature between the bloc walk and the candidate
+  # walk, since a candidate's movement is the sum of the two:
+  #     sqrt(0.0114^2 + 0.0085^2) = 0.0142
+  # tests/test_calibration.py asserts the split still matches the fit. If you
+  # re-run the script, update both numbers together.
+  rw_sd_per_day_prior: 0.0114
+  # Prior SD on a candidate's strength at the start of the window.
+  initial_sd: 1.50
+  # Blocs move together: a bloc-level walk shared by its members, plus each
+  # candidate's own deviation. Set the bloc term to 0 to make candidates
+  # independent (and see the ESS collapse - the common component has to live
+  # somewhere).
+  bloc_rw_sd_per_day_prior: 0.0085
+  # The measured total the two above must reconcile to. Documentation for the
+  # test, not a model input.
+  fitted_total_rw_sd_per_day: 0.0142
+  # Hold the walk scales AT the measured values instead of sampling them.
+  #
+  # MEASURED, then decided. Left free, the posterior walk was 0.0337/day
+  # against a measured 0.0142, while sigma_excess collapsed to 0.0011 - the
+  # walk was absorbing observation noise, because a 146-node grid is far more
+  # flexible than a single noise term and 39 surveys cannot separate them.
+  # Set this false to reproduce that.
+  pin_walk_scales: true
+
+nesting:
+  # The nesting parameter lambda_k of a nested logit, one per bloc.
+  #
+  #   lambda -> 0   perfect substitution inside the bloc. Removing Le Pen from
+  #                 the ballot sends essentially all of her support to
+  #                 Bardella and leaves the RN total unchanged.
+  #   lambda  = 1   independence of irrelevant alternatives. Removing Le Pen
+  #                 redistributes her support proportionally across every
+  #                 other candidate, including Melenchon. This is what a plain
+  #                 softmax over candidates assumes, and it is wrong.
+  #
+  # Beta(2, 4) has mean 1/3 and puts most mass below 0.6, encoding the prior
+  # that within-bloc substitution is strong but not total. The data identify
+  # this wherever a bloc has been tested both with and without a member -
+  # which for the RN and the centre is most of the file.
+  prior_a: 2.0
+  prior_b: 4.0
+  # A bloc with only one candidate ever polled has no within-bloc variation to
+  # identify lambda from, so it is pinned rather than left to wander on its
+  # prior.
+  pin_singleton_blocs: true
+
+house_effects:
+  # Per institute x bloc, on the log-strength scale, ZeroSumNormal across
+  # institutes within each bloc.
+  #
+  # INVARIANT: these must stay sum-to-zero. Without the constraint a constant
+  # moves freely between the house effects and the latent strengths for an
+  # identical likelihood, and the sampler wanders along that ridge.
+  #
+  # Per institute x *bloc*, not per institute x candidate: eight institutes by
+  # 26 candidates is 208 parameters against 165 first-round hypotheses, and
+  # the systematic differences between French institutes are about how they
+  # treat the RN vote and the abstention screen, which is a bloc-level story.
+  sd_prior: 0.12
+
+observation:
+  # Non-sampling noise beyond what the stated sample size explains, on the
+  # share scale. FITTED - see `presidentielle calibrate`.
+  excess_sd_prior: 0.018
+  # An institute testing 13 hypotheses has not run 13 surveys: it asked one
+  # sample of ~1500 people about 13 candidate fields. Treating them as
+  # independent would multiply that sample by 13.
+  #
+  # Each hypothesis in a survey of m hypotheses gets its effective sample
+  # scaled by m^-(this). 1.0 divides the sample evenly between hypotheses
+  # (fully redundant); 0.0 treats each as a fresh survey (fully independent).
+  # The truth is in between: the hypotheses share respondents but genuinely
+  # ask different questions. FITTED - see calibrate.
+  survey_weight_exponent: 0.65
+  # Sample universe. French notices describe who was sampled ("population
+  # francaise agee de 18 ans et plus", "residents de France metropolitaine"),
+  # which is a universe rather than a likely-voter screen - unlike US polls
+  # there is no LV/RV distinction to model here. The effect is kept because
+  # the metropolitan-only universe excludes the overseas departements, which
+  # vote differently. "auto" pins the modal universe to zero as the reference.
+  reference_population: auto
+
+election_day_error:
+  # FITTED by `presidentielle calibrate` against the 2022 cycle (nsppolls
+  # archive) scored on the real result. DO NOT HAND-EDIT: tests/test_calibration.py
+  # asserts the config still matches the fit.
+  #
+  # Split, not stacked: this is the error of a poll taken 0-14 days out, where
+  # the miss is almost entirely systematic. Opinion change between now and
+  # April 2027 is already represented, by the random walk running to election
+  # day. Using a longer-horizon error figure would count drift twice.
+  fitted: false
+  r1_share_error_sd: 0.022
+  r2_margin_error_sd: 0.030
+  # Error is correlated within a bloc: institutes that under-read the RN
+  # under-read every RN candidate at once.
+  bloc_error_corr: 0.55
+
+second_tour:
+  # Transfer rates: of the voters who chose a first-round candidate in bloc j,
+  # what share go to each finalist. Priors come from the 2022 measured
+  # transfers (nsppolls reports.csv); runoff hypothesis polls update them
+  # wherever a matchup has actually been tested.
+  transfer_concentration: 40.0
+  # The "front republicain" is weaker than it was, and assuming the 2022
+  # figures hold in 2027 would be the single biggest way this model could be
+  # wrong. This widens the prior on transfers into any RN finalist.
+  rn_transfer_extra_sd: 0.08
+
+field:
+  # Who is actually on the ballot. Rather than invent probabilities, the
+  # default is empirical: how often pollsters have recently tested each
+  # candidate is itself evidence about who is expected to run - institutes
+  # test the fields their clients think plausible.
+  #
+  # Overridden by hard facts (an announced withdrawal, a validated candidacy)
+  # from the roster's annonce_candidature / retrait_candidature fields.
+  source: "hypothesis_frequency"
+  # Recent hypotheses count for more, with exponential decay.
+  #
+  # MEASURED, and the reason this is a half-life rather than a window. The RN
+  # testing pattern is a step function, not noise. Le Pen was declared
+  # ineligible on 2025-03-31 and institutes switched to testing Bardella:
+  # April 2025 to June 2026 he appears in 62-100% of monthly fields. Her ban
+  # was cut to 15 months on 2026-07-07, and from July 2026 onward she appears
+  # in 100% of fields and he appears in none.
+  #
+  # A flat 120-day window spans the break and reports Le Pen 67% / Bardella
+  # 33%. The last three months are unanimous. A short half-life tracks the
+  # regime change; a window averages across it and gets the RN nomination -
+  # the single most consequential fact about this ballot - badly wrong.
+  half_life_days: 45
+  # Shrink towards even odds so a thin recent window cannot produce a
+  # near-certainty. Pseudo-counts added to each option in an arbitration.
+  shrinkage_pseudocounts: 1.0
+  # Presence probabilities the data cannot know, keyed by candidate id. Use
+  # only for facts, with the source in the comment - never to express a hunch.
+  overrides: {}
+    # Example, after the Conseil constitutionnel publishes the parrainages:
+    # JB: 0.0   # withdrew in favour of Le Pen, [source]
+
+sampling:
+  draws: 1000
+  tune: 1000
+  chains: 4
+  target_accept: 0.92
+  seed: 20270418
+  # Simulation draws per posterior sample when propagating to the ballot,
+  # election-day error and the runoff.
+  sims_per_draw: 20
