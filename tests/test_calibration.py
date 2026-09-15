@@ -130,3 +130,23 @@ def test_walk_scales_stay_pinned(cfg):
         "walk scales are free again - expect intervals roughly twice as wide "
         "as the polling supports; see CLAUDE.md"
     )
+
+
+def test_front_republicain_uncertainty_spans_the_disagreeing_evidence(cfg):
+    """Three sources disagree about how hard it is to transfer to an RN
+    finalist, and the prior has to be wide enough to contain that.
+
+    2022 presidential transfers, the 2024 legislative duels (330 of them,
+    measured by scripts/measure_front_republicain_2024.py) and the 2026 polls
+    about a 2027 runoff imply left-penalties ranging from about four points to
+    about twenty. At 0.70 a one-sigma move is roughly six points of runoff
+    share, so that spread sits near 2.6 sigma. Narrowing this asserts more
+    agreement between the sources than exists.
+    """
+    assert cfg.second_tour.front_republicain_2027_sd >= 0.60, (
+        "too narrow to contain the disagreement between 2022, 2024 and the "
+        "2027 hypothetical polls"
+    )
+    # Not unbounded either: beyond this the runoff becomes a coin flip that
+    # ignores the evidence there is.
+    assert cfg.second_tour.front_republicain_2027_sd <= 1.0

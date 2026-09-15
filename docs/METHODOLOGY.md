@@ -271,13 +271,43 @@ hypotheses would pin it to whatever 2026 respondents currently say and report
 that as knowledge about 2027. So `front_republicain_2027_sd` is applied **per
 simulated world**, after fitting, exactly as election-day error is.
 
-Its size is chosen against the only cycle transition anyone has observed: the
-RN's runoff share moved from 34.1% in 2017 to 41.45% in 2022, +7.3 points.
+Its size is chosen against the evidence that exists, which now disagrees with
+itself — and that disagreement is the point.
+
+**2024 legislatives.** The largest real test of anti-RN transfer since 2022:
+330 second-round duels of an RN or allied candidate against exactly one
+opponent (`scripts/measure_front_republicain_2024.py`, Ministry results under
+Licence Ouverte 2.0). The RN went from 37.3% in round one to 44.3% in round
+two — a gain of 7.0 points, against the 18.3 Le Pen gained in the 2022
+presidential runoff — and lost 74% of those duels. The *front républicain* was
+not merely alive in 2024; it was stronger than in 2022.
+
+It also depends on who the alternative is, which is what this model's proximity
+structure claims. From near-identical first-round positions the RN converted
+46.6% against a left opponent and 42.5% against a centre one, winning 38% of
+duels against the left and 16% against the centre.
+
+The magnitude is where the sources part company. That measured left penalty is
+about four points. The 2027 hypothetical polls imply nearer twenty — Le Pen
+around 68% against Mélenchon and under 50% against Philippe. A legislative duel
+is not a presidential runoff (local candidates, incumbency, and *désistements*
+that concentrate the anti-RN vote by a mechanism a two-candidate runoff lacks),
+and the 2024 "left" is the NFP coalition rather than one polarising figure — so
+the two are not directly comparable. But three credible readings spanning four
+to twenty points is exactly what a prior on this term has to contain.
+
+Also relevant: the RN's runoff share moved from 34.1% in 2017 to 41.45% in
+2022, +7.3 points.
 `scripts/check_runoff_sensitivity.py` translates the parameter into the same
-unit — at 0.45, one sigma is about 4 points of runoff share, so that observed
-transition sits near 1.8 sigma. At the 0.35 first tried it would have been a
-2.4 sigma event, which would have made the only thing that has actually
-happened look close to implausible.
+unit. At **0.70**, one sigma is roughly six points of runoff share: the
+2017→2022 swing sits near 1.2 sigma and the sixteen-point disagreement between
+2024 and the 2027 polls near 2.6 — uncommon, not implausible.
+
+It was **widened symmetrically rather than shifted**, deliberately. The 2024
+evidence leans towards this model being RN-favourable, since the real *front
+républicain* outperformed 2022 and the left penalty looked smaller than the
+hypotheticals imply. That is enough to widen the uncertainty. It is not enough
+to move the central estimate on the strength of a different kind of election.
 
 ### Checking it against the polls it was fitted to
 

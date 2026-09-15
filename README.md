@@ -147,9 +147,14 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
   backtest scores. Its point predictions and structural results are clean; its
   coverage numbers are not an independent validation.
 * **The `front républicain` term is the largest vulnerability**, and it is
-  substantive rather than technical. It is estimated from 2026 polls about a
-  2027 runoff, and voters' willingness to block the RN is exactly the quantity
-  least likely to be stable over that gap.
+  substantive rather than technical. It is now sized against three disagreeing
+  sources — 2022 presidential transfers, the **330 RN duels of the 2024
+  legislatives**, and 2026 polls about a 2027 runoff — which imply left
+  penalties from about four points to about twenty. 2024 shows the *front
+  républicain* was alive and stronger than in 2022, which leans towards this
+  model being RN-favourable; the uncertainty was widened rather than the
+  central estimate moved, because a legislative duel is not a presidential
+  runoff. `scripts/measure_front_republicain_2024.py`.
 * **Ballot probabilities are a proxy.** An institute testing a candidate says
   the scenario is considered live, not that its probability equals the testing
   frequency.

@@ -243,28 +243,65 @@ second_tour:
   # How far the 2027 front republicain may differ from the fitted value,
   # applied per simulated world in simulate.py rather than fitted.
   #
-  # ASSERTED, and unavoidably so: measuring it needs two cycles of transfers
-  # and only one exists. It is the honest home for the model's largest
-  # substantive uncertainty, and it is applied at simulation time precisely so
-  # that the 54 hypothetical 2027 matchups cannot fit it away and report
-  # today's stated intentions as knowledge about May 2027.
+  # Applied at simulation time precisely so the 54 hypothetical 2027 matchups
+  # cannot fit it away and report today's stated intentions as knowledge about
+  # May 2027. Setting it to 0 asserts that 2027 will behave exactly as the
+  # polls say - the assumption this parameter exists to stop being made
+  # silently.
   #
-  # Setting it to 0 asserts that 2027 will behave exactly as the polls say -
-  # which is the assumption this parameter exists to stop being made silently.
+  # WIDENED 0.45 -> 0.70 ON 2024 EVIDENCE.
   #
-  # CHOSEN AGAINST A YARDSTICK, not picked. The only evidence about how far
-  # this moves between cycles is how far it has moved: the RN's runoff share
-  # went 34.14% in 2017 to 41.45% in 2022, +7.3 points in one cycle. (The 2017
-  # figure is the Ministry's election-night publication, which is provisional;
-  # it is used here only to size a prior.)
+  # scripts/measure_front_republicain_2024.py reads the Ministry's 2024
+  # legislative results (Licence Ouverte 2.0) and scores the 330 second-round
+  # duels where an RN or allied candidate faced exactly one opponent - a far
+  # larger real-world sample than the single presidential runoff the model is
+  # otherwise anchored on, and two years more recent.
   #
-  # scripts/check_runoff_sensitivity.py translates this parameter into that
-  # same unit. At 0.45 a one-sigma move is about 4 points of runoff share, so
-  # the one cycle transition anyone has observed sits near 1.8 sigma - an
-  # ordinary draw rather than an extreme one. At the 0.35 first tried it would
-  # have been a 2.4 sigma event, i.e. the model would have called the only
-  # thing that has actually happened close to implausible.
-  front_republicain_2027_sd: 0.45
+  #   overall            RN 37.3% in round 1 -> 44.3% in round 2  (+7.0 pts)
+  #                      2022 presidential:   23.2% -> 41.4%      (+18.3 pts)
+  #                      RN lost 74% of those duels
+  #
+  #   by opponent        RN round 2      RN won
+  #     left     n=147       46.6%          38%
+  #     centre   n=125       42.5%          16%
+  #     right    n= 53       43.5%          19%
+  #
+  # Two things follow. The front republicain was ALIVE AND STRONGER in 2024
+  # than in 2022. And it depends on who the alternative is: from near-identical
+  # first-round positions the RN converts about four points better against the
+  # left than against the centre - which is qualitatively what this model's
+  # proximity structure already says.
+  #
+  # The problem is the MAGNITUDE. The 2027 hypothetical polls imply a left
+  # penalty nearer twenty points (Le Pen about 68% against Melenchon, under 50%
+  # against Philippe). 2024 measured about four. Three credible sources - 2022
+  # transfers, 2024 duels, 2026 polls about 2027 - disagree by far more than a
+  # 0.45 prior allowed. At 0.70 one sigma is roughly six points of runoff
+  # share, which puts the 2017->2022 swing at about 1.2 sigma and that
+  # sixteen-point disagreement at about 2.6: uncommon, not implausible.
+  #
+  # WIDENED SYMMETRICALLY, NOT SHIFTED, and deliberately. The 2024 evidence
+  # leans towards this model being RN-favourable - the real front republicain
+  # outperformed 2022 and the left penalty looked smaller. But a legislative
+  # duel is not a presidential runoff: it is local, carries incumbency, and
+  # follows desistements that concentrate the anti-RN vote by a mechanism a
+  # two-candidate presidential runoff does not have. And the 2024 "left" is the
+  # NFP coalition, not one polarising candidate. That is enough to widen the
+  # uncertainty; it is not enough to move the central estimate.
+  #
+  # AND MEASURED AFTERWARDS: WIDENING THIS CHANGES ALMOST NOTHING. Going from
+  # 0.45 to 0.70 moved every candidate's probability of election by under half
+  # a point (Le Pen 66% either way, Melenchon against her 13% -> 14%). The
+  # runoffs are lopsided, so symmetric noise of six points rarely flips one;
+  # the headline is governed by the CENTRAL transfer estimate, not its spread.
+  #
+  # So this widening is honest bookkeeping, not a fix. The risk the 2024 data
+  # actually raises - that the central estimate is RN-favourable - is still
+  # open. Closing it means folding the 2024 duels into the runoff fit itself,
+  # with an explicit legislative-versus-presidential adjustment, which would
+  # move the published headline and carries its own risk of importing the wrong
+  # kind of election into a presidential model.
+  front_republicain_2027_sd: 0.70
 
 field:
   # Who is actually on the ballot. Rather than invent probabilities, the

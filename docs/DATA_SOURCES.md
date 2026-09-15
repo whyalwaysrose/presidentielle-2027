@@ -77,6 +77,20 @@ The 2017 second-round figures are also used, once, to size a prior — see
 election-night file and is explicitly **provisional**, which is why it is used
 only for an order of magnitude and not as a calibration target.
 
+## 3b. 2024 legislative results — official
+
+**data.gouv.fr**, Ministère de l'Intérieur, **Licence Ouverte 2.0** — explicitly
+open, so the two circonscription-level files are committed to `data/cache/`
+and the analysis is reproducible offline.
+
+Used by `scripts/measure_front_republicain_2024.py` to measure anti-RN vote
+transfer in the 330 second-round duels where an RN or allied candidate faced
+exactly one opponent. It is the largest real-world test of that behaviour since
+2022, and it postdates the cycle everything else in the model is calibrated on.
+
+It informs the *uncertainty* on 2027 transfers, not the central estimate — see
+`second_tour.front_republicain_2027_sd` for why that distinction is deliberate.
+
 ## 4. Election dates — official
 
 First round **18 April 2027**, second round **2 May 2027**, both fixed by the
@@ -114,7 +128,11 @@ decisive, which is close to a fact; the floor for a declaration is a judgement
 about how much a declaration is worth given that *parrainages* still have to be
 collected.
 
-**The `front républicain` in 2027.** The transfer structure is now fitted on
+**The `front républicain` in 2027.** Now sized against three disagreeing
+sources rather than one: 2022 presidential transfers, the 2024 legislative
+duels, and 2026 polls about a 2027 runoff. They imply left-penalties ranging
+from about four points to about twenty, and the prior is set wide enough to
+contain that spread. The transfer structure is now fitted on
 the 2022 *measurements* as well as the 2027 hypotheticals, so it is no longer
 an inference from stated intentions about a runoff two years away. What remains
 irreducibly mine is `front_republicain_2027_sd`: how far 2027 may differ. It is

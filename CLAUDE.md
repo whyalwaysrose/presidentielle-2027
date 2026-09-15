@@ -452,6 +452,47 @@ Two rules about presenting them, both load-bearing:
 so editing only a COMMENT flags a model change. It errs safe - a spurious "the
 model changed" is much better than a silent one - but do not be surprised by it.
 
+## The 2024 legislatives are the most recent read on the front republicain
+
+`scripts/measure_front_republicain_2024.py` scores the 330 second-round duels
+where an RN or allied candidate faced exactly one opponent. Ministry results,
+Licence Ouverte 2.0, committed to `data/cache/`, so it runs offline.
+
+    overall     RN 37.3% round 1 -> 44.3% round 2   (+7.0 pts)
+                2022 presidential: 23.2% -> 41.4%   (+18.3 pts)
+                RN lost 74% of the duels
+
+    by opponent      RN round 2    RN won
+      left  n=147        46.6%       38%
+      centre n=125       42.5%       16%
+      right  n= 53       43.5%       19%
+
+Two findings. The front republicain was **stronger** in 2024 than 2022. And it
+depends on who the alternative is - from near-identical first-round positions
+the RN converts about four points better against the left than the centre,
+which is qualitatively what the proximity structure already says. That is
+independent corroboration of the model's shape from a real election.
+
+**The magnitude is where sources disagree**, and that is what the prior has to
+carry: 2024 measured a left penalty around four points, the 2027 hypothetical
+polls imply nearer twenty. `front_republicain_2027_sd` was widened 0.45 -> 0.70
+to span it.
+
+**And widening it did almost nothing - measured.** 0.45 -> 0.70 moved every
+candidate's probability of election by under half a point. The runoffs are
+lopsided, so six points of symmetric noise rarely flips one; the headline is
+governed by the CENTRAL transfer estimate, not its spread. Treat the widening
+as bookkeeping, not as a fix: **the risk that the central estimate is
+RN-favourable remains open.** Closing it means folding the 2024 duels into the
+runoff fit with an explicit legislative-versus-presidential adjustment.
+
+**Widened, not shifted.** The 2024 evidence leans towards this model being
+RN-favourable. Resist acting on that direction: a legislative duel is local,
+carries incumbency, and follows desistements that concentrate the anti-RN vote
+by a mechanism a two-candidate presidential runoff does not have; and the 2024
+"left" is the NFP coalition, not one polarising candidate. Enough to widen the
+uncertainty, not to move the centre.
+
 ## Measured, then rejected
 
 Keep these unless new evidence overturns them. Each cost real time to establish
