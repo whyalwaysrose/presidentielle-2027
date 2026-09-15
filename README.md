@@ -135,12 +135,13 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
 
 ## Known data-quality and modelling items
 
-* **`bloc_error_corr` and the survey-weight exponent are still asserted.** The
-  first-round election-day error is now fitted (`presidentielle calibrate`),
-  but within-bloc error correlation cannot be — the 2022 field offers only two
-  same-bloc pairs above the noise floor — and the survey-weight exponent would
-  need the same institute pricing one field twice on independent samples. Both
-  say so in the config.
+* **`bloc_error_corr` is still asserted** and cannot be fitted — the 2022 field
+  offers only two same-bloc pairs above the noise floor.
+* **The survey-weight exponent was tested and does not matter.** Across its
+  whole range (0 to 1, a fivefold change in effective sample) the median 90%
+  interval moves from 4.96 points to 4.95, and the two backtest cutoffs rank it
+  oppositely. Width is set by what happens after the last poll, not by how much
+  each poll is trusted. `scripts/fit_survey_weight.py`.
 * **The backtest's coverage check is partly circular.** Both parameters that
   set interval width are fitted on the 2022 cycle, which is the cycle the
   backtest scores. Its point predictions and structural results are clean; its

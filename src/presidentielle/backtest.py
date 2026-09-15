@@ -65,6 +65,31 @@ R2_2022 = dt.date(2022, 4, 24)
 CLOTURE_2022 = dt.date(2022, 3, 4)  # Conseil constitutionnel published the field
 
 
+def crps(draws: np.ndarray, actual: float) -> float:
+    """Continuous ranked probability score for one candidate, from samples.
+
+    Coverage says whether the truth fell inside an interval; it cannot tell a
+    well-centred forecast from a vague one that happens to contain everything.
+    CRPS scores the whole predictive distribution against what happened, and is
+    proper - it cannot be improved by reporting something other than an honest
+    belief. Lower is better, and it is in the units of the thing forecast, so a
+    CRPS of 0.02 is two points of share.
+
+        CRPS = E|X - y| - 0.5 * E|X - X'|
+
+    The second term uses the sorted-sample identity rather than all pairs,
+    which would be quadratic in the number of draws.
+    """
+    x = np.sort(np.asarray(draws, dtype=float))
+    n = x.size
+    if n == 0:
+        return float("nan")
+    term1 = np.abs(x - actual).mean()
+    k = np.arange(1, n + 1)
+    term2 = (2.0 / (n * n)) * np.sum((2 * k - n - 1) * x)
+    return float(term1 - 0.5 * term2)
+
+
 def load_roster_2022() -> Roster:
     """2022 candidates, mapped onto the SAME bloc definitions as 2027."""
     base = load_roster()  # for the bloc definitions and their colours
@@ -185,6 +210,7 @@ class BacktestScore:
     p_win_actual: float = 0.0
     predicted_top2: list[str] = field(default_factory=list)
     mae_points: float = 0.0
+    crps_points: float = 0.0
 
     def as_dict(self) -> dict:
         return {
@@ -193,6 +219,7 @@ class BacktestScore:
             "n_polls": self.n_polls,
             "n_hypotheses": self.n_hypotheses,
             "mae_points": round(self.mae_points, 2),
+            "crps_points": round(self.crps_points, 3),
             "coverage_90": round(self.coverage_90, 3),
             "coverage_50": round(self.coverage_50, 3),
             "p_qualify_actual": {k: round(v, 3) for k, v in self.p_qualify_actual.items()},
@@ -224,7 +251,7 @@ def score(result, roster: Roster, results_2022: dict, as_of: dt.date) -> Backtes
     p_win = result.p_win()
     index = {c: i for i, c in enumerate(result.candidate_ids)}
 
-    rows, inside90, inside50, errs = [], 0, 0, []
+    rows, inside90, inside50, errs, scores = [], 0, 0, [], []
     for cid, a in sorted(actual_by_id.items(), key=lambda kv: -kv[1]):
         i = index.get(cid)
         if i is None:
@@ -232,6 +259,10 @@ def score(result, roster: Roster, results_2022: dict, as_of: dt.date) -> Backtes
         q = quantiles[cid]
         if np.isnan(q[2]):
             continue
+        # Scored on the same draws the intervals come from: conditional on
+        # the candidate standing, which is what the site reports.
+        col = result.shares[result.standing[:, i], i]
+        scores.append(crps(col, a))
         in90 = bool(q[0] <= a <= q[4])
         in50 = bool(q[1] <= a <= q[3])
         inside90 += in90
@@ -271,6 +302,7 @@ def score(result, roster: Roster, results_2022: dict, as_of: dt.date) -> Backtes
         p_win_actual=float(p_win[index["EM"]]) if "EM" in index else 0.0,
         predicted_top2=top2,
         mae_points=float(np.mean(errs)) if errs else 0.0,
+        crps_points=float(np.mean(scores)) * 100 if scores else 0.0,
     )
 
 

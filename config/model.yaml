@@ -136,10 +136,38 @@ observation:
   # The truth is in between: the hypotheses share respondents but genuinely
   # ask different questions.
   #
-  # ASSERTED, not fitted. Fitting it needs the same institute pricing the
-  # same field twice on independent samples, which the data do not contain.
-  # 0.65 sits between fully redundant and fully independent; the forecast's
-  # sensitivity to it is not yet measured.
+  # TESTED ACROSS ITS WHOLE RANGE, and the forecast turns out not to care.
+  #
+  # It cannot be measured directly: comparing hypotheses within one survey
+  # confounds redundancy with the thing being modelled, since different fields
+  # *should* give different shares. So it was fitted against out-of-sample
+  # performance instead - scripts/fit_survey_weight.py runs the 2022 backtest at
+  # two cutoffs for exponents 0.00, 0.35, 0.65 and 1.00, holding everything
+  # else fixed, and scores with CRPS.
+  #
+  #   cutoff        0.00    0.35    0.65    1.00
+  #   221 days     2.003   2.032   2.072   2.089
+  #    30 days     2.078   2.059   2.066   2.052
+  #
+  # The two cutoffs rank it EXACTLY OPPOSITELY, which is the signature of noise
+  # rather than signal. A paired check on per-candidate error agrees: the
+  # extremes differ in opposite directions at the two horizons (8 of 12
+  # candidates one way, 4 of 12 the other, against a 6 of 12 null), with mean
+  # paired differences of -0.0008 and +0.0004.
+  #
+  # The clincher is interval width. Moving from 0.00 to 1.00 changes the
+  # effective sample by about fivefold and changes the median candidate's 90%
+  # interval from 4.96 points to 4.95. Ratio 1.00.
+  #
+  # WHY. The forecast's width is set by what happens AFTER the last poll - the
+  # random walk to election day, and the fitted election-day error. Per-poll
+  # noise governs how tightly the latent state tracks history, and with 40-odd
+  # surveys that path is well determined either way.
+  #
+  # So 0.65 stays: mid-range, defensible, and demonstrably not load-bearing.
+  # This also KILLED a plausible hypothesis - that over-weighting poll noise
+  # made the model sluggish and explained the backtest missing Melenchon's late
+  # surge. It does not; that miss is still unexplained.
   survey_weight_exponent: 0.65
   # Sample universe. French notices describe who was sampled ("population
   # francaise agee de 18 ans et plus", "residents de France metropolitaine"),

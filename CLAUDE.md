@@ -450,6 +450,22 @@ and each has a script that reproduces it.
   per-candidate rather than per-institute, election-day error belongs at the
   candidate level, which is where the model puts it.
 
+- **Tuning `survey_weight_exponent`** (`scripts/fit_survey_weight.py`). It
+  cannot be measured directly - within-survey disagreement is confounded with
+  the field genuinely changing the shares - so it was fitted against 2022
+  backtest CRPS at two cutoffs across 0.00 to 1.00. The two cutoffs rank it
+  **exactly oppositely**, paired per-candidate errors differ in opposite
+  directions, and moving across the whole range changes the median 90% interval
+  from 4.96 points to 4.95. The forecast is insensitive to it, because width is
+  set by what happens after the last poll, not by how much each poll is
+  trusted. 0.65 stays, as a mid-range value that is demonstrably not
+  load-bearing.
+
+  This also killed a hypothesis worth not resurrecting: that over-weighting
+  poll noise made the latent state sluggish and explained the 30-day backtest
+  missing Melenchon's late surge. It does not. **That miss remains
+  unexplained**, and the survey weighting is not where to look.
+
 - **A fatter-tailed election-day error.** The 30-day backtest has calibrated
   50% intervals and thin 90% ones, so the tails are probably too light. Twelve
   candidates in one cycle, whose misses are one correlated story about *vote

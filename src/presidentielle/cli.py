@@ -215,6 +215,19 @@ def cmd_backtest(args) -> int:
         )
         log.warning("SMOKE TEST: draws=%d", args.draws)
 
+    if args.weight_exponent is not None:
+        # For fitting the exponent itself: every other setting is held fixed so
+        # the arms differ only in this. See scripts/fit_survey_weight.py.
+        from dataclasses import replace
+
+        cfg = replace(
+            cfg,
+            observation=replace(
+                cfg.observation, survey_weight_exponent=args.weight_exponent
+            ),
+        )
+        log.info("survey_weight_exponent overridden to %.2f", args.weight_exponent)
+
     history_start = _dt.date.fromisoformat(args.history_start)
     cfg = config_for_2022(cfg, history_start)
     roster = load_roster_2022()
@@ -321,6 +334,7 @@ def cmd_backtest(args) -> int:
         )
     print()
     print(f"  median absolute error   {sc.mae_points:.2f} points")
+    print(f"  CRPS                    {sc.crps_points:.3f} points  (lower is better)")
     print(f"  90% interval coverage   {sc.coverage_90:.0%}  (nominal 90%)")
     print(f"  50% interval coverage   {sc.coverage_50:.0%}  (nominal 50%)")
     print()
@@ -788,6 +802,11 @@ def main(argv: list[str] | None = None) -> int:
     bt.add_argument("--draws", type=int, help="override draws/tune for a smoke test")
     bt.add_argument("--quiet", action="store_true")
     bt.add_argument("--json", help="write the score to this path")
+    bt.add_argument(
+        "--weight-exponent",
+        type=float,
+        help="override observation.survey_weight_exponent (for fitting it)",
+    )
     bt.set_defaults(fn=cmd_backtest)
 
     run = sub.add_parser("run", help="fit, simulate and write the site JSON")
