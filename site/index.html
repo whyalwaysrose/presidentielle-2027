@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
 <meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
 
@@ -42,6 +42,16 @@
 <div id="load-error" class="wrap error-banner" hidden></div>
 
 <main class="wrap">
+
+  <!-- What moved since the last run. Empty on a first run, and hidden then. -->
+  <p id="change-line" class="change-line" hidden></p>
+
+  <!-- Named ballots. Fixing the field makes every number below conditional,
+       which #scenario-note states while one is active. -->
+  <nav id="scenario-bar" class="scenario-bar"
+       aria-label="Scenario" hidden></nav>
+  <div id="scenario-note" class="scenario-panel" hidden></div>
+
 
   <!-- ---------------------------------------------------------------- -->
   <section class="card hero">
@@ -198,8 +208,9 @@
 <script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script src="js/i18n.js?v=7"></script>
-<script src="js/charts.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/i18n.js?v=8"></script>
+<script src="js/charts.js?v=8"></script>
+<script src="js/scenarios.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>

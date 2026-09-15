@@ -318,6 +318,27 @@ First-round intervals on the site are **conditional on the candidate standing**.
 An unconditional interval would fold in every world where they are not on the
 ballot and report a 5th percentile of zero for half the field.
 
+## 5b. Named ballots, and the limit of them
+
+The headline marginalises over who stands. A scenario fixes the ballot instead
+and re-runs only the simulation — no refitting, because the field is applied
+after sampling. Every probability inside one is **conditional on that ballot**,
+which the page states while the scenario is active.
+
+They are also a good test of where the nesting does and does not reach.
+Removing one member of a populated bloc is precisely what λ measures. Removing
+a whole bloc is not: between blocs the model is a plain softmax over inclusive
+values, with **no cross-bloc proximity**, so a vanished bloc's vote is
+redistributed proportionally to every other bloc — IIA at the bloc level, the
+thing the nesting removes *within* a bloc.
+
+That is a real limitation, and it was found by building a scenario that
+depended on it. A "without Reconquête" scenario put Le Pen 13 points below the
+baseline, because Zemmour's vote spread as readily to Mélenchon as to Le Pen.
+It was removed rather than shipped. Closing the gap means giving the
+between-bloc choice a proximity structure of the kind the runoff model already
+has.
+
 ## 6. Backtest
 
 `presidentielle backtest --as-of DATE` reruns the entire pipeline on the 2022

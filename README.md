@@ -6,6 +6,10 @@ sondages. Static site, no backend, no build step.
 
 **Live: <https://whyalwaysrose.github.io/presidentielle-2027/>**
 
+The page opens on the full simulation and can be switched to a named ballot —
+"without Philippe", "a united left" — which re-answers the whole forecast
+conditional on that field.
+
 *Le site est en français par défaut, avec un basculement FR/EN.*
 
 ---
@@ -151,6 +155,11 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
 * **No sub-national estimates**, deliberately. There is no département-level
   presidential polling, and a map from uniform 2022 swing would carry far more
   apparent authority than its inputs support.
+* **The first-round model has no cross-bloc proximity.** Substitution *within*
+  a bloc is fitted; *between* blocs it is a plain softmax over inclusive
+  values, so removing an entire bloc redistributes its vote proportionally to
+  all the others. Scenarios that empty a bloc are unreliable for that reason,
+  and one was removed rather than shipped.
 * **De Villepin's bloc is the weakest roster call** — he polls as an
   anti-system figure drawing from both centre and left.
 * **Institutes are not weighted by accuracy.** Measured and rejected: 87% of

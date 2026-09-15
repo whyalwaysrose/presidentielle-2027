@@ -365,6 +365,35 @@ probability to zero; a declaration only sets a FLOOR, because a declared
 candidate still needs 500 parrainages and can change their mind - Darmanin
 declared on 2026-08-17 and withdrew eight days later.
 
+## Named ballots are cheap; the caveat on them is not optional
+
+`config/scenarios_2027.yaml` defines scenarios as *modifications of the
+reference ballot* (`remove: [EP]`), never as explicit lists, so they survive
+the roster changing. They need **no refit**: the field is applied after
+sampling, so each costs one more simulation pass.
+
+Every number under a scenario is CONDITIONAL on that ballot, and the page must
+say so while they are on screen - `.scenario-warning` renders from the same
+code path as the numbers. A conditional probability shown as an unconditional
+one is the most natural way for this page to mislead.
+
+**Which scenarios are sound.** Removing one member of a bloc that has others is
+exactly what the nesting parameter measures, so `sans_philippe` and
+`centre_uni` rest on something fitted. Removing an ENTIRE bloc does not:
+between blocs the model is a plain softmax over inclusive values with no
+proximity, so a vanished bloc's vote is shared out in proportion to every other
+bloc - IIA, the very thing the nesting fixes *within* a bloc.
+
+A `sans_reconquete` scenario was built and then **removed** for this reason: it
+put Le Pen at 54% against a 67% baseline, and that swing is an artefact, not a
+finding. Zemmour's voters reaching Melenchon as readily as Le Pen is not how the
+French right behaves. `gauche_unie` empties two blocs so its *magnitude* carries
+the same caveat, but its *direction* does not - that comes from the runoff
+transfer model, which is measured on 2022.
+
+**The open modelling gap this exposes:** cross-bloc proximity in the first-round
+model. Until it exists, prefer scenarios that reshuffle within a bloc.
+
 ## Measured, then rejected
 
 Keep these unless new evidence overturns them. Each cost real time to establish

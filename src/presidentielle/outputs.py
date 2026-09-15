@@ -20,7 +20,7 @@ from .model.simulate import SimulationResult, matchup_table
 
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 QUANTILES = (0.05, 0.25, 0.5, 0.75, 0.95)
 QUANTILE_KEYS = ("q05", "q25", "q50", "q75", "q95")

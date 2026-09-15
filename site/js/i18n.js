@@ -26,6 +26,10 @@
       'countdown': function (n) {
         return n + (n > 1 ? ' jours avant le premier tour' : ' jour avant le premier tour');
       },
+      'scenario.model': 'Modèle complet',
+      'scenario.conditional': 'Scénario : toutes les probabilités ci-dessous supposent ce bulletin précis. Ce ne sont pas des probabilités globales.',
+      'scenario.ballot': 'Sur le bulletin :',
+      'change.none': '',
       'hero.title': 'Qui sera élu ?',
       'hero.note': 'Probabilité de remporter le second tour, en tenant compte de l’incertitude sur la composition du bulletin.',
       'qualify.title': 'Qualification pour le second tour',
@@ -79,6 +83,10 @@
       'countdown': function (n) {
         return n + (n > 1 ? ' days to the first round' : ' day to the first round');
       },
+      'scenario.model': 'Full model',
+      'scenario.conditional': 'Scenario: every probability below assumes this exact ballot. These are not overall probabilities.',
+      'scenario.ballot': 'On the ballot:',
+      'change.none': '',
       'hero.title': 'Who becomes president?',
       'hero.note': 'Probability of winning the runoff, allowing for uncertainty about who is on the ballot.',
       'qualify.title': 'Reaching the runoff',

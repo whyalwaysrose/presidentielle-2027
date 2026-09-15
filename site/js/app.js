@@ -15,10 +15,10 @@
 (function () {
   'use strict';
 
-  var SCHEMA_VERSION = 1;
+  var SCHEMA_VERSION = 2;
   var BUILD = '2026-09-07.7';
 
-  var state = { data: null };
+  var state = { data: null, scenario: null };
 
   function showError(message, detail) {
     var box = document.getElementById('load-error');
@@ -38,8 +38,15 @@
   }
 
   function candidate(data, id) {
-    for (var i = 0; i < data.candidats.length; i++) {
-      if (data.candidats[i].id === id) return data.candidats[i];
+    var lists = [data.candidats];
+    if (state.scenario) {
+      var v = Scenarios.view(data, state.scenario);
+      lists.unshift(v.candidats);
+    }
+    for (var l = 0; l < lists.length; l++) {
+      for (var i = 0; i < lists[l].length; i++) {
+        if (lists[l][i].id === id) return lists[l][i];
+      }
     }
     return null;
   }
@@ -67,6 +74,10 @@
     };
   }
 
+  function view() {
+    return Scenarios.view(state.data, state.scenario);
+  }
+
   /* --- header ---------------------------------------------------------- */
   function renderHeader(data) {
     document.getElementById('as-of').textContent = I18n.date(data.as_of);
@@ -80,10 +91,10 @@
   function renderWinners(data) {
     var mount = document.getElementById('win-list');
     mount.innerHTML = '';
-    var rows = data.candidats.slice(0, 6).filter(function (c) {
+    var rows = view().candidats.slice(0, 6).filter(function (c) {
       return (c.p_win || 0) >= 0.005;
     });
-    if (!rows.length) rows = data.candidats.slice(0, 3);
+    if (!rows.length) rows = view().candidats.slice(0, 3);
 
     rows.forEach(function (c) {
       var wrap = document.createElement('div');
@@ -128,7 +139,7 @@
 
   /* --- qualification --------------------------------------------------- */
   function renderQualify(data) {
-    var rows = data.candidats
+    var rows = view().candidats
       .filter(function (c) { return (c.p_qualify || 0) >= 0.01; })
       .sort(function (a, b) { return b.p_qualify - a.p_qualify; })
       .slice(0, 10)
@@ -140,7 +151,7 @@
 
   /* --- first round ------------------------------------------------------ */
   function renderShares(data) {
-    var rows = data.candidats
+    var rows = view().candidats
       .filter(function (c) { return c.share && c.share.q50 !== null && (c.p_standing || 0) >= 0.05; })
       .sort(function (a, b) { return b.share.q50 - a.share.q50; })
       .map(function (c) {
@@ -158,7 +169,7 @@
   function renderDuels(data) {
     var mount = document.getElementById('duels-list');
     mount.innerHTML = '';
-    (data.duels || []).slice(0, 8).forEach(function (d) {
+    (view().duels || []).slice(0, 8).forEach(function (d) {
       var ca = candidate(data, d.a), cb = candidate(data, d.b);
       var colA = ca ? blocColour(data, ca.bloc) : '#888';
       var colB = cb ? blocColour(data, cb.bloc) : '#888';
@@ -370,11 +381,54 @@
     });
   }
 
+  /* --- what moved ------------------------------------------------------- */
+  function renderChange(data) {
+    var el = document.getElementById('change-line');
+    var text = (data.changement && data.changement.texte &&
+                data.changement.texte[I18n.lang]) || '';
+    if (!text) {
+      el.hidden = true;
+      el.textContent = '';
+      return;
+    }
+    el.hidden = false;
+    el.textContent = text;
+    // A model change is not polling news, and the styling says so as well as
+    // the words.
+    el.classList.toggle('is-model-change',
+      !!(data.changement && data.changement.model_changed));
+  }
+
+  /* --- scenarios -------------------------------------------------------- */
+  function renderScenarios(data) {
+    Scenarios.renderBar(
+      document.getElementById('scenario-bar'), data, state.scenario,
+      function (id) {
+        state.scenario = id;
+        renderAll();
+      }
+    );
+    Scenarios.renderNote(
+      document.getElementById('scenario-note'),
+      view().scenario
+    );
+    // The ballot panel answers "who will stand", which a fixed scenario has
+    // already answered by fiat. Hiding it avoids showing a 67% next to a
+    // ballot that assumes 100%.
+    var ballot = document.getElementById('ballot-panel');
+    if (ballot && ballot.closest) {
+      var card = ballot.closest('.card');
+      if (card) card.hidden = !!state.scenario;
+    }
+  }
+
   /* --- render all ------------------------------------------------------- */
   function renderAll() {
     var data = state.data;
     if (!data) return;
     renderHeader(data);
+    renderChange(data);
+    renderScenarios(data);
     renderWinners(data);
     renderQualify(data);
     renderShares(data);

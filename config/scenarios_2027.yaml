@@ -1,0 +1,92 @@
+# Named ballots the reader can switch the forecast to.
+#
+# The default view simulates the ballot - who stands is drawn from institutes'
+# testing behaviour and marginalised over. That is the honest headline, but it
+# answers a question nobody asks out loud. People want "what if Philippe does
+# not run", and averaging over the possibility is not the same as showing it.
+#
+# WHY THIS IS CHEAP. A scenario needs no refitting. The ballot is applied
+# *after* sampling - simulate() takes a field and the posterior draws - so
+# fixing the field costs one more pass of the simulation, seconds rather than
+# the 45 minutes a refit would take.
+#
+# WHAT A SCENARIO MEANS. Every probability inside one is CONDITIONAL on that
+# ballot. "Philippe 54%" under `sans_attal` means 54% given that exactly those
+# people stand, not 54% overall. The page has to say so wherever the numbers
+# appear, because a conditional probability presented as an unconditional one
+# is the most natural way for this page to mislead.
+#
+# WHICH SCENARIOS ARE TRUSTWORTHY, AND WHICH ARE NOT
+#
+# Removing one member of a bloc that has others is exactly what the nesting
+# parameter measures, so `sans_philippe` and `centre_uni` rest on something
+# fitted: how readily centre voters move between Philippe and Attal is
+# estimated from the polls.
+#
+# Removing an ENTIRE bloc is different, and weaker. Between blocs the model is
+# a plain softmax over inclusive values with no notion of proximity, so a
+# vanished bloc's vote is shared out in proportion to every other bloc - IIA,
+# the very thing the nesting fixes *within* a bloc. Zemmour's voters would
+# reach Melenchon as readily as Le Pen, which is not how the French right
+# behaves.
+#
+# A `sans_reconquete` scenario was written and then REMOVED for this reason: it
+# put Le Pen at 54% against a baseline of 67%, and that 13-point swing is an
+# artefact of bloc-level IIA rather than a finding. `gauche_unie` also empties
+# two blocs, so its magnitude carries the same caveat - but its direction does
+# not, because what drives it is the runoff transfer model, which IS measured
+# on 2022: a united left qualifies Melenchon more often into the one runoff
+# Le Pen wins comfortably.
+#
+# Fixing this properly means cross-bloc proximity in the first-round model.
+# Until then, prefer scenarios that reshuffle within a bloc.
+#
+# HOW THEY ARE DEFINED. As modifications of the *reference ballot* - the single
+# most likely field - rather than as explicit lists. A list would silently rot
+# as candidates enter and leave; "remove Philippe" stays meaningful. Ids are
+# validated against the roster on load and an unknown one is an error, not a
+# silent no-op.
+
+scenarios:
+  - id: sans_philippe
+    nom_fr: "Sans Édouard Philippe"
+    nom_en: "Without Édouard Philippe"
+    note_fr: >-
+      Philippe est donné à deux tiers de probabilité de se présenter, et il est
+      le seul candidat que les sondages placent devant Marine Le Pen au second
+      tour. Son absence est donc l'incertitude la plus lourde du scrutin.
+    note_en: >-
+      Philippe is about two-thirds likely to stand, and he is the only candidate
+      the polls put ahead of Le Pen in a runoff. His absence is the single
+      heaviest uncertainty on this ballot.
+    remove: [EP]
+
+  - id: centre_uni
+    nom_fr: "Le centre derrière un seul candidat"
+    nom_en: "One candidate for the centre"
+    note_fr: >-
+      Philippe se présente, Attal non. Le bloc centriste cesse de se diviser :
+      c'est exactement ce que le logit emboîté mesure, puisque le report entre
+      candidats d'un même bloc y est estimé et non supposé.
+    note_en: >-
+      Philippe stands, Attal does not. The centre stops splitting itself - which
+      is precisely what the nested logit measures, since substitution inside a
+      bloc is estimated rather than assumed.
+    remove: [GA]
+
+  - id: gauche_unie
+    nom_fr: "Une gauche unie"
+    nom_en: "A united left"
+    note_fr: >-
+      Un seul candidat à gauche, Jean-Luc Mélenchon, au lieu de quatre. Le
+      résultat est contre-intuitif : l'union qualifie Mélenchon plus souvent,
+      mais précisément pour le second tour que Marine Le Pen remporte le plus
+      largement. Le sens de cet effet vient des reports mesurés en 2022 ; son
+      ampleur est moins sûre, car ce scénario vide deux blocs entiers.
+    note_en: >-
+      One candidate of the left, Mélenchon, instead of four. The result is
+      counter-intuitive: uniting qualifies Mélenchon more often, but into
+      exactly the runoff Le Pen wins most comfortably. The direction comes from
+      the measured 2022 transfers; the magnitude is less certain, because this
+      scenario empties two whole blocs.
+    remove: [RG, MT, FRo, NA]

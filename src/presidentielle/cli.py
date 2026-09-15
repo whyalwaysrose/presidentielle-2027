@@ -356,6 +356,8 @@ def cmd_backtest(args) -> int:
 def cmd_run(args) -> int:
     import arviz as az
 
+    from . import changes
+    from . import scenarios as scenarios_mod
     from .calibration import load_results
     from .commentary import write_commentary
     from .data.transfers import load as load_transfers
@@ -367,6 +369,9 @@ def cmd_run(args) -> int:
     from .outputs import build_forecast, model_fingerprint, write_json
 
     paths.ensure_dirs()
+    # Read the previous archive first: write_json below adds a new file to
+    # the same directory, and 'most recent run' would then mean this one.
+    previous = changes.previous_run(paths.RUNS)
     cfg = load_model_config()
     if args.draws:
         # Smoke-test override. Never used for a published run: the workflow
@@ -512,6 +517,34 @@ def cmd_run(args) -> int:
         candidate_ids=data.candidate_ids,
     )
 
+    def _simulate_field(fields_, rng_):
+        return simulate(
+            strength_draws=strength_draws,
+            lambda_draws=lambda_draws,
+            runoff_draws=runoff_draws,
+            fields=fields_,
+            candidate_bloc=data.candidate_bloc,
+            n_blocs=data.n_blocs,
+            rn_index=data.bloc_keys.index("rn"),
+            cfg=cfg,
+            rng=rng_,
+            candidate_ids=data.candidate_ids,
+        )
+
+    # Named ballots need no refit - the field is applied after sampling - so
+    # these cost one extra simulation pass each, not another 45 minutes.
+    scenario_defs = scenarios_mod.load()
+    scenarios_mod.validate(scenario_defs, roster)
+    scenario_out = scenarios_mod.run_all(
+        scenario_defs,
+        reference=reference,
+        candidate_ids=data.candidate_ids,
+        roster=roster,
+        simulate_fn=_simulate_field,
+        n_sims=n_sims,
+        seed=cfg.sampling.seed,
+    )
+
     trend = _build_trend(post, reference, data, cfg)
     summary = surveys.summarise(weighted)
     recent = _recent_polls(hyps, roster, limit=12)
@@ -575,6 +608,12 @@ def cmd_run(args) -> int:
         as_of=as_of,
         scenario=scenario_name,
     )
+    payload["scenarios"] = scenario_out
+    comparison = changes.compare(payload, previous)
+    payload["changement"] = {
+        **comparison.as_dict(),
+        "texte": changes.describe(comparison, payload),
+    }
     payload["commentaire"] = write_commentary(payload, roster)
 
     write_json(payload, paths.SITE_DATA / "forecast.json")
@@ -582,6 +621,9 @@ def cmd_run(args) -> int:
     write_json(payload, paths.RUNS / f"{stamp}.json")
 
     print()
+    change_text = payload["changement"]["texte"]["en"]
+    if change_text:
+        print(change_text)
     print(f"as of {as_of} - {payload['election']['jours_restants']} days out")
     print(f"{'candidate':26s} {'P(ballot)':>10s} {'P(round 2)':>11s} {'P(win)':>8s}  first round")
     for c in payload["candidats"][:9]:

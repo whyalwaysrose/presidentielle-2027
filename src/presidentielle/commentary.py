@@ -34,14 +34,14 @@ MONTHS_EN = [
 ]
 
 
-def _date_fr(iso: str) -> str:
+def date_fr(iso: str) -> str:
     d = dt.date.fromisoformat(str(iso)[:10])
     # "1er" rather than "1" for the first of the month.
     day = "1er" if d.day == 1 else str(d.day)
     return f"{day} {MOIS_FR[d.month - 1]} {d.year}"
 
 
-def _date_en(iso: str) -> str:
+def date_en(iso: str) -> str:
     d = dt.date.fromisoformat(str(iso)[:10])
     return f"{d.day} {MONTHS_EN[d.month - 1]} {d.year}"
 
@@ -85,7 +85,7 @@ def write_commentary(payload: dict, roster: Roster) -> dict[str, str]:
     # ---------------- French ----------------
     fr = [
         f"À {days} jours du premier tour, le modèle s'appuie sur {n_surveys} enquêtes "
-        f"({n_hyp} hypothèses de premier tour) publiées jusqu'au {_date_fr(as_of)}.",
+        f"({n_hyp} hypothèses de premier tour) publiées jusqu'au {date_fr(as_of)}.",
         f"{top['nom']} est le candidat le plus susceptible d'être élu "
         f"({_pct_fr(top['p_win'])}), devant {by_win[1]['nom']} ({_pct_fr(by_win[1]['p_win'])}) "
         f"et {by_win[2]['nom']} ({_pct_fr(by_win[2]['p_win'])}).",
@@ -104,7 +104,7 @@ def write_commentary(payload: dict, roster: Roster) -> dict[str, str]:
     if not payload["election"]["field_is_known"]:
         fr.append(
             "La composition du bulletin n'est pas encore fixée : les candidatures ne sont "
-            f"closes que le {_date_fr(cloture)}. Le modèle simule qui se présente au lieu "
+            f"closes que le {date_fr(cloture)}. Le modèle simule qui se présente au lieu "
             "de le supposer, et la probabilité d'être élu intègre donc celle de figurer "
             "sur le bulletin."
         )
@@ -112,7 +112,7 @@ def write_commentary(payload: dict, roster: Roster) -> dict[str, str]:
     # ---------------- English ----------------
     en = [
         f"With {days} days to the first round, the model uses {n_surveys} surveys "
-        f"({n_hyp} first-round hypotheses) published up to {_date_en(as_of)}.",
+        f"({n_hyp} first-round hypotheses) published up to {date_en(as_of)}.",
         f"{top['nom']} is the most likely winner ({_pct_en(top['p_win'])}), ahead of "
         f"{by_win[1]['nom']} ({_pct_en(by_win[1]['p_win'])}) and "
         f"{by_win[2]['nom']} ({_pct_en(by_win[2]['p_win'])}).",
@@ -131,7 +131,7 @@ def write_commentary(payload: dict, roster: Roster) -> dict[str, str]:
     if not payload["election"]["field_is_known"]:
         en.append(
             "The ballot is not yet settled - candidacies do not close until "
-            f"{_date_en(cloture)}. The model simulates who stands rather than assuming "
+            f"{date_en(cloture)}. The model simulates who stands rather than assuming "
             "it, so a candidate's probability of winning includes the probability of "
             "being on the ballot at all."
         )
