@@ -333,9 +333,122 @@
     ));
   }
 
+  /* ---------------------------------------------------------------------
+     Probability over time. Points are sparse by design - one per state of the
+     polling, not per model run - so the markers matter as much as the line:
+     with four data dates a smooth curve would imply readings that do not
+     exist.
+     --------------------------------------------------------------------- */
+  function historyLines(mount, hist, meta, legendMount) {
+    clear(mount);
+    if (legendMount) clear(legendMount);
+    if (!hist || !hist.dates || hist.dates.length < 2) return;
+
+    var width = Math.max(mount.clientWidth || 720, 320);
+    var height = Math.min(320, Math.max(220, width * 0.38));
+    var padL = 44, padR = 14, padT = 14, padB = 28;
+    var plotW = width - padL - padR;
+    var plotH = height - padT - padB;
+
+    var times = hist.dates.map(function (d) { return Date.parse(d); });
+    var t0 = times[0], t1 = times[times.length - 1];
+    var span = (t1 - t0) || 1;
+
+    var ids = Object.keys(hist.series);
+    var maxV = 0.1;
+    ids.forEach(function (id) {
+      hist.series[id].forEach(function (v) { if (v != null && v > maxV) maxV = v; });
+    });
+    var ymax = Math.min(1, Math.ceil((maxV + 0.05) * 10) / 10);
+
+    var x = function (t) { return padL + ((t - t0) / span) * plotW; };
+    var y = function (v) { return padT + plotH - (v / ymax) * plotH; };
+
+    var svg = titledSvg(
+      { viewBox: '0 0 ' + width + ' ' + height, width: width, height: height },
+      I18n.t('history.a11yTitle')
+    );
+    var border = cssVar('--border', '#262d38');
+    var faint = cssVar('--text-faint', '#7d8894');
+
+    for (var g = 0; g <= ymax + 1e-9; g += 0.1) {
+      svg.appendChild(el('line', {
+        x1: padL, y1: y(g), x2: width - padR, y2: y(g),
+        stroke: border, 'stroke-width': 1
+      }));
+      svg.appendChild(el('text', {
+        x: padL - 6, y: y(g) + 3, 'text-anchor': 'end', fill: faint, 'font-size': 10
+      }, I18n.pct(g)));
+    }
+    hist.dates.forEach(function (iso, i) {
+      svg.appendChild(el('text', {
+        x: x(times[i]), y: height - 8, 'text-anchor': 'middle',
+        fill: faint, 'font-size': 10
+      }, I18n.shortDate(iso)));
+    });
+
+    ids.sort(function (a, b) {
+      var va = hist.series[a][hist.series[a].length - 1] || 0;
+      var vb = hist.series[b][hist.series[b].length - 1] || 0;
+      return vb - va;
+    });
+
+    ids.forEach(function (id) {
+      var colour = meta.colourOf(id);
+      var vals = hist.series[id];
+      var d = '', started = false;
+      vals.forEach(function (v, i) {
+        if (v == null) return;
+        d += (started ? 'L' : 'M') + x(times[i]).toFixed(1) + ' ' + y(v).toFixed(1) + ' ';
+        started = true;
+      });
+      if (d) {
+        svg.appendChild(el('path', {
+          d: d, fill: 'none', stroke: colour, 'stroke-width': 2,
+          'stroke-linejoin': 'round', 'stroke-linecap': 'round'
+        }));
+      }
+      vals.forEach(function (v, i) {
+        if (v == null) return;
+        svg.appendChild(el('circle', {
+          cx: x(times[i]), cy: y(v), r: 3.5,
+          fill: cssVar('--bg-elev', '#161b22'), stroke: colour, 'stroke-width': 2
+        }));
+      });
+      if (legendMount) {
+        var item = document.createElement('span');
+        item.className = 'legend-item';
+        var sw = document.createElement('span');
+        sw.className = 'legend-swatch';
+        sw.style.background = colour;
+        item.appendChild(sw);
+        item.appendChild(document.createTextNode(
+          (hist.noms && hist.noms[id]) || meta.nameOf(id)
+        ));
+        legendMount.appendChild(item);
+      }
+    });
+
+    mount.appendChild(svg);
+
+    mount.appendChild(dataTable(
+      I18n.t('history.a11yTitle'),
+      [I18n.t('history.date')].concat(ids.map(function (id) {
+        return (hist.noms && hist.noms[id]) || meta.nameOf(id);
+      })),
+      hist.dates.map(function (iso, i) {
+        return [I18n.date(iso)].concat(ids.map(function (id) {
+          var v = hist.series[id][i];
+          return v == null ? '—' : I18n.pct(v);
+        }));
+      })
+    ));
+  }
+
   global.Charts = {
     probabilityBars: probabilityBars,
     intervalPlot: intervalPlot,
-    trendLines: trendLines
+    trendLines: trendLines,
+    historyLines: historyLines
   };
 })(window);

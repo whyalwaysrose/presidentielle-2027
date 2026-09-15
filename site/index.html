@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
 <meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
-<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 
@@ -148,6 +148,27 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
+  <section class="card" id="history-card" aria-labelledby="h-history" hidden>
+    <div class="card-head">
+      <h2 id="h-history" data-i18n="history.title">Évolution de la probabilité d’être élu</h2>
+      <p class="card-note" data-i18n="history.note"></p>
+    </div>
+    <div id="history-chart" class="chart"></div>
+    <div id="history-legend" class="legend"></div>
+    <p id="history-warning" class="history-warning" hidden></p>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section class="card" id="record-card" aria-labelledby="h-record" hidden>
+    <div class="card-head">
+      <h2 id="h-record" data-i18n="record.title">Ce que vaut ce modele</h2>
+      <p class="card-note" data-i18n="record.note"></p>
+    </div>
+    <div id="record-table" class="polls"></div>
+    <div id="record-caveats" class="record-caveats"></div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
   <section class="card method" aria-labelledby="h-method">
     <div class="card-head">
       <h2 id="h-method" data-i18n="method.title">Méthode et limites</h2>
@@ -215,9 +236,9 @@
 <script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script src="js/i18n.js?v=10"></script>
-<script src="js/charts.js?v=10"></script>
-<script src="js/scenarios.js?v=10"></script>
-<script src="js/app.js?v=10"></script>
+<script src="js/i18n.js?v=12"></script>
+<script src="js/charts.js?v=12"></script>
+<script src="js/scenarios.js?v=12"></script>
+<script src="js/app.js?v=12"></script>
 </body>
 </html>

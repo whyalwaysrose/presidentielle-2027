@@ -387,6 +387,106 @@
     mount.appendChild(table);
   }
 
+  /* --- headline over time ------------------------------------------------ */
+  function renderHistory(data) {
+    var card = document.getElementById('history-card');
+    var hist = data.historique;
+    if (!hist || !hist.dates || hist.dates.length < 2) {
+      // One data point is not a history. Hide rather than draw a dot.
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    Charts.historyLines(
+      document.getElementById('history-chart'), hist, meta(data),
+      document.getElementById('history-legend')
+    );
+    // Earlier points came from earlier arithmetic. Saying so is the difference
+    // between a history and a misleading one.
+    var warn = document.getElementById('history-warning');
+    warn.hidden = !hist.model_changed;
+    warn.textContent = hist.model_changed ? I18n.t('history.modelChanged') : '';
+  }
+
+  /* --- the model's own record ------------------------------------------- */
+  function renderRecord(data) {
+    var card = document.getElementById('record-card');
+    var rec = data.palmares;
+    if (!rec || !rec.runs || !rec.runs.length) {
+      // Nothing scored yet. Better silent than a section claiming a record
+      // that does not exist.
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+
+    var mount = document.getElementById('record-table');
+    mount.innerHTML = '';
+    var table = document.createElement('table');
+    var cap = document.createElement('caption');
+    cap.className = 'sr-only';
+    cap.textContent = I18n.t('record.title');
+    table.appendChild(cap);
+
+    var head = [I18n.t('record.horizon'), I18n.t('record.top2'),
+                I18n.t('record.mae'), I18n.t('record.cov90'),
+                I18n.t('record.pwinner')];
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    head.forEach(function (h) {
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'col');
+      th.textContent = h;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    var worstCoverage = 1;
+    rec.runs.forEach(function (r) {
+      if (typeof r.coverage_90 === 'number') {
+        worstCoverage = Math.min(worstCoverage, r.coverage_90);
+      }
+      var tr = document.createElement('tr');
+      var cells = [
+        I18n.t('record.days', r.days_out),
+        r.top2_correct ? I18n.t('record.yes') : I18n.t('record.no'),
+        (r.mae_points != null ? r.mae_points.toFixed(1) : '—') + ' pts',
+        I18n.pct(r.coverage_90),
+        I18n.pct(r.p_winner)
+      ];
+      cells.forEach(function (c, i) {
+        var cell = document.createElement(i === 0 ? 'th' : 'td');
+        if (i === 0) cell.setAttribute('scope', 'row');
+        cell.textContent = c;
+        tr.appendChild(cell);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    mount.appendChild(table);
+
+    // The caveats are not decoration. A record shown without them reads as
+    // independent validation, which this is not.
+    var cav = document.getElementById('record-caveats');
+    cav.innerHTML = '';
+    var h = document.createElement('h3');
+    h.textContent = I18n.t('record.caveats');
+    cav.appendChild(h);
+
+    var items = [{ key: 'record.vuln', main: true }];
+    if (worstCoverage < 0.9) items.push({ key: 'record.undercover' });
+    if (rec.circular) items.push({ key: 'record.circular' });
+
+    items.forEach(function (it) {
+      var p = document.createElement('p');
+      p.textContent = I18n.t(it.key);
+      if (it.main) p.className = 'is-key';
+      cav.appendChild(p);
+    });
+  }
+
   /* --- commentary and diagnostics --------------------------------------- */
   function renderCommentary(data) {
     var mount = document.getElementById('commentary');
@@ -470,6 +570,8 @@
     renderDuels(data);
     renderBallot(data);
     renderPolls(data);
+    renderHistory(data);
+    renderRecord(data);
     renderCommentary(data);
     Charts.trendLines(
       document.getElementById('trend-chart'),

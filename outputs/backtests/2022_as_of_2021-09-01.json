@@ -4,6 +4,7 @@
  "n_polls": 26,
  "n_hypotheses": 68,
  "mae_points": 2.82,
+ "crps_points": 2.059,
  "coverage_90": 0.833,
  "coverage_50": 0.417,
  "p_qualify_actual": {

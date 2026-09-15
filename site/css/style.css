@@ -509,3 +509,34 @@ main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
 #main:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
 .win-list { list-style: none; padding: 0; }
+
+
+/* --- the model's own record ---------------------------------------------- */
+
+.record-caveats {
+  margin-top: var(--sp-5);
+  display: grid;
+  gap: var(--sp-3);
+}
+.record-caveats p {
+  margin: 0;
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--border-strong);
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  max-width: 72ch;
+}
+/* The vulnerability is the one a reader most needs to carry away. */
+.record-caveats p.is-key { border-left-color: var(--accent); color: var(--text); }
+
+
+/* --- headline over time --------------------------------------------------- */
+
+.history-warning {
+  margin: var(--sp-3) 0 0;
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--border-strong);
+  font-size: var(--fs-sm);
+  color: var(--text-faint);
+  max-width: 72ch;
+}

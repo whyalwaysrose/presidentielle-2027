@@ -178,6 +178,12 @@ uncertainty is large — and the page says so in both languages.
 A personal project, unaffiliated with any polling institute, party or news
 organisation.
 
+**The page shows its own track record.** How the same model did when replayed
+on 2022, at two horizons, with the caveats attached — including that the
+coverage figure is partly circular. Plus the headline probability over time,
+one point per state of the polling rather than per run, flagged when the model
+itself changed during the period.
+
 **Accessibility.** Every chart carries a localised title and a hidden but
 navigable data table, so the figures are reachable without seeing the graphic.
 Landmarks are named, the hero and ballot panels are lists, scenario and

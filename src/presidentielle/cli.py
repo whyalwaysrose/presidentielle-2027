@@ -370,7 +370,7 @@ def cmd_backtest(args) -> int:
 def cmd_run(args) -> int:
     import arviz as az
 
-    from . import changes
+    from . import changes, history, trackrecord
     from . import scenarios as scenarios_mod
     from .calibration import load_results
     from .commentary import write_commentary
@@ -623,6 +623,8 @@ def cmd_run(args) -> int:
         scenario=scenario_name,
     )
     payload["scenarios"] = scenario_out
+    payload["palmares"] = trackrecord.build()
+    payload["historique"] = history.build()
     comparison = changes.compare(payload, previous)
     payload["changement"] = {
         **comparison.as_dict(),

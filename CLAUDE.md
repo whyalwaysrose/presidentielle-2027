@@ -429,6 +429,29 @@ does not paint `:focus` styles while `document.hasFocus()` is false, although
 off-screen and appear broken when it is correct. Mirror the declaration on a
 class to check it.
 
+## The page shows the model's own record, with its caveats attached
+
+`trackrecord.py` reads the committed backtest scores in `outputs/backtests/`
+and `history.py` reads `outputs/runs/`, so the page cannot drift from what was
+measured - nothing is retyped into HTML.
+
+Two rules about presenting them, both load-bearing:
+
+1. **The record never appears without its caveats.** Coverage measured on 2022
+   is partly circular, because the parameters setting interval width were
+   fitted on that cycle. Shown alone it would read as independent validation.
+   `tests/test_record_history.py` asserts the `circular` flag is always true.
+2. **The history plots one point per DATA DATE, not per run.** Of the first 23
+   archived runs only four had distinct `as_of` dates - the rest were the same
+   polling re-sampled, across eight model fingerprints. A line through every
+   run would show a reader my edits and call it French opinion. The chart also
+   states when the model changed during the period, because earlier points came
+   from earlier arithmetic.
+
+**Known false positive:** `model_fingerprint` hashes the bytes of `model.yaml`,
+so editing only a COMMENT flags a model change. It errs safe - a spurious "the
+model changed" is much better than a silent one - but do not be surprised by it.
+
 ## Measured, then rejected
 
 Keep these unless new evidence overturns them. Each cost real time to establish
