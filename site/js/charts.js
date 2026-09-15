@@ -10,6 +10,71 @@
 
   var SVG = 'http://www.w3.org/2000/svg';
 
+  /* Unique ids for <title> elements, so aria-labelledby can point at them. */
+  var uid = 0;
+  function nextId(prefix) { uid += 1; return prefix + '-' + uid; }
+
+  /* ---------------------------------------------------------------------
+     ACCESSIBLE CHARTS.
+
+     These used to carry role="img" and no accessible name. That is worse than
+     no role at all: role="img" makes the element a LEAF, so a screen reader
+     announces "image", with no name, and skips every label and number inside
+     it. All three charts were, in practice, empty to assistive technology.
+
+     The fix is the standard two-part one. The SVG keeps role="img" and gains a
+     <title> that says what the chart shows, so it is announced as something
+     rather than nothing. The actual numbers then live in a real <table> beside
+     it, visually hidden but fully navigable - a screen reader user can move
+     through it row by row with table commands, which is a better experience
+     than any amount of description on the graphic.
+     --------------------------------------------------------------------- */
+
+  function titledSvg(attrs, titleText) {
+    var id = nextId('chart-title');
+    var svg = el('svg', attrs);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-labelledby', id);
+    var t = el('title', { id: id }, titleText);
+    svg.appendChild(t);
+    return svg;
+  }
+
+  /* The same data the chart draws, as a table. Hidden visually, not from
+     assistive technology - display:none or hidden would remove it from both. */
+  function dataTable(caption, headers, rows) {
+    var table = document.createElement('table');
+    table.className = 'sr-only';
+    var cap = document.createElement('caption');
+    cap.textContent = caption;
+    table.appendChild(cap);
+
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    headers.forEach(function (h) {
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'col');
+      th.textContent = h;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      r.forEach(function (cell, i) {
+        var td = document.createElement(i === 0 ? 'th' : 'td');
+        if (i === 0) td.setAttribute('scope', 'row');
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    return table;
+  }
+
   function el(name, attrs, text) {
     var node = document.createElementNS(SVG, name);
     if (attrs) {
@@ -53,10 +118,10 @@
     var barW = Math.max(60, width - labelW - valueW - padR);
     var height = rows.length * rowH + 8;
 
-    var svg = el('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      width: width, height: height, role: 'img'
-    });
+    var svg = titledSvg(
+      { viewBox: '0 0 ' + width + ' ' + height, width: width, height: height },
+      opts.title || I18n.t('a11y.barsTitle')
+    );
 
     var track = cssVar('--track', '#232a34');
     var dim = cssVar('--text-dim', '#9aa7b4');
@@ -82,6 +147,11 @@
     });
 
     mount.appendChild(svg);
+    mount.appendChild(dataTable(
+      opts.title || I18n.t('a11y.barsTitle'),
+      [I18n.t('a11y.candidate'), I18n.t('a11y.probability')],
+      rows.map(function (r) { return [r.label, I18n.pct(r.value)]; })
+    ));
   }
 
   /* ---------------------------------------------------------------------
@@ -109,10 +179,10 @@
     var xmax = Math.min(1, Math.ceil((maxV + 0.02) * 20) / 20);
     var x = function (v) { return labelW + (v / xmax) * plotW; };
 
-    var svg = el('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      width: width, height: height, role: 'img'
-    });
+    var svg = titledSvg(
+      { viewBox: '0 0 ' + width + ' ' + height, width: width, height: height },
+      opts.title || I18n.t('a11y.intervalTitle')
+    );
 
     var border = cssVar('--border', '#262d38');
     var dim = cssVar('--text-dim', '#9aa7b4');
@@ -154,6 +224,14 @@
     });
 
     mount.appendChild(svg);
+    mount.appendChild(dataTable(
+      opts.title || I18n.t('a11y.intervalTitle'),
+      [I18n.t('a11y.candidate'), I18n.t('label.median'),
+       I18n.t('a11y.low'), I18n.t('a11y.high')],
+      rows.map(function (r) {
+        return [r.label, I18n.pct(r.q50, 1), I18n.pct(r.q05, 1), I18n.pct(r.q95, 1)];
+      })
+    ));
   }
 
   /* ---------------------------------------------------------------------
@@ -186,9 +264,10 @@
     var x = function (t) { return padL + ((t - t0) / (t1 - t0)) * plotW; };
     var y = function (v) { return padT + plotH - (v / ymax) * plotH; };
 
-    var svg = el('svg', {
-      viewBox: '0 0 ' + width + ' ' + height, width: width, height: height, role: 'img'
-    });
+    var svg = titledSvg(
+      { viewBox: '0 0 ' + width + ' ' + height, width: width, height: height },
+      I18n.t('a11y.trendTitle')
+    );
 
     var border = cssVar('--border', '#262d38');
     var faint = cssVar('--text-faint', '#7d8894');
@@ -242,6 +321,16 @@
     });
 
     mount.appendChild(svg);
+
+    // A full time series would be an unreadable table. The useful summary is
+    // where each line ends, which is what the chart is read for.
+    mount.appendChild(dataTable(
+      I18n.t('a11y.trendTable'),
+      [I18n.t('a11y.candidate'), I18n.t('a11y.latest')],
+      series.map(function (sr) {
+        return [meta.nameOf(sr.id), I18n.pct(sr.values[sr.values.length - 1], 1)];
+      })
+    ));
   }
 
   global.Charts = {

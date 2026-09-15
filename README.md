@@ -177,6 +177,12 @@ uncertainty is large — and the page says so in both languages.
 A personal project, unaffiliated with any polling institute, party or news
 organisation.
 
+**Accessibility.** Every chart carries a localised title and a hidden but
+navigable data table, so the figures are reachable without seeing the graphic.
+Landmarks are named, the hero and ballot panels are lists, scenario and
+language changes are announced, and there is a skip link. Colour is never the
+only carrier of meaning.
+
 **Privacy.** The hosted page counts visits with
 [GoatCounter](https://www.goatcounter.com/): cookieless, aggregate, no personal
 data and no cross-site tracking. It stores nothing that identifies a reader,

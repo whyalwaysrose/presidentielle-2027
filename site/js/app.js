@@ -74,6 +74,17 @@
     };
   }
 
+  /* Switching scenario or language rewrites most of the page in place. A
+     sighted user sees that instantly; without an announcement nobody else
+     knows anything happened at all. */
+  function announce(message) {
+    var live = document.getElementById('a11y-live');
+    if (!live || !message) return;
+    // Re-setting identical text does not re-announce, so clear first.
+    live.textContent = '';
+    setTimeout(function () { live.textContent = message; }, 50);
+  }
+
   function view() {
     return Scenarios.view(state.data, state.scenario);
   }
@@ -97,7 +108,7 @@
     if (!rows.length) rows = view().candidats.slice(0, 3);
 
     rows.forEach(function (c) {
-      var wrap = document.createElement('div');
+      var wrap = document.createElement('li');
       wrap.className = 'win-row';
 
       var top = document.createElement('div');
@@ -125,6 +136,8 @@
 
       var track = document.createElement('div');
       track.className = 'bar-track';
+      // The bar repeats the number beside it; announcing it twice is noise.
+      track.setAttribute('aria-hidden', 'true');
       var fill = document.createElement('div');
       fill.className = 'bar-fill';
       fill.style.width = Math.max(0.6, (c.p_win || 0) * 100) + '%';
@@ -190,6 +203,12 @@
 
       var bar = document.createElement('div');
       bar.className = 'duel-bar';
+      // Two coloured halves reading "44%" "56%" say nothing about whose. One
+      // labelled group says the whole thing once.
+      bar.setAttribute('role', 'group');
+      bar.setAttribute('aria-label',
+        d.nom_a + ' ' + I18n.pct(d.p_a_wins) + ', ' +
+        d.nom_b + ' ' + I18n.pct(1 - d.p_a_wins));
       var left = document.createElement('div');
       left.className = 'duel-side';
       left.style.width = (d.p_a_wins * 100) + '%';
@@ -200,6 +219,8 @@
       right.style.width = ((1 - d.p_a_wins) * 100) + '%';
       right.style.background = colB;
       right.textContent = I18n.pct(1 - d.p_a_wins);
+      left.setAttribute('aria-hidden', 'true');
+      right.setAttribute('aria-hidden', 'true');
       bar.appendChild(left);
       bar.appendChild(right);
 
@@ -231,6 +252,8 @@
 
       var bar = document.createElement('div');
       bar.className = 'arb-bar';
+      // The labels under it carry the same numbers in text.
+      bar.setAttribute('aria-hidden', 'true');
       var labels = document.createElement('div');
       labels.className = 'arb-labels';
 
@@ -286,6 +309,7 @@
       v.textContent = I18n.pct(e.p);
       var track = document.createElement('div');
       track.className = 'stand-track';
+      track.setAttribute('aria-hidden', 'true');
       var fill = document.createElement('div');
       fill.className = 'stand-fill';
       fill.style.width = (e.p * 100) + '%';
@@ -306,11 +330,16 @@
     var mount = document.getElementById('polls-table');
     mount.innerHTML = '';
     var table = document.createElement('table');
+    var cap = document.createElement('caption');
+    cap.className = 'sr-only';
+    cap.textContent = I18n.t('a11y.pollsCaption');
+    table.appendChild(cap);
     var thead = document.createElement('thead');
     var hr = document.createElement('tr');
     [I18n.t('polls.institute'), I18n.t('polls.dates'),
      I18n.t('polls.sample'), I18n.t('polls.top')].forEach(function (h) {
       var th = document.createElement('th');
+      th.setAttribute('scope', 'col');
       th.textContent = h;
       hr.appendChild(th);
     });
@@ -321,7 +350,8 @@
     (data.derniers_sondages || []).forEach(function (p) {
       var tr = document.createElement('tr');
 
-      var td1 = document.createElement('td');
+      var td1 = document.createElement('th');
+      td1.setAttribute('scope', 'row');
       var inst = document.createElement('span');
       inst.className = 'poll-inst';
       inst.textContent = p.institut;
@@ -406,6 +436,11 @@
       function (id) {
         state.scenario = id;
         renderAll();
+        var v = view().scenario;
+        announce(v
+          ? I18n.t('a11y.announceScenario',
+                   I18n.lang === 'fr' ? v.nom_fr : v.nom_en)
+          : I18n.t('a11y.announceModel'));
       }
     );
     Scenarios.renderNote(

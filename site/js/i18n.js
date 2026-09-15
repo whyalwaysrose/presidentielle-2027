@@ -30,6 +30,22 @@
       'scenario.conditional': 'Scénario : toutes les probabilités ci-dessous supposent ce bulletin précis. Ce ne sont pas des probabilités globales.',
       'scenario.ballot': 'Sur le bulletin :',
       'change.none': '',
+      'a11y.skip': 'Aller au contenu',
+      'a11y.scenarioNav': 'Choisir un scénario',
+      'a11y.barsTitle': 'Probabilité par candidat',
+      'a11y.intervalTitle': 'Score au premier tour, intervalle à 90 %',
+      'a11y.trendTitle': 'Évolution du score estimé au premier tour',
+      'a11y.trendTable': 'Score estimé le plus récent, par candidat',
+      'a11y.candidate': 'Candidat',
+      'a11y.probability': 'Probabilité',
+      'a11y.low': 'Borne basse',
+      'a11y.high': 'Borne haute',
+      'a11y.latest': 'Dernière valeur',
+      'a11y.pollsCaption': 'Dernières enquêtes publiées',
+      'a11y.announceScenario': function (name) {
+        return 'Scénario appliqué : ' + name + '. Les probabilités affichées supposent ce bulletin.';
+      },
+      'a11y.announceModel': 'Modèle complet rétabli. Les probabilités tiennent compte de l’incertitude sur le bulletin.',
       'hero.title': 'Qui sera élu ?',
       'hero.note': 'Probabilité de remporter le second tour, en tenant compte de l’incertitude sur la composition du bulletin.',
       'qualify.title': 'Qualification pour le second tour',
@@ -87,6 +103,22 @@
       'scenario.conditional': 'Scenario: every probability below assumes this exact ballot. These are not overall probabilities.',
       'scenario.ballot': 'On the ballot:',
       'change.none': '',
+      'a11y.skip': 'Skip to content',
+      'a11y.scenarioNav': 'Choose a scenario',
+      'a11y.barsTitle': 'Probability by candidate',
+      'a11y.intervalTitle': 'First-round share, 90% interval',
+      'a11y.trendTitle': 'Estimated first-round share over time',
+      'a11y.trendTable': 'Most recent estimated share, by candidate',
+      'a11y.candidate': 'Candidate',
+      'a11y.probability': 'Probability',
+      'a11y.low': 'Lower bound',
+      'a11y.high': 'Upper bound',
+      'a11y.latest': 'Latest value',
+      'a11y.pollsCaption': 'Most recent published surveys',
+      'a11y.announceScenario': function (name) {
+        return 'Scenario applied: ' + name + '. The probabilities shown assume this ballot.';
+      },
+      'a11y.announceModel': 'Full model restored. Probabilities allow for uncertainty about the ballot.',
       'hero.title': 'Who becomes president?',
       'hero.note': 'Probability of winning the runoff, allowing for uncertainty about who is on the ballot.',
       'qualify.title': 'Reaching the runoff',
@@ -202,6 +234,11 @@
         } else {
           el.textContent = value;
         }
+      }
+      var labelled = document.querySelectorAll('[data-i18n-aria]');
+      for (var k = 0; k < labelled.length; k++) {
+        var v = I18n.t(labelled[k].getAttribute('data-i18n-aria'));
+        if (typeof v === 'string') labelled[k].setAttribute('aria-label', v);
       }
       var btns = document.querySelectorAll('.lang-btn');
       for (var j = 0; j < btns.length; j++) {

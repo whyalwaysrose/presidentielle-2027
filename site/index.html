@@ -15,9 +15,11 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
 <meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
-<link rel="stylesheet" href="css/style.css?v=8">
+<link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
+
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Aller au contenu</a>
 
 <header class="site-header">
   <div class="wrap header-inner">
@@ -39,9 +41,13 @@
   </div>
 </header>
 
-<div id="load-error" class="wrap error-banner" hidden></div>
+<div id="load-error" class="wrap error-banner" role="alert" hidden></div>
 
-<main class="wrap">
+<!-- Switching scenario or language rewrites most of the page. Without an
+     announcement a screen-reader user gets no indication anything happened. -->
+<p id="a11y-live" class="sr-only" role="status" aria-live="polite"></p>
+
+<main class="wrap" id="main" tabindex="-1">
 
   <!-- What moved since the last run. Empty on a first run, and hidden then. -->
   <p id="change-line" class="change-line" hidden></p>
@@ -49,26 +55,27 @@
   <!-- Named ballots. Fixing the field makes every number below conditional,
        which #scenario-note states while one is active. -->
   <nav id="scenario-bar" class="scenario-bar"
-       aria-label="Scenario" hidden></nav>
+       data-i18n-aria="a11y.scenarioNav"
+       aria-label="Choisir un scénario" hidden></nav>
   <div id="scenario-note" class="scenario-panel" hidden></div>
 
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card hero">
+  <section class="card hero" aria-labelledby="h-hero">
     <div class="card-head">
-      <h2 data-i18n="hero.title">Qui sera élu ?</h2>
+      <h2 id="h-hero" data-i18n="hero.title">Qui sera élu ?</h2>
       <p class="card-note" data-i18n="hero.note">
         Probabilité de remporter le second tour, en tenant compte de l'incertitude
         sur la composition du bulletin.
       </p>
     </div>
-    <div id="win-list" class="win-list"></div>
+    <ul id="win-list" class="win-list"></ul>
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-qualify">
     <div class="card-head">
-      <h2 data-i18n="qualify.title">Qualification pour le second tour</h2>
+      <h2 id="h-qualify" data-i18n="qualify.title">Qualification pour le second tour</h2>
       <p class="card-note" data-i18n="qualify.note">
         Se qualifier et gagner sont deux questions différentes. Un candidat peut
         dominer le premier tour et perdre le second.
@@ -78,9 +85,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-first">
     <div class="card-head">
-      <h2 data-i18n="first.title">Premier tour</h2>
+      <h2 id="h-first" data-i18n="first.title">Premier tour</h2>
       <p class="card-note" data-i18n="first.note">
         Intervalle à 90 % du score au premier tour, <em>sachant que le candidat
         se présente</em>. La barre plus épaisse est l'intervalle à 50 %.
@@ -90,9 +97,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-duels">
     <div class="card-head">
-      <h2 data-i18n="duels.title">Seconds tours possibles</h2>
+      <h2 id="h-duels" data-i18n="duels.title">Seconds tours possibles</h2>
       <p class="card-note" data-i18n="duels.note">
         Chaque duel que la simulation a produit, avec sa probabilité de se tenir
         et son vainqueur.
@@ -102,9 +109,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-trend">
     <div class="card-head">
-      <h2 data-i18n="trend.title">Évolution</h2>
+      <h2 id="h-trend" data-i18n="trend.title">Évolution</h2>
       <p class="card-note" data-i18n="trend.note">
         Score estimé au premier tour au fil du temps, pour le bulletin de
         référence. Les points sont les sondages ; la ligne est le modèle.
@@ -115,9 +122,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-ballot">
     <div class="card-head">
-      <h2 data-i18n="ballot.title">Qui sera sur le bulletin ?</h2>
+      <h2 id="h-ballot" data-i18n="ballot.title">Qui sera sur le bulletin ?</h2>
       <p class="card-note" data-i18n="ballot.note">
         Les candidatures ne sont closes que le 12 mars 2027. Le modèle simule le
         bulletin au lieu de le supposer. Ces probabilités sont estimées à partir
@@ -129,9 +136,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <section class="card" aria-labelledby="h-polls">
     <div class="card-head">
-      <h2 data-i18n="polls.title">Derniers sondages</h2>
+      <h2 id="h-polls" data-i18n="polls.title">Derniers sondages</h2>
       <p class="card-note" data-i18n="polls.note">
         Chaque enquête renvoie à la notice déposée auprès de la Commission des
         sondages, qui est la source primaire.
@@ -141,9 +148,9 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
-  <section class="card method">
+  <section class="card method" aria-labelledby="h-method">
     <div class="card-head">
-      <h2 data-i18n="method.title">Méthode et limites</h2>
+      <h2 id="h-method" data-i18n="method.title">Méthode et limites</h2>
     </div>
     <div id="commentary" class="commentary"></div>
     <div class="method-grid">
@@ -208,9 +215,9 @@
 <script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script src="js/i18n.js?v=8"></script>
-<script src="js/charts.js?v=8"></script>
-<script src="js/scenarios.js?v=8"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/i18n.js?v=10"></script>
+<script src="js/charts.js?v=10"></script>
+<script src="js/scenarios.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
 </body>
 </html>

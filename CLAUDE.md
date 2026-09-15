@@ -394,6 +394,41 @@ transfer model, which is measured on 2022.
 **The open modelling gap this exposes:** cross-bloc proximity in the first-round
 model. Until it exists, prefer scenarios that reshuffle within a bloc.
 
+## Accessibility: the charts were empty, not merely unlabelled
+
+All three charts carried `role="img"` with **no accessible name**. That is worse
+than omitting the role: `role="img"` makes the element a LEAF, so a screen
+reader announces "image", with no name, and skips every label and number
+inside. The charts were not badly labelled, they were unavailable.
+
+The fix is the standard two-part one, in `charts.js`. Each SVG keeps
+`role="img"` and gains a localised `<title>` via `aria-labelledby`, so it is
+announced as something. The numbers then live in a real `<table class="sr-only">`
+beside it - visually clipped, fully navigable with table commands, which beats
+any amount of description on the graphic. `.sr-only` uses clipping, never
+`display:none` or `hidden`, which would remove it from assistive technology too.
+
+Also fixed: eight unnamed `<section>` landmarks (now `aria-labelledby` their own
+h2), a hard-coded English `aria-label="Scenario"` on a French-default page, the
+hero rendered as a pile of unrelated `<div>`s (now a list), duel bars that
+announced "44%" "56%" without saying whose (now one labelled group with the
+halves `aria-hidden`), decorative bars announced twice, a table with no caption
+and no `scope`, a missing skip link, and no `role="alert"` on the error banner.
+
+Switching scenario or language rewrites most of the page in place. That now
+announces through `#a11y-live`, or a screen-reader user gets no indication
+anything happened.
+
+**Contrast was already fine** - measured 4.80 and 7.05 against their
+backgrounds, both passing AA at their sizes. The problems here were all
+semantic, so do not go changing colours looking for them.
+
+**A trap when verifying any of this in a headless or background pane:** Chrome
+does not paint `:focus` styles while `document.hasFocus()` is false, although
+`element.matches(':focus')` still returns true. A skip link will look stuck
+off-screen and appear broken when it is correct. Mirror the declaration on a
+class to check it.
+
 ## Measured, then rejected
 
 Keep these unless new evidence overturns them. Each cost real time to establish
