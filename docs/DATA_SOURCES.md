@@ -83,13 +83,23 @@ only for an order of magnitude and not as a calibration target.
 open, so the two circonscription-level files are committed to `data/cache/`
 and the analysis is reproducible offline.
 
-Used by `scripts/measure_front_republicain_2024.py` to measure anti-RN vote
-transfer in the 330 second-round duels where an RN or allied candidate faced
-exactly one opponent. It is the largest real-world test of that behaviour since
-2022, and it postdates the cycle everything else in the model is calibrated on.
+The 330 second-round duels where an RN or allied candidate faced exactly one
+opponent are the largest real-world test of anti-RN transfer since 2022, and
+they postdate the cycle everything else in the model is calibrated on.
 
-It informs the *uncertainty* on 2027 transfers, not the central estimate — see
-`second_tour.front_republicain_2027_sd` for why that distinction is deliberate.
+- `scripts/measure_front_republicain_2024.py` reports them descriptively.
+- `src/presidentielle/data/legislatives_2024.py` turns them into 317 transfer
+  observations the runoff model is fitted on, **partially pooled** with the
+  presidential cycles. See §4 of `METHODOLOGY.md`.
+
+Two limitations of the source matter, and are handled rather than ignored.
+136 of the opponents carry the nuance `UG` — the Nouveau Front populaire joint
+nomination — and **the file does not record which party each one came from**;
+they are placed at the NFP's published seat-sharing split, and the sensitivity
+to that is traced by `scripts/check_legislatives_2024.py`. The "divers" and
+regionalist nuances have no position on a left-right axis, so their votes leave
+the transfer pool; that is 0.8% of the first-round vote, reported by the loader
+rather than assumed away, and duels where it exceeds 5% are dropped.
 
 ## 4. Election dates — official
 

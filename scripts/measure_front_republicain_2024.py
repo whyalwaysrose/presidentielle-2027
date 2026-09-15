@@ -5,9 +5,7 @@ WHY GO LOOKING FOR THIS
 The single assumption that can most change this forecast is how readily
 non-RN voters transfer to block an RN finalist. In the model that is fitted on
 **2022** presidential transfers and on 2026 polls asking about a hypothetical
-2027 runoff. Both are old or speculative, and the uncertainty term covering the
-gap (`second_tour.front_republicain_2027_sd`) was sized from a single cycle
-transition, 2017 to 2022.
+2027 runoff. Both are old or speculative.
 
 The 2024 legislative elections are the largest real test of anti-RN transfer
 behaviour since, and they postdate 2022. 330 second-round duels pitted an RN or
@@ -21,6 +19,11 @@ party label, which can change), and the RN's share of the two-way vote in round
 two is compared with its first-round position. Aggregated by the bloc the
 opponent came from, that answers the question the model actually needs: does it
 matter *who* the anti-RN candidate is?
+
+This is the DESCRIPTIVE read. The duels are also fitted properly, inside the
+runoff transfer model - see ``presidentielle/data/legislatives_2024.py``, which
+this script shares its parsing and its nuance mapping with, and
+``scripts/check_legislatives_2024.py`` for what they do to the forecast.
 
 WHAT THIS IS NOT
 ----------------
@@ -41,28 +44,42 @@ Run:  python scripts/measure_front_republicain_2024.py
 
 from __future__ import annotations
 
-import csv
+import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-CACHE = ROOT / "data" / "cache"
-T1 = CACHE / "legislatives_2024_t1.csv"
-T2 = CACHE / "legislatives_2024_t2.csv"
+os.environ.setdefault("PYTENSOR_FLAGS", "cxx=")
 
-SOURCE = (
-    "Ministere de l'Interieur via data.gouv.fr, Licence Ouverte 2.0:\n"
-    "  https://www.data.gouv.fr/datasets/"
-    "elections-legislatives-des-30-juin-et-7-juillet-2024-resultats-definitifs-du-1er-tour\n"
-    "  https://www.data.gouv.fr/datasets/"
-    "elections-legislatives-des-30-juin-et-7-juillet-2024-resultats-definitifs-du-2nd-tour"
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from presidentielle.data.legislatives_2024 import (  # noqa: E402
+    NUANCE_BLOC,
+    SOURCE_URL,
+    T1,
+    T2,
+    parse,
+    raw_duels,
 )
 
-# Ministry "nuance" codes. RN plus the allied union of the far right.
-FAR_RIGHT = {"RN", "UXD"}
-LEFT = {"UG", "DVG", "ECO", "EXG", "FI", "SOC", "COM"}
-CENTRE = {"ENS", "DVC", "MDM", "HOR"}
-RIGHT = {"LR", "DVD", "UDI"}
+# Coarse groups for reporting. Derived from the model's own nuance mapping so
+# the two cannot drift apart: a nuance belongs to the group its heaviest bloc
+# belongs to.
+GROUP_OF_BLOC = {
+    "extreme_gauche": "left", "gauche_radicale": "left",
+    "socialiste": "left", "ecologiste": "left",
+    "centre": "centre",
+    "droite": "right",
+    "souverainiste": "far right", "reconquete": "far right", "rn": "far right",
+}
+
+
+def group_of(nuance: str) -> str:
+    weights = NUANCE_BLOC.get(nuance)
+    if not weights:
+        return "other"
+    return GROUP_OF_BLOC[max(weights, key=weights.get)]
+
 
 # 2022 presidential, for comparison: Le Pen 23.15% in round one, 41.45% of the
 # two-way vote in round two (config/resultats_2022.yaml).
@@ -70,101 +87,14 @@ LEPEN_2022_R1 = 0.2315
 LEPEN_2022_R2 = 0.4145
 
 
-def bloc_of(nuance: str) -> str:
-    if nuance in LEFT:
-        return "left"
-    if nuance in CENTRE:
-        return "centre"
-    if nuance in RIGHT:
-        return "right"
-    return "other"
-
-
-def parse(path: Path) -> dict:
-    """Ministry circonscription file -> {(dept, circ): {exprimes, candidates}}."""
-    out: dict[tuple[str, str], dict] = {}
-    with open(path, encoding="utf-8", errors="replace", newline="") as fh:
-        cols = [c.strip().strip('"') for c in fh.readline().split(";")]
-        for row in csv.reader(fh, delimiter=";"):
-            if len(row) < 10:
-                continue
-            d = dict(zip(cols, row, strict=False))
-            key = (
-                d["Code département"].strip(),
-                d["Code circonscription législative"].strip(),
-            )
-            cands = []
-            i = 1
-            while f"Nuance candidat {i}" in d:
-                nu = (d.get(f"Nuance candidat {i}") or "").strip()
-                nom = (d.get(f"Nom candidat {i}") or "").strip().upper()
-                pre = (d.get(f"Prénom candidat {i}") or "").strip().upper()
-                voix = (d.get(f"Voix {i}") or "").strip().replace(" ", "").replace("\xa0", "")
-                if nu and voix.isdigit():
-                    cands.append({"nu": nu, "nom": nom, "pre": pre, "v": int(voix)})
-                i += 1
-            exp = d["Exprimés"].replace(" ", "").replace("\xa0", "")
-            out[key] = {"exp": int(exp), "c": cands}
-    return out
-
-
-def _match(first: dict, cand: dict) -> dict | None:
-    """Find a round-two finalist in the round-one field, BY NAME.
-
-    Not by party label: a candidate's nuance can differ between rounds, and a
-    mismatch there would silently drop the duel rather than erroring.
-    """
-    return next(
-        (
-            x
-            for x in first["c"]
-            if x["nom"] == cand["nom"] and x["pre"] == cand["pre"]
-        ),
-        None,
-    )
-
-
-def duels(t1: dict, t2: dict) -> list[dict]:
-    """Round-two duels of RN against exactly one opponent, matched by name."""
-    rows = []
-    for key, second in t2.items():
-        if len(second["c"]) != 2:
-            continue
-        rn = [c for c in second["c"] if c["nu"] in FAR_RIGHT]
-        if len(rn) != 1:
-            continue
-        rn = rn[0]
-        opp = next(c for c in second["c"] if c is not rn)
-        first = t1.get(key)
-        if not first:
-            continue
-
-        rn1, opp1 = _match(first, rn), _match(first, opp)
-        if not rn1 or not opp1:
-            continue
-        rows.append(
-            {
-                "bloc": bloc_of(opp["nu"]),
-                "nuance": opp["nu"],
-                "rn_r1": rn1["v"],
-                "rn_r2": rn["v"],
-                "opp_r1": opp1["v"],
-                "opp_r2": opp["v"],
-                "exp_r1": first["exp"],
-                "exp_r2": second["exp"],
-            }
-        )
-    return rows
-
-
 def main() -> int:
     if not T1.exists() or not T2.exists():
-        sys.exit(
-            f"missing {T1.name} / {T2.name} in data/cache.\n{SOURCE}"
-        )
-    rows = duels(parse(T1), parse(T2))
+        sys.exit(f"missing {T1.name} / {T2.name} in data/cache.\n{SOURCE_URL}")
+    rows = raw_duels(parse(T1), parse(T2))
     if len(rows) < 50:
         sys.exit(f"only {len(rows)} duels matched; expected several hundred")
+    for r in rows:
+        r["bloc"] = group_of(r["nuance"])
 
     def agg(sub):
         r1 = sum(r["rn_r1"] for r in sub) / sum(r["exp_r1"] for r in sub)
@@ -207,8 +137,9 @@ def main() -> int:
         print("  The model's structure says the same thing qualitatively. The 2027")
         print("  hypothetical polls say it far more strongly - they put Le Pen around")
         print("  68% against Melenchon and under 50% against Philippe, a gap nearer 20")
-        print("  points. That disagreement is the reason the 2027 transfer term carries")
-        print("  a wide uncertainty; see config/model.yaml second_tour.")
+        print("  points. Reconciling those two is what the legislative-versus-")
+        print("  presidential terms in the runoff model exist for; see")
+        print("  scripts/check_legislatives_2024.py.")
         print()
         print("  Do not read the gap above as Melenchon's penalty. The 2024 'left' is")
         print("  the NFP coalition, not one polarising candidate, and these are local")

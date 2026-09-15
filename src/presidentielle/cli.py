@@ -276,6 +276,11 @@ def cmd_backtest(args) -> int:
     # NO LOOKAHEAD. The 2022 measured transfers were published during the April
     # campaign, so a forecast dated before it cannot use them. The runoff here
     # is the unanchored model, and therefore weaker than what runs in production.
+    #
+    # The 2024 legislative duels are excluded for the same reason and far more
+    # plainly: they happened two years AFTER the election being replayed.
+    # `duels_2024` is left at its default of None below deliberately - this is
+    # not an omission to be tidied up into matching the production call.
     rdata = build_runoff_data(
         data.runoffs,
         candidate_ids=data.candidate_ids,
@@ -374,6 +379,7 @@ def cmd_run(args) -> int:
     from . import scenarios as scenarios_mod
     from .calibration import load_results
     from .commentary import write_commentary
+    from .data import legislatives_2024
     from .data.transfers import load as load_transfers
     from .model.design import build_model_data
     from .model.field import build_ballot_model, draw_fields, fixed_field
@@ -470,7 +476,29 @@ def cmd_run(args) -> int:
         log.warning("no 2022 transfers (%s); runoff rests on 2027 polls alone", exc)
         transfers = None
 
-    rmodel = build_runoff_model(rdata, cfg, data.bloc_keys, transfers=transfers)
+    # And on the 2024 legislative duels, the most recent real measurement of
+    # anti-RN transfer there is. Partially pooled, not pooled: see runoff.py on
+    # why a legislative election is not allowed to set a presidential level.
+    duels_2024 = None
+    if cfg.second_tour.legislatives_2024:
+        try:
+            duels_2024 = legislatives_2024.build(data.bloc_keys)
+            for line in duels_2024.dropped:
+                log.info("2024 duels: dropped %s", line)
+            log.info(
+                "anchoring runoff on %d measured 2024 legislative duels "
+                "(%.1f%% of first-round vote unplaceable)",
+                len(duels_2024), 100 * duels_2024.unmapped_share,
+            )
+        except (FileNotFoundError, ValueError) as exc:
+            # Not fatal: the forecast stood on 2022 and the 2027 polls before
+            # this data existed and still can. But it must be visible, because
+            # the alternative is a quietly different model.
+            log.warning("no 2024 duels (%s); runoff rests on 2022 and 2027", exc)
+
+    rmodel = build_runoff_model(
+        rdata, cfg, data.bloc_keys, transfers=transfers, duels_2024=duels_2024
+    )
     with rmodel:
         ridata = __import__("pymc").sample(
             draws=cfg.sampling.draws,
@@ -489,12 +517,46 @@ def cmd_run(args) -> int:
     _mu = rp["mu"].mean(("chain", "draw")).values
     _resid = _mu - rdata.y
     _worst = int(np.argmax(np.abs(_resid)))
+    # And did the runoff model CONVERGE? This was unmonitored until it was
+    # caught misbehaving: `max_rhat` above covers only the first-round model,
+    # so the transfer fit - which decides P(win) - was published for weeks with
+    # nobody looking. Without the 2024 duels it is weakly identified and can
+    # wander to a second mode (measured: r-hat 1.54, bulk ESS 7, gamma 6.4
+    # against a usual 3.5). A bad fit here moves the headline and nothing else
+    # on the page looks wrong, which is exactly the class of failure this
+    # project keeps finding the hard way.
+    _rsum = az.summary(
+        ridata,
+        var_names=["positions", "gamma", "abstain", "delta_front_republicain"],
+    )
     runoff_fit = {
         "mae_points": round(float(np.abs(_resid).mean()) * 100, 2),
         "bias_points": round(float(_resid.mean()) * 100, 2),
         "worst_matchup": rdata.labels[_worst],
         "worst_error_points": round(float(_resid[_worst]) * 100, 2),
+        "max_rhat": round(float(_rsum["r_hat"].max()), 3),
+        "min_ess_bulk": int(_rsum["ess_bulk"].min()),
     }
+    if runoff_fit["max_rhat"] > 1.05 or runoff_fit["min_ess_bulk"] < 200:
+        # FAILS CLOSED, like an unreadable roster. This fit is bimodal across
+        # seeds - see runoff.py - and a run that lands in the second mode
+        # reports a materially different P(win) while every other number on the
+        # page looks entirely normal. MAE does not catch it. Publishing anyway
+        # would put a probability on a public page that the model does not
+        # actually support.
+        print(
+            f"error: the runoff transfer model did not converge "
+            f"(r-hat {runoff_fit['max_rhat']}, bulk ESS "
+            f"{runoff_fit['min_ess_bulk']}).\n"
+            "P(win) rests entirely on this fit, and a bad one is invisible in "
+            "every other figure.\n"
+            "Re-run - this is seed-dependent and usually clears. To publish "
+            "anyway, knowing the probabilities are unreliable, pass "
+            "--allow-unconverged.",
+            file=sys.stderr,
+        )
+        if not args.allow_unconverged:
+            return 2
     log.info(
         "runoff fit: MAE %.2f pts, bias %+.2f pts, worst %s %+.1f pts",
         runoff_fit["mae_points"], runoff_fit["bias_points"],
@@ -574,6 +636,15 @@ def cmd_run(args) -> int:
         },
         "delta_front_republicain": round(float(rp["delta_front_republicain"].mean()), 3),
         "n_transferts_2022": 0 if transfers is None else len(transfers),
+        "n_duels_2024": 0 if duels_2024 is None else len(duels_2024),
+        "delta_legislatif": (
+            round(float(rp["delta_legislatif"].mean()), 3)
+            if "delta_legislatif" in rp else None
+        ),
+        "gamma_legislatif_ratio": (
+            round(float((rp["gamma_2024"] / rp["gamma"]).mean()), 3)
+            if "gamma_2024" in rp else None
+        ),
         "candidacy_facts": fact_notes,
         "runoff_fit": runoff_fit,
         "sigma_excess": round(float(post["sigma_excess"].mean()), 4),
@@ -817,6 +888,11 @@ def main(argv: list[str] | None = None) -> int:
         "--allow-skipped",
         action="store_true",
         help="publish even though some records could not be read (field incomplete)",
+    )
+    run.add_argument(
+        "--allow-unconverged",
+        action="store_true",
+        help="publish even though the runoff fit did not converge (P(win) unreliable)",
     )
     run.add_argument("--quiet", action="store_true", help="no sampling progress bar")
     run.add_argument("--draws", type=int, help="override draws/tune for a smoke test")

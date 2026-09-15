@@ -87,6 +87,7 @@ Serve the site with any static file server; `site/` is the deploy root.
 | Primary authority | [Commission des sondages](http://www.commission-des-sondages.fr/) notice per poll | public |
 | Historical calibration | [nsppolls](https://github.com/nsppolls/nsppolls) 2020–22 archive | MIT |
 | 2022 measured transfers | nsppolls `reports.csv` | MIT |
+| 2024 legislative duels | [data.gouv.fr](https://www.data.gouv.fr/) circonscription results | Licence Ouverte 2.0 |
 | Results | [data.gouv.fr](https://www.data.gouv.fr/) / Ministère de l'Intérieur | Licence Ouverte 2.0 |
 
 Every poll record carries the filename of its Commission des sondages notice,
@@ -121,9 +122,11 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
    by `m^(−0.65)`. On the current file that is 311,461 raw → 117,529 effective.
 5. **Ballot simulation** from decayed testing frequency, overridden by
    recorded declarations and withdrawals where they exist.
-6. **Runoff** by quadratic-proximity transfers, anchored on **43 measured 2022
-   vote transfers** as well as the 54 hypothetical 2027 matchups, and checked
-   against the matchups it was fitted to.
+6. **Runoff** by quadratic-proximity transfers, fitted jointly on **43
+   measured 2022 vote transfers**, **317 RN duels from the 2024 legislative
+   elections** and the 54 hypothetical 2027 matchups — the legislative cycle
+   partially pooled, with its own geometry — and checked against the matchups
+   it was fitted to.
 7. **Election-day error**, fitted against the 2022 cycle
    (`presidentielle calibrate`), applied on the strength scale before the
    softmax.
@@ -147,14 +150,17 @@ Full detail in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
   backtest scores. Its point predictions and structural results are clean; its
   coverage numbers are not an independent validation.
 * **The `front républicain` term is the largest vulnerability**, and it is
-  substantive rather than technical. It is now sized against three disagreeing
-  sources — 2022 presidential transfers, the **330 RN duels of the 2024
-  legislatives**, and 2026 polls about a 2027 runoff — which imply left
-  penalties from about four points to about twenty. 2024 shows the *front
-  républicain* was alive and stronger than in 2022, which leans towards this
-  model being RN-favourable; the uncertainty was widened rather than the
-  central estimate moved, because a legislative duel is not a presidential
-  runoff. `scripts/measure_front_republicain_2024.py`.
+  substantive rather than technical. It is fitted on three sources: 2022
+  presidential transfers, the **330 RN duels of the 2024 legislatives**, and
+  2026 polls about a 2027 runoff. Those appeared to disagree badly — the duels
+  imply a left penalty of about four points, the 2027 polls nearer twenty — but
+  fitting them properly showed the gap is carried by how sharply voters
+  discriminate by ideological distance, which is *lower* in a local election
+  full of incumbents and *désistements*, as it should be. Across every
+  defensible setting the duels move the reported runoff shares by about a
+  point. The most recent real election does not overturn the model; that was
+  worth establishing rather than assuming in either direction.
+  `scripts/check_legislatives_2024.py`.
 * **Ballot probabilities are a proxy.** An institute testing a candidate says
   the scenario is considered live, not that its probability equals the testing
   frequency.

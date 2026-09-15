@@ -16,7 +16,7 @@
   'use strict';
 
   var SCHEMA_VERSION = 2;
-  var BUILD = '2026-09-07.7';
+  var BUILD = '2026-09-16.1';
 
   var state = { data: null, scenario: null };
 

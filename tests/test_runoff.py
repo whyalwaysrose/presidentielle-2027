@@ -139,3 +139,47 @@ def test_squared_kernel_matches_a_hand_computation():
     )[0]
     assert got == pytest.approx(expected_a)
     assert got == pytest.approx(0.5), "symmetric setup must split evenly"
+
+
+# ------------------------------------------------------------ identification
+
+
+def _tiny_runoff_data():
+    """A minimal well-formed RunoffData, enough to build the model graph."""
+    from presidentielle.model.runoff import RunoffData
+
+    source = np.zeros((2, K))
+    source[:, GAUCHE] = 0.20
+    source[:, BLOCS.index("droite")] = 0.15
+    return RunoffData(
+        pair_bloc=np.array([[CENTRE, RN], [GAUCHE, RN]], dtype="int64"),
+        pair_cand=np.array([[0, 1], [2, 1]], dtype="int64"),
+        source_shares=source,
+        finalist_own=np.array([[0.22, 0.33], [0.18, 0.33]]),
+        y=np.array([0.55, 0.45]),
+        n=np.array([1000.0, 1000.0]),
+        labels=["a vs b", "c vs b"],
+    )
+
+
+def test_the_position_prior_still_orders_the_blocs():
+    """The axis must not be free to reflect: with only pairwise distances in
+    the likelihood, an axis read right-to-left fits identically and every
+    conclusion about who transfers to whom inverts.
+
+    This is a prior-predictive check, so it guards the anchor rather than the
+    fit. The fit's own instability is a separate, open problem - see
+    `runoff.py` and `diagnostics.runoff_fit.max_rhat`.
+    """
+    import pymc as pm
+
+    from presidentielle.config import load_model_config
+    from presidentielle.model.runoff import build_runoff_model
+
+    model = build_runoff_model(_tiny_runoff_data(), load_model_config(), BLOCS)
+    with model:
+        prior = pm.sample_prior_predictive(draws=200, random_seed=0)
+
+    pos = prior.prior["positions"].values.reshape(-1, K)
+    assert (pos[:, BLOCS.index("extreme_gauche")] < pos[:, RN]).all()
+    assert pos[:, GAUCHE].mean() < pos[:, CENTRE].mean() < pos[:, RN].mean()

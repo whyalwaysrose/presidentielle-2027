@@ -225,13 +225,22 @@ seconds. `tests/test_runoff.py` finite-differences across the kink point so an
 `abs()` cannot come back unnoticed.
 
 `δ` is the **front républicain**: extra reluctance to transfer to an RN
-finalist beyond ideological distance. Twenty parameters against 54 observations,
-which is why it is a proximity model rather than a free 9×9 transfer matrix
-(81 parameters).
+finalist beyond ideological distance. Twenty parameters, which is why it is a
+proximity model rather than a free 9×9 transfer matrix (81 parameters).
 
 Priors on the positions come from the known ordering of French blocs and are
-anchored so the axis cannot reflect. The 2022 measured transfers
-(nsppolls `reports.csv`) are the empirical reference point.
+anchored so the axis cannot reflect.
+
+It is fitted on every source of transfer evidence that exists, which is three:
+
+| evidence | n | what it is | informs |
+|---|---|---|---|
+| measured 2022 transfers | 43 | institutes asking real voters during the real runoff campaign | positions, γ, δ |
+| hypothetical 2027 matchups | 54 | 2026 respondents asked about a runoff two years away | positions, γ, δ |
+| 2024 legislative duels | 317 | a real election, counted | positions, γ — **not** δ |
+
+The last of those is a different kind of election, and most of the care in this
+section is about what that does and does not permit.
 
 ### Anchored on what actually happened in 2022
 
@@ -271,43 +280,145 @@ hypotheses would pin it to whatever 2026 respondents currently say and report
 that as knowledge about 2027. So `front_republicain_2027_sd` is applied **per
 simulated world**, after fitting, exactly as election-day error is.
 
-Its size is chosen against the evidence that exists, which now disagrees with
-itself — and that disagreement is the point.
+Its size is set against the one observed cycle transition: the RN's runoff
+share moved from 34.1% in 2017 to 41.45% in 2022, +7.3 points.
+`scripts/check_runoff_sensitivity.py` translates the parameter into that unit.
+At **0.70**, one sigma is roughly six points of runoff share, so the 2017→2022
+swing sits near 1.2 sigma.
 
-**2024 legislatives.** The largest real test of anti-RN transfer since 2022:
-330 second-round duels of an RN or allied candidate against exactly one
-opponent (`scripts/measure_front_republicain_2024.py`, Ministry results under
-Licence Ouverte 2.0). The RN went from 37.3% in round one to 44.3% in round
-two — a gain of 7.0 points, against the 18.3 Le Pen gained in the 2022
-presidential runoff — and lost 74% of those duels. The *front républicain* was
-not merely alive in 2024; it was stronger than in 2022.
+It was widened from 0.45 to 0.70 in September 2026, on an argument that has
+since been superseded by the section below — and it was then **measured to be
+inert**. Moving it across that range changes every candidate's probability of
+election by under half a point, because the runoffs are lopsided and symmetric
+noise rarely flips one. It stays at 0.70 because the uncertainty it represents
+is unchanged; narrowing it back would be reacting to a modelling decision
+rather than to evidence.
 
-It also depends on who the alternative is, which is what this model's proximity
-structure claims. From near-identical first-round positions the RN converted
-46.6% against a left opponent and 42.5% against a centre one, winning 38% of
-duels against the left and 16% against the centre.
+### The 2024 legislative duels, and why they are only partially pooled
 
-The magnitude is where the sources part company. That measured left penalty is
-about four points. The 2027 hypothetical polls imply nearer twenty — Le Pen
-around 68% against Mélenchon and under 50% against Philippe. A legislative duel
-is not a presidential runoff (local candidates, incumbency, and *désistements*
-that concentrate the anti-RN vote by a mechanism a two-candidate runoff lacks),
-and the 2024 "left" is the NFP coalition rather than one polarising figure — so
-the two are not directly comparable. But three credible readings spanning four
-to twenty points is exactly what a prior on this term has to contain.
+The 2024 legislative elections are the largest real test of anti-RN transfer
+since 2022, and they postdate the cycle everything else here is calibrated on.
+330 second-round duels pitted an RN or allied candidate against exactly one
+opponent (Ministry results, Licence Ouverte 2.0). Structurally that is the same
+object this model already predicts: a full first-round distribution, everyone
+but two eliminated, one two-way result.
 
-Also relevant: the RN's runoff share moved from 34.1% in 2017 to 41.45% in
-2022, +7.3 points.
-`scripts/check_runoff_sensitivity.py` translates the parameter into the same
-unit. At **0.70**, one sigma is roughly six points of runoff share: the
-2017→2022 swing sits near 1.2 sigma and the sixteen-point disagreement between
-2024 and the 2027 polls near 2.6 — uncommon, not implausible.
+Descriptively (`scripts/measure_front_republicain_2024.py`) the RN went from
+37.3% in round one to 44.3% in round two — a gain of 7.0 points, against the
+18.3 Le Pen gained in 2022 — and lost 74% of those duels. The *front
+républicain* was not merely alive in 2024; it was stronger than in 2022. It
+also depended on who the alternative was, which is what the proximity structure
+claims: from near-identical first-round positions the RN converted 46.6%
+against a left opponent and 42.5% against a centre one.
 
-It was **widened symmetrically rather than shifted**, deliberately. The 2024
-evidence leans towards this model being RN-favourable, since the real *front
-républicain* outperformed 2022 and the left penalty looked smaller than the
-hypotheticals imply. That is enough to widen the uncertainty. It is not enough
-to move the central estimate on the strength of a different kind of election.
+**The apparent conflict.** That measured left penalty is about four points. The
+2027 hypothetical polls imply nearer twenty — Le Pen around 68% against
+Mélenchon and under 50% against Philippe. Taken at face value, the real
+election says this model's geometry is RN-favourable.
+
+**Pooling them outright does not work, and the failure is instructive.** The
+obvious implementation — one geometry, three datasets — was tried and measured.
+317 local duels outvote 97 presidential observations on every shared parameter:
+
+| | without 2024 | pooled outright |
+|---|---|---|
+| fitted RN position | +1.07 | **+0.54** |
+| γ | 3.71 | 1.90 |
+| MAE against the 2027 matchups | 2.27 pts | **5.82 pts** |
+
+A fitted RN position of +0.54 puts the RN nearer the centre than the mainstream
+right. That is not a finding about French politics; it is a legislative
+election rewriting a presidential model. `scripts/check_legislatives_2024.py`
+reproduces it on demand as the `pooled outright` row, so the claim stays
+checkable rather than remembered.
+
+**So the cycles are partially pooled.** Each quantity gets a legislative
+version of itself, centred on the presidential one, with an asserted scale
+saying how far a legislative election may differ — positions, γ, abstention,
+and δ, in `config/model.yaml`. What crosses over is the *shape*; what stays in
+2024 is the *level*.
+
+**What that revealed.** The four-versus-twenty conflict is absorbed by the
+legislative-versus-presidential terms, and it needs to be a *large* difference:
+in the published fit the legislative front républicain is δ = 1.08 against a
+presidential 0.09, with γ at 0.80 of its presidential value. That is not a
+discrepancy being explained away. A local election full of incumbents, personal
+votes and *désistements* **should** both transfer against the RN harder and
+discriminate less sharply by ideology than a presidential runoff does. Once
+that difference is allowed, the 2024 duels stop contradicting the presidential
+geometry.
+
+**Which of the two terms carries it is not sharply identified**, and should not
+be quoted as though it were. γ and the δ shift are partly interchangeable —
+both say "a legislative duel transfers differently". Exploratory fits put most
+of the difference on γ (ratio 0.53, δ shift 0.26); the published fit puts most
+of it on δ (ratio 0.80, δ shift ≈ 0.99). The total is stable across both; the
+split is not.
+
+**The result is therefore a null one, and that is the finding.** Across every
+defensible setting of the pooling scales, the duels move the reported runoff
+shares by about a point; only the indefensible setting moves them more. The
+cost is 0.15 points of MAE against the 2027 matchups. What was gained is not a
+changed forecast but a *tested* one: the question of whether the most recent
+real election contradicts this model was open, was answerable, and is now
+answered — with the legislative-versus-presidential difference as an explicit,
+inspectable parameter (`diagnostics.gamma_legislatif_ratio`,
+`delta_legislatif`) instead of a paragraph of hedging.
+
+**What it still cannot settle.** Three things, none of them fixable here. 136
+of the opponents are Nouveau Front populaire joint nominations and the Ministry
+file does not record which party each came from; they sit at the NFP's
+published seat-sharing split, and the check script traces the cost of that
+assumption. The pooling scales are asserted, because measuring them needs a
+second legislative election to compare against — the same shortage that stops
+`bloc_error_corr` being fitted. And a duel is an aggregate flow, so this is
+ecological inference: it says where a bloc's votes went, never who moved.
+
+These duels are **excluded from the backtest**, which replays 2022. They
+happened two years later.
+
+### The runoff fit is bimodal across seeds, and that is unresolved
+
+Found while checking whether the 2024 duels were safe to add, and it predates
+them. Four chains per seed, 500 draws:
+
+| seed | duels off | duels on |
+|---|---|---|
+| 1 | **r-hat 1.54, ESS 7**, gamma 6.39 | r-hat 1.01, ESS 469, gamma 3.55 |
+| 2 | r-hat 1.01, ESS 422, gamma 3.71 | r-hat 1.01, ESS 569, gamma 3.58 |
+| 3 | **r-hat 1.54, ESS 7**, gamma 5.78 | **r-hat 1.54, ESS 7**, gamma 5.56 |
+| 4 | r-hat 1.01, ESS 474, gamma 3.72 | r-hat 1.01, ESS 593, gamma 3.55 |
+
+Roughly half of seeds land in a second mode at γ near 5.5–6.4 rather than the
+usual 3.5. The duels reduce the rate but do not remove it.
+
+**Goodness of fit does not detect this.** The seed-3 failure had an MAE of
+2.16 points against the tested matchups — the *best* in the table, better than
+any converged fit. A bad run therefore looks entirely normal in every figure
+the page shows, while P(win) moves. That combination is why
+`diagnostics.runoff_fit` now carries `max_rhat` and `min_ess_bulk`, and why
+`presidentielle run` **exits 2 rather than publishing** a runoff fit that has
+not converged, unless `--allow-unconverged` is passed.
+
+**This was unmonitored before.** `diagnostics.max_rhat` covers only the
+first-round model, so the transfer fit — the one that decides the presidency —
+was published without anyone checking it had converged, at the same four chains
+where it fails perhaps half the time. Whether any past published run was
+affected cannot be recovered after the fact.
+
+**One hypothesis has been tried and rejected.** `γ·(x_j − x_k)²` depends only
+on pairwise distances, so shifting every position, or rescaling the positions
+against γ, leaves the likelihood exactly unchanged — two genuinely redundant
+directions that only the position prior stands on. The failing fits were
+consistent with it: they showed positions compressed by about
+√(γ_bad/γ_good). Removing both directions by construction changed the failure
+rate not at all, and on one seed made it worse — taking the duels-off failure
+rate from two seeds in four to three. The arithmetic that suggested the
+diagnosis was a coincidence, and the reparameterisation was reverted rather
+than kept on a falsified rationale.
+
+So the cause is still open. What is closed is the silence: a bad fit can no
+longer reach the page.
 
 ### Checking it against the polls it was fitted to
 

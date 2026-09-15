@@ -452,11 +452,12 @@ Two rules about presenting them, both load-bearing:
 so editing only a COMMENT flags a model change. It errs safe - a spurious "the
 model changed" is much better than a silent one - but do not be surprised by it.
 
-## The 2024 legislatives are the most recent read on the front republicain
+## The 2024 legislatives are fitted, partially pooled, and they changed nothing
 
-`scripts/measure_front_republicain_2024.py` scores the 330 second-round duels
-where an RN or allied candidate faced exactly one opponent. Ministry results,
-Licence Ouverte 2.0, committed to `data/cache/`, so it runs offline.
+The 2024 legislative elections are the largest real test of anti-RN transfer
+since 2022. 330 second-round duels where an RN or allied candidate faced
+exactly one opponent; Ministry results, Licence Ouverte 2.0, committed to
+`data/cache/` so everything here runs offline.
 
     overall     RN 37.3% round 1 -> 44.3% round 2   (+7.0 pts)
                 2022 presidential: 23.2% -> 41.4%   (+18.3 pts)
@@ -467,31 +468,97 @@ Licence Ouverte 2.0, committed to `data/cache/`, so it runs offline.
       centre n=125       42.5%       16%
       right  n= 53       43.5%       19%
 
-Two findings. The front republicain was **stronger** in 2024 than 2022. And it
-depends on who the alternative is - from near-identical first-round positions
-the RN converts about four points better against the left than the centre,
-which is qualitatively what the proximity structure already says. That is
-independent corroboration of the model's shape from a real election.
+Two layers. `scripts/measure_front_republicain_2024.py` reports that
+descriptively. `data/legislatives_2024.py` turns the duels into 317 transfer
+observations that the runoff model is actually **fitted** on, alongside the 43
+measured 2022 transfers and the 54 hypothetical 2027 matchups. The two share
+their parsing and their nuance mapping, deliberately - they used to duplicate
+it, which is a drift waiting to happen.
 
-**The magnitude is where sources disagree**, and that is what the prior has to
-carry: 2024 measured a left penalty around four points, the 2027 hypothetical
-polls imply nearer twenty. `front_republicain_2027_sd` was widened 0.45 -> 0.70
-to span it.
+**Pooling them outright does not work. Do not "simplify" it back.** The obvious
+implementation - one geometry, three datasets - was tried and measured:
 
-**And widening it did almost nothing - measured.** 0.45 -> 0.70 moved every
-candidate's probability of election by under half a point. The runoffs are
-lopsided, so six points of symmetric noise rarely flips one; the headline is
-governed by the CENTRAL transfer estimate, not its spread. Treat the widening
-as bookkeeping, not as a fix: **the risk that the central estimate is
-RN-favourable remains open.** Closing it means folding the 2024 duels into the
-runoff fit with an explicit legislative-versus-presidential adjustment.
+| | without 2024 | pooled outright |
+|---|---|---|
+| fitted RN position | +1.07 | **+0.54** |
+| gamma | 3.71 | 1.90 |
+| MAE vs the 2027 matchups | 2.27 pts | **5.82 pts** |
 
-**Widened, not shifted.** The 2024 evidence leans towards this model being
-RN-favourable. Resist acting on that direction: a legislative duel is local,
-carries incumbency, and follows desistements that concentrate the anti-RN vote
-by a mechanism a two-candidate presidential runoff does not have; and the 2024
-"left" is the NFP coalition, not one polarising candidate. Enough to widen the
-uncertainty, not to move the centre.
+An RN position of +0.54 puts the RN nearer the centre than the mainstream
+right. 317 local duels simply outvote 97 presidential observations on every
+shared parameter. `scripts/check_legislatives_2024.py` reproduces this on
+demand as the `pooled outright` row.
+
+So the cycles are **partially pooled**: positions, gamma, abstention and delta
+each get a legislative version of itself, centred on the presidential one, with
+an asserted scale in `config/model.yaml`. The shape crosses over; the level
+stays in 2024.
+
+**The finding, and it is a null one.** The four-points-versus-twenty conflict
+between 2024 and the 2027 runoff polls is absorbed by the legislative terms,
+and the difference has to be LARGE: the published fit has a legislative front
+republicain of 1.08 against a presidential 0.09, with gamma at 0.80 of its
+presidential value. A local election full of incumbents, personal votes and
+desistements SHOULD both transfer against the RN harder and discriminate less
+sharply by ideology. Once that is allowed, the duels stop contradicting the
+presidential geometry, and across every defensible setting of the pooling
+scales they move the reported runoff shares by about a point.
+
+**Do not quote the split between gamma and delta.** They are partly
+interchangeable and it is not sharply identified: exploratory fits loaded it
+onto gamma (ratio 0.53, delta shift 0.26), the published fit onto delta (ratio
+0.80, shift ~0.99). The TOTAL is stable; the decomposition is not.
+
+**So the open question from the previous round is now closed, in the negative.**
+It used to read: "the risk that the central estimate is RN-favourable remains
+open". It was answerable, it was answered, and the answer is that the most
+recent real election does not overturn this model. What was bought is not a
+changed forecast but a tested one, with the legislative-versus-presidential
+difference as an inspectable parameter (`diagnostics.gamma_legislatif_ratio`,
+`delta_legislatif`) rather than a paragraph of hedging.
+
+**Three things it still cannot settle**, none fixable here: 136 opponents are
+NFP joint nominations whose actual party the Ministry file does not record (they
+sit at the published seat-sharing split; the check script prices that
+assumption); the pooling scales are asserted, because measuring them needs a
+second legislative election, the same shortage that stops `bloc_error_corr`
+being fitted; and a duel is an aggregate flow, so this is ecological inference.
+
+**Excluded from the backtest**, which replays 2022. They happened two years
+later. `cmd_backtest` passes `duels_2024=None` and says so - that is not an
+omission to tidy up.
+
+## The runoff fit is bimodal across seeds - open, and it fails closed
+
+Found while checking whether the 2024 duels were safe to add; it predates them.
+Four chains per seed:
+
+| seed | duels off | duels on |
+|---|---|---|
+| 1 | **r-hat 1.54, ESS 7**, gamma 6.39 | r-hat 1.01, ESS 469, gamma 3.55 |
+| 2 | r-hat 1.01, ESS 422, gamma 3.71 | r-hat 1.01, ESS 569, gamma 3.58 |
+| 3 | **r-hat 1.54, ESS 7**, gamma 5.78 | **r-hat 1.54, ESS 7**, gamma 5.56 |
+| 4 | r-hat 1.01, ESS 474, gamma 3.72 | r-hat 1.01, ESS 593, gamma 3.55 |
+
+About half of seeds settle at gamma near 5.5-6.4 instead of 3.5. The duels
+reduce the rate, they do not remove it.
+
+**MAE does not catch it.** The seed-3 failure scored 2.16 points against the
+tested matchups - the BEST in the table. So a bad fit looks completely normal
+everywhere a reader can see, while P(win) moves.
+
+Two consequences, both load-bearing:
+
+1. `diagnostics.runoff_fit` carries `max_rhat` and `min_ess_bulk`. Before this,
+   `diagnostics.max_rhat` covered only the FIRST-ROUND model - the transfer fit
+   that decides the presidency was published unchecked. Do not remove them.
+2. `presidentielle run` **exits 2** rather than publish an unconverged runoff
+   fit, unless `--allow-unconverged`. Same principle as the roster failing
+   closed: stale but correct beats fresh but quietly wrong. Re-running usually
+   clears it, because it is seed-dependent.
+
+**The cause is not known.** If you go looking, start by reading the rejected
+hypothesis below so you do not repeat it.
 
 ## Measured, then rejected
 
@@ -529,6 +596,20 @@ and each has a script that reproduces it.
   poll noise made the latent state sluggish and explained the 30-day backtest
   missing Melenchon's late surge. It does not. **That miss remains
   unexplained**, and the survey weighting is not where to look.
+
+- **The scale ridge as the cause of the bimodal runoff fit.**
+  `gamma * (x_j - x_k)^2` depends only on pairwise distances, so shifting every
+  position, or rescaling the positions against gamma, leaves the likelihood
+  exactly unchanged. Two redundant directions, with only the position prior
+  standing on them - and the failing fits looked the part, showing positions
+  compressed by roughly the `sqrt(gamma_bad / gamma_good)` that predicts.
+
+  Removing both by construction - centring the positions and fixing their
+  spread, the same move invariant 6 makes for the softmax - changed the failure
+  rate not at all, and on one seed made it WORSE, taking the duels-off failure
+  rate from two seeds in four to three. The confirming arithmetic was a
+  coincidence. Reverted rather than kept on a falsified rationale; the
+  redundancy is real, but it is not the bug.
 
 - **A fatter-tailed election-day error.** The 30-day backtest has calibrated
   50% intervals and thin 90% ones, so the tails are probably too light. Twelve

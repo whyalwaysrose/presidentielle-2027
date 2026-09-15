@@ -178,6 +178,46 @@ def _predict(
     return to_a / (to_a + to_b)
 
 
+def _predict_duels(
+    positions: pt.TensorVariable,
+    gamma: pt.TensorVariable,
+    delta: pt.TensorVariable,
+    abstain: pt.TensorVariable,
+    opp_weight,
+    source_shares,
+    finalist_own,
+    rn_index: int,
+):
+    """RN share of the two-way vote in each 2024 legislative duel.
+
+    The same arithmetic as ``_predict``, with one structural difference: the
+    opponent's position is a WEIGHTED MIXTURE of bloc positions rather than one
+    bloc, because 134 of the opponents are Nouveau Front populaire joint
+    nominations spanning LFI to the Socialists (see
+    ``data/legislatives_2024.py``).
+
+    Every parameter passed in is the LEGISLATIVE version of itself. Which of
+    them are close to their presidential counterparts, and by how much, is the
+    whole substance of using this data at all; ``build_runoff_model`` decides
+    it and this function does not know.
+
+    Finalist 0 is always the RN side, so there is no per-duel sign bookkeeping.
+    """
+    xa = positions[rn_index]
+    xb = pt.dot(opp_weight, positions)[:, None]  # (M, 1)
+    xj = positions[None, :]  # (1, K)
+
+    ua = -gamma * (xj - xa) ** 2 - delta + pt.zeros_like(xb)  # (M, K)
+    ub = -gamma * (xj - xb) ** 2
+    uw = abstain[None, :] + pt.zeros_like(xb)
+
+    p = pt.special.softmax(pt.stack([ua, ub, uw], axis=2), axis=2)
+
+    to_a = (source_shares * p[:, :, 0]).sum(axis=1) + finalist_own[:, 0]
+    to_b = (source_shares * p[:, :, 1]).sum(axis=1) + finalist_own[:, 1]
+    return to_a / (to_a + to_b)
+
+
 def _transfer_probs(positions, gamma, delta, abstain, bloc_a, bloc_b, rn_index):
     """(K, 3) probabilities that each bloc's voters go to A, to B, or abstain.
 
@@ -198,14 +238,22 @@ def build_runoff_model(
     cfg: ModelConfig,
     bloc_keys: list[str],
     transfers=None,
+    duels_2024=None,
 ) -> pm.Model:
-    """Fit the transfer model, optionally anchored on the 2022 measurements.
+    """Fit the transfer model on every source of transfer evidence there is.
 
-    Two cycles, one structure. Bloc positions, the proximity weight and each
-    bloc's readiness to abstain are treated as properties of French politics
-    and shared. The front republicain is NOT: whether voters will still cross
-    the aisle to block the RN in 2027 as they did in 2022 is the open question,
-    so it gets one value per cycle and a prior linking them.
+    Three cycles, one structure. Bloc positions and the proximity weight are
+    treated as properties of French politics and shared - that is what makes
+    a 2022 measurement or a 2024 duel say anything about 2027 at all. The
+    front republicain is NOT shared unconditionally: whether voters will still
+    cross the aisle to block the RN in 2027 is the open question, so the
+    legislative cycle gets its own value linked by an explicit adjustment.
+
+    | evidence                       | n   | informs                       |
+    |--------------------------------|-----|-------------------------------|
+    | measured 2022 transfers        |  43 | positions, gamma, delta       |
+    | hypothetical 2027 matchups     |  54 | positions, gamma, delta       |
+    | 2024 legislative duels         | 317 | positions, gamma  (NOT delta) |
     """
     rn_index = bloc_keys.index("rn")
     centre_index = bloc_keys.index("centre")
@@ -216,6 +264,8 @@ def build_runoff_model(
         coords["transfert"] = [
             f"{o.source_candidate} ({o.institut})" for o in transfers
         ]
+    if duels_2024 is not None:
+        coords["duel"] = list(duels_2024.labels)
 
     with pm.Model(coords=coords) as model:
         # Positions are anchored by an informative prior on the known ordering
@@ -224,6 +274,27 @@ def build_runoff_model(
         # Tighter than the 0.25 first used. Loose positions and delta are
         # partly confounded - moving the RN further right acts exactly like an
         # RN penalty - and at 0.25 the positions simply absorbed it.
+        #
+        # THIS FIT IS BIMODAL ACROSS SEEDS AND THE CAUSE IS NOT KNOWN. Four
+        # chains per seed on the real data: roughly half of seeds return r-hat
+        # 1.54 with bulk ESS 7, settling at gamma near 5.5-6.4 rather than the
+        # usual 3.5. The 2024 duels reduce the rate (one seed in four against
+        # two) but do not remove it.
+        #
+        # GOODNESS OF FIT DOES NOT DETECT IT - the worst-converged fit in that
+        # experiment had the BEST MAE of the eight. Only r-hat does, which is
+        # why `diagnostics.runoff_fit` carries it and why `run` refuses to
+        # publish a runoff fit that has not converged.
+        #
+        # One hypothesis has been tried and REJECTED: that this was the scale
+        # ridge. `gamma * (x_j - x_k)**2` depends on pairwise distances alone,
+        # so shifting every position, or rescaling them against gamma, leaves
+        # the likelihood untouched - two genuinely redundant directions that
+        # only the prior stands on, and the failing fits did show positions
+        # compressed by about the factor sqrt(gamma_bad / gamma_good) predicts.
+        # Removing both by construction changed the failure rate not at all
+        # (same seeds, same r-hat). The arithmetic that suggested it was a
+        # coincidence. See CLAUDE.md, "Measured, then rejected".
         positions = pm.Normal("positions", mu=prior_x, sigma=0.12, dims="bloc")
         gamma = pm.HalfNormal("gamma", sigma=3.0)
         abstain = pm.Normal("abstain", mu=0.0, sigma=1.0, dims="bloc")
@@ -274,6 +345,100 @@ def build_runoff_model(
                 sigma=sigma_t,
                 observed=t_b,
                 dims="transfert",
+            )
+
+        # --- 2024 legislative duels -------------------------------------
+        # 317 real second-round duels against 54 hypothetical matchups, and
+        # that ratio is the whole problem. Sharing the geometry outright was
+        # tried first and MEASURED: the duels simply outvoted the presidential
+        # evidence on every shared parameter.
+        #
+        #     fitted RN position          +1.07 -> +0.54
+        #     gamma                        3.71 -> 1.90
+        #     MAE vs the 2027 matchups     2.27 -> 5.82 points
+        #
+        # An RN position of +0.54 puts the RN nearer the centre than the
+        # mainstream right. That is not a finding about French politics; it is
+        # a legislative election quietly rewriting a presidential model.
+        #
+        # So the two cycles are PARTIALLY POOLED rather than pooled. Each
+        # quantity gets a legislative version of itself, centred on the
+        # presidential one, with an asserted scale saying how far a legislative
+        # election is allowed to differ:
+        #
+        #   positions   how far a bloc's perceived position may sit from its
+        #               presidential one. Local candidates carry personal
+        #               reputations that a national label does not.
+        #   gamma       how sharply voters discriminate by ideological
+        #               distance. Expected to be LOWER in a local election,
+        #               where incumbency and personal votes dilute ideology -
+        #               and that is what the data says.
+        #   abstain     legislative round-two dropout. Largely not shared; the
+        #               prior is wide on purpose.
+        #   delta       the front republicain itself. A legislative duel
+        #               follows desistements, which concentrate the anti-RN
+        #               vote by a mechanism a two-candidate presidential runoff
+        #               has no equivalent of. Its prior is the widest of all,
+        #               so 2024's LEVEL stays in 2024.
+        #
+        # What crosses over is therefore the SHAPE and not the level: how much
+        # worse the RN does against a left opponent than a centre one, from
+        # near-identical first-round positions. That is a claim about the
+        # geometry of French politics, and 317 real duels measure it far better
+        # than any number of hypothetical polls.
+        #
+        # NONE OF THESE SCALES CAN BE FITTED. That needs more than one
+        # legislative election to compare, exactly as `bloc_error_corr` needs
+        # more than one presidential cycle. They are ASSERTED, they are what
+        # carries this evidence into the forecast, and
+        # `scripts/check_legislatives_2024.py` traces the headline across the
+        # whole range of them rather than leaving the choice invisible.
+        if duels_2024 is not None and len(duels_2024):
+            leg = cfg.second_tour
+
+            # Non-centred, like every other hierarchical piece in this model.
+            z_pos = pm.Normal("z_positions_2024", 0.0, 1.0, dims="bloc")
+            pos_2024 = pm.Deterministic(
+                "positions_2024",
+                positions + z_pos * leg.legislative_position_sd,
+                dims="bloc",
+            )
+            z_gamma = pm.Normal("z_gamma_2024", 0.0, 1.0)
+            gamma_2024 = pm.Deterministic(
+                "gamma_2024",
+                gamma * pt.exp(z_gamma * leg.legislative_gamma_log_sd),
+            )
+            z_abst = pm.Normal("z_abstain_2024", 0.0, 1.0, dims="bloc")
+            abstain_2024 = pm.Deterministic(
+                "abstain_2024",
+                abstain + z_abst * leg.legislative_abstention_sd,
+                dims="bloc",
+            )
+            adjustment = pm.Normal(
+                "ajustement_legislatif", 0.0, leg.legislative_delta_shift_sd
+            )
+            delta_2024 = pm.Deterministic("delta_legislatif", delta + adjustment)
+
+            mu_duels = _predict_duels(
+                pos_2024, gamma_2024, delta_2024, abstain_2024,
+                duels_2024.opp_weight, duels_2024.source_shares,
+                duels_2024.finalist_own, rn_index,
+            )
+            mu_duels = pm.Deterministic(
+                "mu_duels", pt.clip(mu_duels, 1e-4, 1 - 1e-4), dims="duel"
+            )
+            # Duel-to-duel scatter is real heterogeneity - incumbency, a local
+            # candidate, a well-known mayor - not sampling noise. Counting
+            # ~50 000 counted votes per duel as if it were a poll would make
+            # each duel near-certain. This is fitted, and comes out around 1.7
+            # points, an order of magnitude above any sampling term.
+            sigma_leg = pm.HalfNormal("sigma_legislatif", sigma=leg.legislative_scatter_sd)
+            pm.Normal(
+                "obs_duels_2024",
+                mu=mu_duels,
+                sigma=sigma_leg,
+                observed=duels_2024.y,
+                dims="duel",
             )
 
         # --- 2027 hypothetical matchups ---------------------------------

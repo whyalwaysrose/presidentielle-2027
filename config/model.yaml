@@ -249,59 +249,105 @@ second_tour:
   # polls say - the assumption this parameter exists to stop being made
   # silently.
   #
-  # WIDENED 0.45 -> 0.70 ON 2024 EVIDENCE.
+  # Sized so the one observed cycle transition - the RN's runoff share moving
+  # 7.3 points from 2017 to 2022 - sits near 1.2 sigma, one sigma being roughly
+  # six points of runoff share. scripts/check_runoff_sensitivity.py translates
+  # it into that unit.
   #
-  # scripts/measure_front_republicain_2024.py reads the Ministry's 2024
-  # legislative results (Licence Ouverte 2.0) and scores the 330 second-round
-  # duels where an RN or allied candidate faced exactly one opponent - a far
-  # larger real-world sample than the single presidential runoff the model is
-  # otherwise anchored on, and two years more recent.
+  # WIDENED 0.45 -> 0.70 IN SEPTEMBER 2026, and the reason has since been
+  # SUPERSEDED. It was widened because three sources appeared to disagree about
+  # how hard it is to transfer to an RN finalist by far more than 0.45 allowed:
+  # 2022's measured transfers, the 2024 legislative duels (a left penalty of
+  # about four points) and the 2027 hypothetical polls (nearer twenty).
   #
-  #   overall            RN 37.3% in round 1 -> 44.3% in round 2  (+7.0 pts)
-  #                      2022 presidential:   23.2% -> 41.4%      (+18.3 pts)
-  #                      RN lost 74% of those duels
+  # The duels are now fitted rather than eyeballed, and the disagreement turns
+  # out to be structural rather than evidential - a legislative duel wants a
+  # much flatter proximity weight than a presidential contest, which is what a
+  # local election full of incumbents should look like. See `legislatives_2024`
+  # below. So this is NOT carrying a four-versus-twenty conflict any more.
   #
-  #   by opponent        RN round 2      RN won
-  #     left     n=147       46.6%          38%
-  #     centre   n=125       42.5%          16%
-  #     right    n= 53       43.5%          19%
-  #
-  # Two things follow. The front republicain was ALIVE AND STRONGER in 2024
-  # than in 2022. And it depends on who the alternative is: from near-identical
-  # first-round positions the RN converts about four points better against the
-  # left than against the centre - which is qualitatively what this model's
-  # proximity structure already says.
-  #
-  # The problem is the MAGNITUDE. The 2027 hypothetical polls imply a left
-  # penalty nearer twenty points (Le Pen about 68% against Melenchon, under 50%
-  # against Philippe). 2024 measured about four. Three credible sources - 2022
-  # transfers, 2024 duels, 2026 polls about 2027 - disagree by far more than a
-  # 0.45 prior allowed. At 0.70 one sigma is roughly six points of runoff
-  # share, which puts the 2017->2022 swing at about 1.2 sigma and that
-  # sixteen-point disagreement at about 2.6: uncommon, not implausible.
-  #
-  # WIDENED SYMMETRICALLY, NOT SHIFTED, and deliberately. The 2024 evidence
-  # leans towards this model being RN-favourable - the real front republicain
-  # outperformed 2022 and the left penalty looked smaller. But a legislative
-  # duel is not a presidential runoff: it is local, carries incumbency, and
-  # follows desistements that concentrate the anti-RN vote by a mechanism a
-  # two-candidate presidential runoff does not have. And the 2024 "left" is the
-  # NFP coalition, not one polarising candidate. That is enough to widen the
-  # uncertainty; it is not enough to move the central estimate.
-  #
-  # AND MEASURED AFTERWARDS: WIDENING THIS CHANGES ALMOST NOTHING. Going from
-  # 0.45 to 0.70 moved every candidate's probability of election by under half
-  # a point (Le Pen 66% either way, Melenchon against her 13% -> 14%). The
-  # runoffs are lopsided, so symmetric noise of six points rarely flips one;
-  # the headline is governed by the CENTRAL transfer estimate, not its spread.
-  #
-  # So this widening is honest bookkeeping, not a fix. The risk the 2024 data
-  # actually raises - that the central estimate is RN-favourable - is still
-  # open. Closing it means folding the 2024 duels into the runoff fit itself,
-  # with an explicit legislative-versus-presidential adjustment, which would
-  # move the published headline and carries its own risk of importing the wrong
-  # kind of election into a presidential model.
+  # It stays at 0.70 regardless, for two reasons. The uncertainty it actually
+  # represents - whether voters still cross the aisle in May 2027 - is
+  # unchanged by any of that. And it was MEASURED to be inert: moving it from
+  # 0.45 to 0.70 changed every candidate's probability of election by under
+  # half a point, because the runoffs are lopsided and symmetric noise rarely
+  # flips one. Narrowing it back would be reacting to a modelling choice of
+  # mine rather than to evidence.
+
   front_republicain_2027_sd: 0.70
+
+  # --- the 2024 legislative duels -----------------------------------------
+  # 317 real second-round duels in which an RN or allied candidate faced
+  # exactly one opponent, fitted alongside the 43 measured 2022 transfers and
+  # the 54 hypothetical 2027 matchups. Ministry results, Licence Ouverte 2.0.
+  # See src/presidentielle/data/legislatives_2024.py and model/runoff.py.
+  #
+  # Set false to drop them entirely, which is how their effect is measured
+  # rather than asserted.
+  legislatives_2024: true
+
+  # HOW FAR A LEGISLATIVE ELECTION MAY DIFFER FROM A PRESIDENTIAL ONE.
+  #
+  # These four scales are the whole substance of using this data. Sharing the
+  # geometry outright was tried first and does not work: 317 local duels
+  # outvote the presidential evidence on every shared parameter. Measured, with
+  # all of these at ~0:
+  #
+  #   fitted RN position   +1.07 -> +0.54, i.e. nearer the centre than the
+  #                        mainstream right. That is not French politics.
+  #   gamma                 3.71 -> 1.90
+  #   MAE vs the 2027 matchups   2.27 -> 5.82 points
+  #
+  # scripts/check_legislatives_2024.py reproduces that on demand as the
+  # `pooled outright` row, so the claim stays checkable.
+  #
+  # NONE OF THESE CAN BE FITTED. That needs more than one legislative election
+  # to compare against, exactly as bloc_error_corr needs more than one
+  # presidential cycle. They are ASSERTED. What is measured is that the
+  # forecast is INSENSITIVE to them across the whole defensible range: every
+  # setting in the check script moves the reported runoff shares by about a
+  # point, and only the indefensible one moves them more.
+
+  # Positions: how far a bloc's perceived place on the left-right axis may sit
+  # from its presidential one. Local candidates carry personal reputations a
+  # national label does not. Comparable to the 0.12 prior spread on the
+  # positions themselves - a legislative election may be perceived about as
+  # differently as we are unsure of the position at all.
+  legislative_position_sd: 0.10
+
+  # Gamma: how sharply voters discriminate by ideological distance. Expected to
+  # be LOWER in a local election, where incumbency and personal votes dilute
+  # ideology, and it fits that way - gamma_2024 comes out at 0.5 to 0.8 times
+  # the presidential value depending on the fit.
+  #
+  # BUT DO NOT READ GAMMA AS *THE* EXPLANATION. It and the delta shift below
+  # are partly interchangeable - both say "a legislative duel transfers
+  # differently" - and the split between them is NOT sharply identified.
+  # Exploratory fits put most of it on gamma (ratio 0.53, delta shift 0.26);
+  # the published fit puts most of it on delta (ratio 0.80, delta shift near
+  # 0.99). The TOTAL legislative-versus-presidential difference is stable and
+  # large; its decomposition is not. 0.40 in log terms spans the observed
+  # range at about 1.2 to 1.7 sigma.
+  legislative_gamma_log_sd: 0.40
+
+  # Abstention: legislative round-two dropout differs from presidential, and is
+  # deliberately barely shared. Tightening this to 0.1 was measured and it
+  # BREAKS THE FIT - MAE 3.18 points, r-hat 1.07, minimum ESS 30. The model
+  # starts contorting gamma to fit turnout behaviour it should be ignoring.
+  legislative_abstention_sd: 1.00
+
+  # The front republicain itself, as a shift on delta. The widest of the four,
+  # at roughly nineteen times the delta prior scale, so 2024's LEVEL stays in
+  # 2024. A legislative duel follows desistements - third-placed candidates
+  # standing down to concentrate the anti-RN vote - which a two-candidate
+  # presidential runoff has no mechanism for at all.
+  legislative_delta_shift_sd: 1.50
+
+  # Duel-to-duel scatter: incumbency, a local candidate, a well-known mayor.
+  # Prior only; this is fitted, and comes out near 0.017. Real heterogeneity,
+  # an order of magnitude above any sampling term - counting ~50 000 counted
+  # votes per duel as though it were a poll would make each duel near-certain.
+  legislative_scatter_sd: 0.05
 
 field:
   # Who is actually on the ballot. Rather than invent probabilities, the

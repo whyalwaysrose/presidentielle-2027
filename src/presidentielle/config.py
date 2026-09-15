@@ -81,6 +81,15 @@ class SecondTourConfig:
     transfer_concentration: float
     rn_transfer_extra_sd: float
     front_republicain_2027_sd: float
+    # The 2024 legislative duels, and the nuisance terms that keep a
+    # legislative election's LEVEL out of a presidential forecast. See
+    # `model.yaml` and `model/runoff.py`.
+    legislatives_2024: bool = True
+    legislative_position_sd: float = 0.10
+    legislative_gamma_log_sd: float = 0.40
+    legislative_abstention_sd: float = 1.00
+    legislative_delta_shift_sd: float = 1.50
+    legislative_scatter_sd: float = 0.05
 
 
 @dataclass(frozen=True)
