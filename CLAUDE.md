@@ -68,7 +68,12 @@ anything in `src/presidentielle/model/`.
     votes. It cost 14.5 points on Bardella-versus-Mélenchon, pushed runoff MAE
     from 1.97 to 3.54, and read as tension between the 2022 and 2027 evidence
     rather than as a bug. `tests/test_field.py` guards it.
-14. **Bump `SCHEMA_VERSION` in `outputs.py` and the matching constant in
+14. **A run must never publish a forecast it could not fully read.**
+    `presidentielle run` exits 2 if any record was skipped, unless
+    `--allow-skipped`. Skipping an unreadable hypothesis is still the right
+    thing - guessing a bloc would be worse - but publishing without saying so
+    is not. See below.
+15. **Bump `SCHEMA_VERSION` in `outputs.py` and the matching constant in
     `site/js/app.js` together.** The page checks it and shows a banner rather
     than rendering blanks.
 
@@ -306,6 +311,36 @@ hypotheses would pin it to what 2026 respondents currently say and report that
 as knowledge about May 2027. Sized so the one observed cycle transition (the
 RN's runoff share moving 7.3 points from 2017 to 2022) is about 1.8 sigma;
 `scripts/check_runoff_sensitivity.py` translates it into points of runoff share.
+
+## A new candidate breaks the daily run, and should
+
+This is the expected maintenance event, not a defect. New names appear in the
+polling as the field forms, the roster fails closed on anything it does not
+know, and somebody has to decide which bloc they belong in. Fix: add them to
+`config/candidats_2027.yaml` with a bloc, citing the upstream `parti` field and
+whatever the co-occurrence pattern shows.
+
+**It happened on 2026-09-09** with Karim Bouamrane (PS, mayor of Saint-Ouen),
+first tested by OpinionWay. What went wrong was not the failure but the delay:
+
+- 2026-09-13: the run skipped three hypotheses, warned in its logs, and
+  **published anyway**. Nothing failed.
+- 2026-09-14: the next day's `pytest` finally caught it, against the cache the
+  13th had committed.
+
+So two days of published forecasts were computed on a field the roster could
+not fully read, and the alarm came from a step that only looks at *yesterday's*
+data. Two changes close that:
+
+1. `presidentielle run` now **fails closed** on any skipped record. Stale but
+   correct beats fresh but quietly wrong - the site keeps serving the last good
+   forecast until the roster is updated.
+2. `daily.yml` **fetches before it tests**, so the suite's "the roster can read
+   every polled candidate" assertion applies to the data that run is about to
+   use, rather than to the previous day's.
+
+`diagnostics.skipped_detail` carries the list, so an `--allow-skipped` run is
+visible in the output rather than only in a log.
 
 ## Facts beat the proxy, and the two agree
 

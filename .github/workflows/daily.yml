@@ -35,13 +35,18 @@ jobs:
       - name: Lint
         run: ruff check src tests scripts
 
-      - name: Test
-        # Runs against the committed cache, so a broken upstream file fails
-        # here rather than silently producing a forecast from stale data.
-        run: pytest -q
-
+      # Fetch BEFORE testing. The suite asserts that the roster can read every
+      # polled candidate, and that assertion is only worth anything against the
+      # data this run is about to use. Testing the committed cache first passes
+      # happily and then the fetch introduces a candidate nobody has mapped -
+      # which is exactly how a new name went unnoticed for two days.
       - name: Fetch polls
         run: presidentielle fetch
+
+      - name: Test
+        # Runs against the data just fetched, so an unreadable record fails
+        # here rather than producing a forecast from a narrowed field.
+        run: pytest -q
 
       - name: Audit
         # Prints anything the roster failed closed on. A new candidate being

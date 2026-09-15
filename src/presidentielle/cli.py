@@ -378,6 +378,36 @@ def cmd_run(args) -> int:
         log.warning("SMOKE TEST: draws=%d, results are not publishable", args.draws)
     roster = load_roster()
     hyps, weighted, skipped = _load(cfg, roster, force=args.refresh)
+    if skipped and not args.allow_skipped:
+        # FAILS CLOSED, and deliberately louder than the roster itself.
+        #
+        # Skipping a hypothesis is the safe response to an unknown candidate -
+        # far better than guessing a bloc, which would corrupt the substitution
+        # structure. But safe is not the same as acceptable: it silently
+        # narrows the evidence, and a forecast published on a narrowed field
+        # looks exactly like one published on the full field.
+        #
+        # This happened. Karim Bouamrane first appeared in an OpinionWay survey
+        # on 2026-09-09; the run of 2026-09-13 skipped three hypotheses, warned
+        # in its logs, published anyway, and nothing failed until the NEXT day's
+        # test caught it. Two days of forecasts were computed on a field the
+        # roster could not fully read.
+        #
+        # Stale but correct beats fresh but quietly wrong: the site keeps
+        # serving the last good forecast while this is fixed.
+        print(
+            f"error: {len(skipped)} record(s) could not be read, so the forecast "
+            "would be built on a narrowed field:",
+            file=sys.stderr,
+        )
+        for line in skipped:
+            print(f"  {line}", file=sys.stderr)
+        print(
+            "\nAdd the candidate(s) to config/candidats_2027.yaml with their bloc. "
+            "To publish anyway, knowing the field is incomplete, pass --allow-skipped.",
+            file=sys.stderr,
+        )
+        return 2
     data = build_model_data(weighted, cfg=cfg, roster=roster)
     as_of = max(h.fin for h in hyps)
 
@@ -516,6 +546,7 @@ def cmd_run(args) -> int:
         ),
         "walk_scales_pinned": cfg.latent.pin_walk_scales,
         "skipped_records": len(skipped),
+        "skipped_detail": skipped,
         "n_first_round_hypotheses": data.meta["n_first_round_hypotheses"],
         "n_second_round_hypotheses": data.meta["n_second_round_hypotheses"],
         "pinned_blocs": data.meta["unidentified_blocs"],
@@ -719,6 +750,11 @@ def main(argv: list[str] | None = None) -> int:
 
     run = sub.add_parser("run", help="fit, simulate and write the site JSON")
     run.add_argument("--refresh", action="store_true", help="re-download polls first")
+    run.add_argument(
+        "--allow-skipped",
+        action="store_true",
+        help="publish even though some records could not be read (field incomplete)",
+    )
     run.add_argument("--quiet", action="store_true", help="no sampling progress bar")
     run.add_argument("--draws", type=int, help="override draws/tune for a smoke test")
     run.add_argument(

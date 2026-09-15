@@ -79,6 +79,12 @@ candidats:
   BC:   { nom: "Bernard Cazeneuve",       parti: "Parti socialiste",              bloc: socialiste }
   AH:   { nom: "Anne Hidalgo",            parti: "Parti socialiste",              bloc: socialiste }
   SRo:  { nom: "Ségolène Royal",          parti: "Parti socialiste",              bloc: socialiste }
+  # First tested 2026-09-09 (OpinionWay). Party affiliation is the upstream
+  # file's own: "Parti Socialiste". OpinionWay paired him with a *different*
+  # other socialist in each of its three fields - Hollande, Royal, Glucksmann -
+  # so he is an addition to that nest rather than an alternative to any one of
+  # them, and the exclusivity check treats him as an independent candidacy.
+  KB:   { nom: "Karim Bouamrane",         parti: "Parti socialiste",              bloc: socialiste }
 
   # --- Écologistes -------------------------------------------------------
   MT:   { nom: "Marine Tondelier",        parti: "Les Écologistes",               bloc: ecologiste }

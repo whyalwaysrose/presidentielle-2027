@@ -187,3 +187,32 @@ def test_election_grid_ends_on_election_day(roster, cfg):
     data = build_model_data(w, cfg=cfg, roster=roster)
     assert data.grid_dates[-1] == cfg.election.premier_tour
     assert data.election_index == len(data.grid_dates) - 1
+
+
+def test_run_refuses_to_publish_on_a_narrowed_field(roster, monkeypatch, capsys):
+    """REGRESSION. A run must not quietly publish a forecast it could not fully
+    read.
+
+    Karim Bouamrane first appeared in an OpinionWay survey on 2026-09-09. The
+    run of 2026-09-13 skipped three hypotheses, warned in its logs, published
+    anyway, and nothing failed until the next day's test caught it - so two
+    days of forecasts were computed on a field the roster could not fully read.
+
+    Skipping is still the right response to an unknown candidate; guessing a
+    bloc would be worse. Publishing without saying so is what is not allowed.
+    """
+    from dataclasses import replace as dc_replace
+
+    from presidentielle import cli
+
+    # A roster that cannot read one of the candidates actually in the cache.
+    crippled = dc_replace(
+        roster, candidats={k: v for k, v in roster.candidats.items() if k != "JLM"}
+    )
+    monkeypatch.setattr(cli, "load_roster", lambda *a, **k: crippled)
+
+    code = cli.main(["run", "--quiet"])
+    out = capsys.readouterr()
+    assert code == 2, "run published despite records it could not read"
+    assert "narrowed field" in out.err
+    assert "--allow-skipped" in out.err, "the escape hatch must be discoverable"
