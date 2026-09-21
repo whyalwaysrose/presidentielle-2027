@@ -51,7 +51,9 @@ jobs:
       - name: Audit
         # Prints anything the roster failed closed on. A new candidate being
         # tested shows up here as skipped records before it can quietly shrink
-        # the sample.
+        # the sample. It also reports polls the Commission des sondages has on
+        # file that the feed lacks (checked during Fetch), as annotations on
+        # this run's summary page - never as a failure.
         run: presidentielle audit
 
       - name: Run the model
