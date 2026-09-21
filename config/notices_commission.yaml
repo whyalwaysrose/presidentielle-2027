@@ -1,0 +1,79 @@
+# Commission des sondages notices that a PERSON has read and ruled on.
+#
+# `presidentielle audit` compares the poll feed with the Commission's notice
+# catalog and reads every notice the feed lacks (src/presidentielle/data/
+# commission.py). Its classifier is a pattern match, so some notices need a
+# human verdict. Anything listed here is no longer warned about, but a
+# `manquante` one is still reported every run as a known gap until it
+# reaches the feed.
+#
+# statut:
+#   manquante          a 2027 voting-intention poll the feed does not have
+#   dans_le_flux       already in the feed, under another filename
+#   pas_une_intention  not a 2027 voting-intention poll
+#
+# Only add an entry after reading the notice itself, and say what it asks.
+
+notices:
+
+  # --- real gaps -------------------------------------------------------------
+
+  9927-pres-toluna-hi-regards-30-avril.pdf:
+    statut: manquante
+    note: >-
+      Toluna Harris Interactive for Regards, fieldwork 24-25 April 2025, 1 189
+      respondents. First-round voting intentions, including "gauche unie"
+      hypotheses. No Harris poll in the feed between 15 April and 5 May 2025.
+      Read 2026-09-21.
+
+  10218-pres-election-2027-opinionway-le-figaro-3-juillet.pdf:
+    statut: manquante
+    note: >-
+      OpinionWay for Fondapol, fieldwork 1-8 June 2026, 3 057 registered
+      voters. Second-round head-to-heads (Philippe, Attal, Retailleau each
+      against Bardella and Melenchon), plus potential-vote items. The only
+      OpinionWay polls in the feed around then are the 10-11 June JDD wave and
+      the 8-9 July Presitrack. Read 2026-09-21.
+
+  # --- in the feed under another filename -----------------------------------
+
+  10035-pres-verian-lhemicycle-12-decembre.pdf:
+    statut: dans_le_flux
+    note: >-
+      Same Verian / L'Hemicycle poll (fieldwork 18-20 November 2025) that the
+      feed already carries as 10024-pres-verian-lhemicycle-27-novembre.pdf -
+      a re-filed notice, not a second poll.
+
+  10167-pres-odoxa-31-mars.pdf:
+    statut: dans_le_flux
+    note: >-
+      Odoxa for Mascaret / Public Senat, fieldwork 25-26 March 2026. In the
+      feed as barometre-odoxa-mascaret-mars-2026.pdf.
+
+  # --- not voting intentions -------------------------------------------------
+
+  9988-leg-pres-odoxa-backbone-le-figaro-2-octobre.pdf:
+    statut: pas_une_intention
+    note: >-
+      Asks how people would vote in a LEGISLATIVE contest after a dissolution
+      (RN candidate against a Nouveau Front populaire one), not a presidential
+      one. Filed under "Pres" upstream.
+
+  10175-pres-femme-elysee-opinionway-challenges-22-avril.pdf:
+    statut: pas_une_intention
+    note: >-
+      "Pourriez-vous voter pour chacune des personnalites suivantes" - potential
+      vote for named women, answered per personality. A potential, not an
+      intention.
+
+  10210-pres-seconds-tours-ifop-marianne-24-juin.pdf:
+    statut: pas_une_intention
+    note: >-
+      Ifop for Marianne, "Les seconds tours souhaites": which runoff people
+      WANT to see, not how they would vote in one.
+
+  10255-pres-csa-cnews-8-septembre.pdf:
+    statut: pas_une_intention
+    note: >-
+      CSA for CNews / Europe 1 / JDD, "Les attentes des Francais envers le
+      futur president" - priorities for the next president.

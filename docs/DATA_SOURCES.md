@@ -44,6 +44,49 @@ cite. Its presidential file **stops at 2022-04-22** and its last commit is
 for 2027 would produce a forecast of the wrong election. It remains valuable
 for calibration (below).
 
+### 1b. Checking the feed against the Commission itself
+
+The feed is only as complete as its own ingestion, and that is known to leak:
+MieuxVoter/presidentielle2027#182 (open) documents its new-poll detector filing
+at most ten polls per run and silently skipping the rest — six were lost that
+way on 2026-09-12. So every `presidentielle fetch` compares the feed with the
+Commission's full notice list, via
+[MieuxVoter/sondages-commission-index](https://github.com/MieuxVoter/sondages-commission-index),
+which mirrors both the list and the PDFs (`src/presidentielle/data/commission.py`).
+
+The Commission files popularity barometers and opinion questions under the
+same "Pres" category as voting intentions, and filenames do not tell them
+apart — only 14 of the 46 notices in the feed say so in their name. So each
+notice the feed lacks is **read**: downloaded once, its text extracted, and
+classified by whether it asks a vote question. Verdicts are cached in
+`data/cache/commission_scan.json`.
+
+**Calibrated on 2026-09-21** against the 135 presidential notices since the
+feed begins. Of the 44 in the feed — all genuine voting intentions — the
+classifier recognises 42. One is a scanned image with no text; one (a Cluster17
+barometer) carries its question in a form the extractor cannot read, so **a
+missing Cluster17 poll could pass unnoticed**. The classifier's false
+positives were institutes' own disclaimers ("*ne constitue nullement une
+intention de vote*"), now filtered.
+
+What it found on that first run:
+
+| notice | verdict |
+|---|---|
+| Toluna Harris Interactive / Regards, 24–25 Apr 2025 | **missing** — first-round voting intentions |
+| OpinionWay / Fondapol, 1–8 Jun 2026 | **missing** — second-round head-to-heads |
+| Verian / L'Hémicycle, Dec 2025 | in the feed, as the earlier notice for the same fieldwork |
+| Odoxa / Mascaret, Mar 2026 | in the feed, under a non-Commission filename |
+| four others | not voting intentions (desired runoffs, potential vote, a legislative question, expectations of the next president) |
+
+Human verdicts live in `config/notices_commission.yaml`, each with a note on
+what was read. A gap is **reported, never repaired**: the check does not add
+polls to the model, because a notice's numbers transcribed by hand are
+unreviewed input. It shows in `audit`, in `diagnostics.couverture_commission`
+in the published JSON, and on the GitHub run — as a warning for an unreviewed
+gap older than seven days, as a notice for known gaps and unreadable PDFs. It
+never fails the run: a missing poll is upstream's to fix.
+
 ## 2. Historical polls, for calibration — official, via a compiled source
 
 **nsppolls** again: 409 polls covering the 2020–2022 period, with the same

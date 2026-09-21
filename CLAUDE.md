@@ -342,6 +342,26 @@ data. Two changes close that:
 `diagnostics.skipped_detail` carries the list, so an `--allow-skipped` run is
 visible in the output rather than only in a log.
 
+## The feed is checked against the Commission des sondages every day
+
+`presidentielle fetch` compares the poll feed with the Commission's full
+notice list and READS every notice the feed lacks
+(`data/commission.py`, documented in `docs/DATA_SOURCES.md` 1b). It exists
+because two real voting-intention polls were missing and nothing noticed:
+Harris/Regards (April 2025) and OpinionWay/Fondapol (June 2026).
+
+- **When `audit` warns "MISSING from the feed"**: open the notice, then add a
+  verdict to `config/notices_commission.yaml` with a note saying what it asks.
+  `manquante` keeps it reported as a known gap; the other statuses silence it.
+  Getting the poll into the feed is an upstream fix.
+- **It never adds polls and never fails the run.** Reported, not repaired.
+- **Filenames are useless for this** - 32 of the 46 notices in the feed do not
+  say "iv" in their name. Do not "simplify" it to a filename match.
+- **The PDF extractor's regexes must stay linear.** The first version
+  backtracked quadratically and took minutes on some notices; a test pins it.
+- **Known blind spot:** a Cluster17 notice that is in the feed reads as "not a
+  vote question", so a missing Cluster17 poll could pass unnoticed.
+
 ## Facts beat the proxy, and the two agree
 
 Ballot probabilities come from testing frequency, which is a proxy. Where

@@ -78,6 +78,24 @@ def cmd_fetch(args) -> int:
         print("refreshed candidats.csv (declarations and withdrawals)")
     except Exception as exc:  # noqa: BLE001
         print(f"warning: could not refresh candidats.csv ({exc})")
+    # Compare the feed with the Commission des sondages. Downloads and reads
+    # any notice the feed lacks, once; the verdicts are cached and committed,
+    # so `audit` and `run` can report without touching the network. Never
+    # fatal: a missing poll is upstream's problem, not a reason to stop.
+    try:
+        from .data import commission
+
+        commission.fetch_catalog()
+        report = commission.check(
+            commission.feed_filenames(),
+            as_of=dt.date.today(),
+            since=cfg.polls.history_start,
+        )
+        print(f"Commission catalog: {report.notices_considered} presidential notices, "
+              f"{report.in_feed} in the feed, "
+              f"{len(report.missing_vote)} unreviewed gap(s)")
+    except Exception as exc:  # noqa: BLE001
+        print(f"warning: could not check the Commission catalog ({exc})")
     s = surveys.summarise(weighted)
     print(f"{s['surveys']} surveys, {s['hypotheses']} hypotheses "
           f"({s['hypotheses_tour1']} first round, {s['hypotheses_tour2']} second)")
@@ -133,7 +151,49 @@ def cmd_audit(args) -> int:
         print(f"{len(skipped)} record(s) skipped:")
         for line in skipped:
             print("  ", line)
+
+    _print_commission_coverage(cfg)
     return 0
+
+
+def _commission_coverage(cfg):
+    """The feed-versus-Commission report, from cached verdicts only.
+
+    `fetch` does the downloading; this never touches the network, so `audit`
+    and `run` behave the same offline as on CI. Returns None if the catalog has
+    never been fetched.
+    """
+    from .data import commission
+
+    if not commission.CATALOG_FILE.exists():
+        return None
+    return commission.check(
+        commission.feed_filenames(),
+        as_of=dt.date.today(),
+        since=cfg.polls.history_start,
+        download=False,
+    )
+
+
+def _print_commission_coverage(cfg) -> None:
+    from .data import commission
+
+    report = _commission_coverage(cfg)
+    print()
+    if report is None:
+        print("Commission catalog not fetched - run `presidentielle fetch`.")
+        return
+    print(f"Commission des sondages: {report.notices_considered} presidential notices "
+          f"since {cfg.polls.history_start}, {report.in_feed} in the feed "
+          f"(latest notice {report.latest_notice}).")
+    lines = report.lines()
+    if not lines:
+        print("  every voting-intention notice is in the feed")
+    for line in lines:
+        print(f"  {line}")
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        for cmd in commission.github_annotations(report):
+            print(cmd)
 
 
 def cmd_calibrate(args) -> int:
@@ -705,6 +765,12 @@ def cmd_run(args) -> int:
         "texte": changes.describe(comparison, payload),
     }
     payload["commentaire"] = write_commentary(payload, roster)
+    # Which published polls this forecast does NOT include, so the gap travels
+    # with the numbers instead of living only in a CI log.
+    coverage = _commission_coverage(cfg)
+    payload["diagnostics"]["couverture_commission"] = (
+        coverage.as_dict() if coverage else None
+    )
 
     write_json(payload, paths.SITE_DATA / "forecast.json")
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
