@@ -365,6 +365,28 @@ probability to zero; a declaration only sets a FLOOR, because a declared
 candidate still needs 500 parrainages and can change their mind - Darmanin
 declared on 2026-08-17 and withdrew eight days later.
 
+**Precedence is enforced by ORDER OF APPLICATION** (facts pass, then pins
+pass). It used to be one dict keyed by candidate, so a pin only beat a fact on
+the same person; a pinned Bardella sat at his fact's slot, ahead of Le Pen's
+declaration floor, which then squeezed the pin from 0.40 to 0.15.
+
+**Declarations must be corroborated by the polling; withdrawals need not be.**
+On 2026-09-16 upstream started recording ~15 declaration dates at once, many
+statements of intent (five socialists; Bertrand's date is one his own team
+disowned). Applied raw, Le Pen went 65% -> 55% with NO new polling, and the
+daily run would have published it. A declaration floor now applies only when
+testing frequency is already >= `field.declaration_corroboration` (0.25, in an
+empty 0.13-0.56 gap). Ignored ones are listed in `ballot.declarations_ignored`
+and flagged by `audit`. A test fails if a declared candidate lands within 0.10
+of the line - decide that person by hand in `field.overrides`.
+
+This is the rule this section always implied: the CSV is trusted BECAUSE a
+second signal agrees. When they diverge, the proxy wins for declarations.
+
+**Sebastien Bonnal (`SB`)** is the second new-candidate break, 2026-09-16: one
+self-commissioned OpinionWay poll at 0.5%, no party upstream. Placed in
+`souverainiste` by judgement, commented as such in the roster.
+
 ## Named ballots are cheap; the caveat on them is not optional
 
 `config/scenarios_2027.yaml` defines scenarios as *modifications of the

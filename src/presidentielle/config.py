@@ -98,6 +98,7 @@ class FieldConfig:
     half_life_days: float
     shrinkage_pseudocounts: float
     declared_floor: float = 0.85
+    declaration_corroboration: float = 0.25
     overrides: dict = field(default_factory=dict)
 
 

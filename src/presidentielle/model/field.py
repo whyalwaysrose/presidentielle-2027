@@ -81,12 +81,16 @@ class BallotModel:
     arbitrations: list[Arbitration]
     independent: dict[str, float] = dc_field(default_factory=dict)
     weights_used: float = 0.0
+    # Declared candidates whose declaration was ignored because the polling
+    # does not corroborate it. Reported, never silently dropped.
+    uncorroborated: list[str] = dc_field(default_factory=list)
 
     def as_dict(self) -> dict:
         return {
             "arbitrations": [a.as_dict() for a in self.arbitrations],
             "independent": {k: round(v, 4) for k, v in sorted(self.independent.items())},
             "effective_hypotheses": round(self.weights_used, 1),
+            "declarations_ignored": sorted(self.uncorroborated),
         }
 
 
@@ -192,13 +196,67 @@ def build_ballot_model(
     # a floor, and never lowers it: the frequency estimate may already be higher
     # for someone institutes test constantly, and a declaration is not stronger
     # evidence than that.
-    adjustments: dict[str, tuple[str, float]] = {}
-    for cid, value in (facts or {}).items():
-        adjustments[cid] = ("set" if value <= 0.0 else "floor", float(value))
-    for cid, value in (cfg.field_.overrides or {}).items():
-        adjustments[cid] = ("set", float(value))
+    #
+    # Precedence is enforced by ORDER OF APPLICATION, in two passes. Within an
+    # arbitration, every adjustment renormalises the other options, so whatever
+    # is applied last is what survives. This used to be one dict keyed by
+    # candidate, which only honoured precedence when a fact and a pin touched
+    # the SAME candidate: a pinned Bardella sat at his fact's position in the
+    # dict, ahead of Le Pen's declaration floor, and that floor then squeezed
+    # the pin from 0.40 to 0.15. It surfaced the day upstream started recording
+    # Le Pen's declaration.
+    def frequency_estimate(cid: str) -> float | None:
+        if cid in independent:
+            return independent[cid]
+        for arb in arbitrations:
+            if cid in arb.options:
+                return arb.probabilities[arb.options.index(cid)]
+        return None
 
-    for cid, (mode, value) in adjustments.items():
+    # A declaration counts only where the polling corroborates it. Upstream
+    # records statements of intent alongside real declarations, and on
+    # 2026-09-16 applying them all moved the headline ten points with no new
+    # polling. A withdrawal is always applied: nobody is harmed by believing a
+    # candidate who says they are out.
+    fact_pass: list[tuple[str, tuple[str, float]]] = []
+    uncorroborated: list[str] = []
+    for cid, value in (facts or {}).items():
+        if value <= 0.0:
+            fact_pass.append((cid, ("set", float(value))))
+            continue
+        freq_p = frequency_estimate(cid)
+        if freq_p is not None and freq_p < cfg.field_.declaration_corroboration:
+            uncorroborated.append(cid)
+            log.info(
+                "ballot %s: declaration IGNORED - institutes test them at %.2f, "
+                "below the %.2f corroboration threshold",
+                cid, freq_p, cfg.field_.declaration_corroboration,
+            )
+            continue
+        fact_pass.append((cid, ("floor", float(value))))
+    pin_pass = [
+        (cid, ("set", float(value)))
+        for cid, value in (cfg.field_.overrides or {}).items()
+    ]
+    pinned = {cid for cid, _ in pin_pass}
+    adjustments = [(c, a) for c, a in fact_pass if c not in pinned] + pin_pass
+
+    for arb in arbitrations:
+        declared = [
+            c for c, (mode, _) in fact_pass if mode == "floor" and c in arb.options
+        ]
+        if len(declared) > 1:
+            # Mutually exclusive options cannot all be floored at 0.85; the
+            # later one wins and the earlier is squeezed. Two declared
+            # candidates in one arbitration also suggests the arbitration is
+            # wrong - both may well stand.
+            log.warning(
+                "arbitration %s has several declared candidates (%s); floors "
+                "conflict, so check whether they are really mutually exclusive",
+                arb.bloc, ", ".join(declared),
+            )
+
+    for cid, (mode, value) in adjustments:
         if cid in independent:
             current = independent[cid]
             independent[cid] = value if mode == "set" else max(current, value)
@@ -246,6 +304,7 @@ def build_ballot_model(
         arbitrations=arbitrations,
         independent=independent,
         weights_used=total_w,
+        uncorroborated=sorted(uncorroborated),
     )
 
 

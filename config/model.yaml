@@ -385,6 +385,27 @@ field:
   # declared candidate still needs 500 parrainages and can change their mind -
   # Darmanin declared on 2026-08-17 and withdrew eight days later.
   declared_floor: 0.85
+  # ...but only where the polling CORROBORATES the declaration. A declaration
+  # floor is applied only if testing frequency already gives the candidate at
+  # least this probability of standing; otherwise it is logged and ignored.
+  # Withdrawals are always applied.
+  #
+  # Why: on 2026-09-16 upstream started recording declaration dates for about
+  # fifteen candidates at once, many of them statements of intent rather than
+  # ballot places - five socialists would each have been 85% likely to stand,
+  # and Xavier Bertrand's recorded date is one his own team said was not an
+  # official declaration. Applied uncritically, that moved Le Pen from 65% to
+  # 55% with no new polling. The CSV was always trusted on the grounds that a
+  # second signal (testing frequency) agreed with it; this makes that
+  # agreement a requirement rather than an assumption.
+  #
+  # ASSERTED, placed in a wide empty gap in the data on that day: every
+  # declared candidate was either tested at 0.56 or above (Attal, Philippe,
+  # Glucksmann, Retailleau, ...) or at 0.13 or below (Lisnard, Faure, Ruffin,
+  # Bouamrane, Royal, Bertrand). Anything between 0.15 and 0.5 classifies them
+  # identically. If a candidate ever lands near this line, look at them by
+  # hand and pin them in `overrides` below.
+  declaration_corroboration: 0.25
   # Presence probabilities the data cannot know, keyed by candidate id. These
   # win over everything, including the declarations above. Use only for facts,
   # with the source in the comment - never to express a hunch.

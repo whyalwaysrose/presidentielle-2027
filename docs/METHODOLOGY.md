@@ -194,7 +194,28 @@ same month. The test suite asserts the agreement and fails if it breaks.
 Withdrawal is decisive. Declaring is only a floor — a declared candidate still
 needs 500 validated *parrainages*, and Darmanin declared on 2026-08-17 and
 withdrew eight days later. Precedence runs: testing frequency, then recorded
-facts, then the manual `field.overrides` pin.
+facts, then the manual `field.overrides` pin — enforced by the order in which
+they are applied, since each adjustment inside an arbitration renormalises the
+others. (It used to depend on dictionary order, which let a declaration floor on
+Le Pen squeeze a pinned Bardella from 0.40 to 0.15.)
+
+**A declaration counts only where the polling corroborates it.** On 2026-09-16
+the upstream file began recording declaration dates for about fifteen
+candidates at once, and many are statements of intent rather than ballot
+places: five socialists would each have been 85% likely to stand, and Xavier
+Bertrand's recorded date is one his own team said was not an official
+declaration. Applied uncritically, that moved Le Pen from 65% to 55% with no new
+polling at all. The field was only ever trusted because a second signal agreed
+with it, so that agreement is now required: a declaration floor applies only if
+institutes already test the candidate at 25% or more
+(`field.declaration_corroboration`). Everyone else's declaration is logged,
+reported by `presidentielle audit`, and ignored. Withdrawals always apply —
+believing a candidate who says they are out costs nothing.
+
+The threshold is asserted, and sits in a wide empty gap: on the day it was set,
+every declared candidate was tested at 0.56 or more, or at 0.13 or less. A test
+fails if anyone lands near it, so a close case is decided by a person in
+`field.overrides` rather than by the line.
 
 ### Institutes are not weighted by accuracy
 

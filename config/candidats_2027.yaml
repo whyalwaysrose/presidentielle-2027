@@ -136,6 +136,13 @@ candidats:
   # --- Souverainistes ------------------------------------------------------
   NDA:  { nom: "Nicolas Dupont-Aignan",   parti: "Debout la France",              bloc: souverainiste }
   PdV:  { nom: "Philippe de Villiers",    parti: "Divers droite souverainiste",   bloc: souverainiste }
+  # Independent, no party. Tested once, at 0.5%, by OpinionWay (2026-09-02/04)
+  # in a survey he commissioned himself. The bloc is a JUDGEMENT, not a data
+  # field: upstream records no party, and his platform is described as popular
+  # sovereigntism with economic liberalism and a rejection of the party
+  # system (candidator.fr). Souverainiste is the nearest fit. At half a point
+  # the choice barely touches anyone else; revisit if he polls materially.
+  SB:   { nom: "Sébastien Bonnal",        parti: "Indépendant",                   bloc: souverainiste }
 
   # --- Droite nationale (Reconquête et alliés) -----------------------------
   EZ:   { nom: "Éric Zemmour",            parti: "Reconquête",                    bloc: reconquete }

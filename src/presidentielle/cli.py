@@ -109,8 +109,11 @@ def cmd_audit(args) -> int:
     )
     if fact_notes:
         print("Declared candidacies and withdrawals (these beat the frequency proxy):")
+        ignored = {roster.candidats[c].nom for c in ballot.uncorroborated}
         for line in fact_notes:
-            print(f"  {line}")
+            name = line.split(":", 1)[0]
+            suffix = "   [IGNORED: polling does not corroborate]" if name in ignored else ""
+            print(f"  {line}{suffix}")
         print()
     print("Ballot arbitrations (mutually exclusive candidacies):")
     for a in ballot.arbitrations:
@@ -855,6 +858,12 @@ def _recent_polls(hyps, roster, limit: int) -> list[dict]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # The summary prints names with accents and a typographic minus sign. A
+    # Windows console defaults to cp1252, which cannot encode U+2212, so a run
+    # that had already fitted and written its JSON exited 1 on the final print.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     p = argparse.ArgumentParser(prog="presidentielle")
     p.add_argument("-v", "--verbose", action="store_true")
     sub = p.add_subparsers(dest="cmd", required=True)
