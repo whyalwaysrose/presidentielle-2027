@@ -70,6 +70,13 @@ candidats:
   # than the PS's: in 2022 Roussel's measured second-round transfers sat closer
   # to Mélenchon's than to Hidalgo's (nsppolls reports.csv).
   FRo:  { nom: "Fabien Roussel",          parti: "Parti communiste français",     bloc: gauche_radicale }
+  # Gauche Républicaine et Socialiste: the 2019 split from the PS's left wing,
+  # which sat with the communists in the European Parliament's GUE/NGL group
+  # and inside the Nouveau Front populaire. Grouped with the PCF here for the
+  # same reason Roussel is - closer to Mélenchon's electorate than the PS's -
+  # rather than with the social democrats whose name it shares. First tested
+  # 2026-09-29 (IFOP), at 1%.
+  EMa:  { nom: "Emmanuel Maurel",         parti: "Gauche républicaine et socialiste", bloc: gauche_radicale }
 
   # --- Sociaux-démocrates -----------------------------------------------
   RG:   { nom: "Raphaël Glucksmann",      parti: "Place publique",                bloc: socialiste }
@@ -85,6 +92,9 @@ candidats:
   # so he is an addition to that nest rather than an alternative to any one of
   # them, and the exclusivity check treats him as an independent candidacy.
   KB:   { nom: "Karim Bouamrane",         parti: "Parti socialiste",              bloc: socialiste }
+  # First tested 2026-09-29 (IFOP), at 3%. Upstream records him as Parti
+  # Socialiste and a declared candidate since 2026-02-05.
+  JG:   { nom: "Jérôme Guedj",            parti: "Parti socialiste",              bloc: socialiste }
 
   # --- Écologistes -------------------------------------------------------
   MT:   { nom: "Marine Tondelier",        parti: "Les Écologistes",               bloc: ecologiste }
@@ -143,6 +153,12 @@ candidats:
   # system (candidator.fr). Souverainiste is the nearest fit. At half a point
   # the choice barely touches anyone else; revisit if he polls materially.
   SB:   { nom: "Sébastien Bonnal",        parti: "Indépendant",                   bloc: souverainiste }
+  # Appears only in four IFOP fields of December 2024, at 1-1.5%, which reached
+  # the feed in the 2026-09-22 restructure. Same bloc as `config/candidats_2022.yaml`
+  # gives him, and for the reason recorded there: a rural anti-system candidate
+  # with no clean home on a left-right axis. `config/resultats_2022.yaml` scores
+  # his 2022 result in that bloc too, so the backtest and the forecast agree.
+  JL:   { nom: "Jean Lassalle",           parti: "Résistons !",                   bloc: souverainiste }
 
   # --- Droite nationale (Reconquête et alliés) -----------------------------
   EZ:   { nom: "Éric Zemmour",            parti: "Reconquête",                    bloc: reconquete }

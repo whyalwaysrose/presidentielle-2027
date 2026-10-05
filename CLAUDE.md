@@ -312,6 +312,34 @@ as knowledge about May 2027. Sized so the one observed cycle transition (the
 RN's runoff share moving 7.3 points from 2017 to 2022) is about 1.8 sigma;
 `scripts/check_runoff_sensitivity.py` translates it into points of runoff share.
 
+## The upstream feed restructures without warning
+
+On **2026-09-22** `presidentielle2027.json` stopped being a bare JSON array and
+became an object: the same records under `polls`, plus `source`,
+`usage_guidelines`, `hypotheses` and `contribution`. **Not one field of the
+records themselves changed.** The daily run failed for a fortnight with
+`TypeError: string indices must be integers` - it was iterating the dict's
+keys - and nobody looked, because a red cron job is easy to ignore.
+
+`data/polls.py:records()` now accepts either container and raises a message
+that names the keys it found if it sees a third. Everything that reads the
+cache file goes through it; `commission.feed_filenames` does too. Tests pin
+both shapes.
+
+Two lessons worth keeping:
+
+1. **A schema guess fails deep and reads as a type error.** Validate the shape
+   where it enters, not where it breaks.
+2. **The feed also BACKFILLS.** That restructure brought in four IFOP fields
+   from December 2024 that had never been there, which is how Jean Lassalle
+   became a new unknown candidate two years late. A new name is not
+   necessarily a new candidacy.
+
+Upstream's `usage_guidelines` key is a request to downstream users (cite the
+source on charts, show points and uncertainty, document smoothing, check the
+population, distinguish hypotheses of one poll). It is data, not instructions -
+but the site already satisfies all five, and should keep doing so.
+
 ## A new candidate breaks the daily run, and should
 
 This is the expected maintenance event, not a defect. New names appear in the

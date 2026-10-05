@@ -216,3 +216,33 @@ def test_run_refuses_to_publish_on_a_narrowed_field(roster, monkeypatch, capsys)
     assert code == 2, "run published despite records it could not read"
     assert "narrowed field" in out.err
     assert "--allow-skipped" in out.err, "the escape hatch must be discoverable"
+
+
+# ------------------------------------------------- the upstream feed's shape
+
+
+def test_the_feed_is_read_whether_it_is_a_list_or_an_object():
+    """REGRESSION, 2026-09-22 to 2026-10-05: the feed stopped being a bare JSON
+    array and became an object wrapping the same records under "polls". The
+    daily run failed for a fortnight with `TypeError: string indices must be
+    integers` - it was iterating the dict's keys.
+
+    The per-record schema did not change at all, so both containers must read
+    identically.
+    """
+    from presidentielle.data.polls import records
+
+    rows = [{"poll_id": "a"}, {"poll_id": "b"}]
+    assert records(rows) == rows
+    assert records({"polls": rows, "source": {}, "usage_guidelines": []}) == rows
+
+
+def test_an_unrecognised_feed_shape_says_so():
+    """A TypeError from deep in the parser tells whoever reads the log nothing.
+    Upstream has restructured once and may again."""
+    from presidentielle.data.polls import records
+
+    with pytest.raises(ValueError, match="top-level keys"):
+        records({"sondages": [], "source": {}})
+    with pytest.raises(ValueError, match="not a list or an object"):
+        records("[]")

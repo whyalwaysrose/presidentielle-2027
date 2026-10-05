@@ -361,9 +361,10 @@ def check(
 def feed_filenames(path: Path | None = None) -> set[str]:
     """Notice filenames the poll feed already carries."""
     from .polls import CACHE_FILE as POLLS
+    from .polls import records
 
-    records = json.loads((path or POLLS).read_text(encoding="utf-8"))
-    return {r["filename"] for r in records if r.get("filename")}
+    payload = json.loads((path or POLLS).read_text(encoding="utf-8"))
+    return {r["filename"] for r in records(payload) if r.get("filename")}
 
 
 def github_annotations(report: CoverageReport) -> list[str]:

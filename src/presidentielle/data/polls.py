@@ -111,8 +111,37 @@ def _parse_tour(value: str) -> int:
     raise ValueError(f"unrecognised tour {value!r}")
 
 
+def records(payload: list | dict) -> list[dict]:
+    """The poll records, whichever shape upstream is publishing.
+
+    The file was a bare JSON array until 2026-09-22, when it became an object
+    wrapping the same records under "polls", alongside `source`,
+    `usage_guidelines`, `hypotheses` and `contribution`. The per-record schema
+    did not change at all - not one field added or removed - so only the
+    container is handled here.
+
+    FAILS LOUDLY on anything else. The daily run broke for a fortnight on that
+    change with `TypeError: string indices must be integers`, which says
+    nothing about what actually happened.
+    """
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        polls = payload.get("polls")
+        if isinstance(polls, list):
+            return polls
+        raise ValueError(
+            "the poll feed is an object with no 'polls' list; its top-level keys "
+            f"are {sorted(payload)}. The upstream schema has moved again - see "
+            "data/polls.py:records()."
+        )
+    raise ValueError(
+        f"the poll feed is a {type(payload).__name__}, not a list or an object"
+    )
+
+
 def parse(
-    payload: list[dict],
+    payload: list | dict,
     *,
     roster,
     history_start: dt.date | None = None,
@@ -132,7 +161,7 @@ def parse(
     out: list[Hypothese] = []
     skipped: list[str] = []
 
-    for rec in payload:
+    for rec in records(payload):
         try:
             fin = _parse_date(rec["fin_enquete"])
             debut = _parse_date(rec["debut_enquete"])
