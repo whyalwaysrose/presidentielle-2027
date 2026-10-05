@@ -148,6 +148,21 @@ a:hover { text-decoration-color: currentColor; }
 }
 .error-banner code { font-size: var(--fs-2xs); color: var(--text-dim); display: block; margin-top: 4px; }
 
+/* --- the daily run has stopped ------------------------------------------- */
+
+/* Deliberately not styled as an error: the forecast shown is still a correct
+   forecast of the data it had. It is out of date, which is a different claim. */
+.stale-banner {
+  margin-top: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border-strong);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: rgba(232, 163, 61, 0.12);
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
 /* --- cards --------------------------------------------------------------- */
 
 main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }

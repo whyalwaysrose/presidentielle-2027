@@ -16,7 +16,12 @@
   'use strict';
 
   var SCHEMA_VERSION = 2;
-  var BUILD = '2026-09-16.1';
+
+  /* The run publishes daily, so anything older than this means it has stopped.
+     Three days rather than two: a single infrastructure hiccup at GitHub (a
+     job no runner picks up) should not put a warning on a correct forecast. */
+  var STALE_DAYS = 3;
+  var BUILD = '2026-10-05.1';
 
   var state = { data: null, scenario: null };
 
@@ -558,9 +563,26 @@
   }
 
   /* --- render all ------------------------------------------------------- */
+  /* --- is this forecast still current? ---------------------------------- */
+  function renderStale(data) {
+    var el = document.getElementById('stale-banner');
+    var stamp = Date.parse(data.generated_at);
+    if (!stamp) { el.hidden = true; return; }
+    var days = Math.floor((Date.now() - stamp) / 86400000);
+    if (days < STALE_DAYS) { el.hidden = true; el.textContent = ''; return; }
+    // Rendered from the data's own timestamp, so it cannot disagree with the
+    // numbers on screen, and it is rebuilt on a language switch like the rest.
+    el.hidden = false;
+    el.textContent = I18n.t('stale.warning', {
+      date: I18n.date(data.generated_at.slice(0, 10)),
+      days: days
+    });
+  }
+
   function renderAll() {
     var data = state.data;
     if (!data) return;
+    renderStale(data);
     renderHeader(data);
     renderChange(data);
     renderScenarios(data);

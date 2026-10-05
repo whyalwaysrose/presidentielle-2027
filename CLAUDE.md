@@ -312,6 +312,33 @@ as knowledge about May 2027. Sized so the one observed cycle transition (the
 RN's runoff share moving 7.3 points from 2017 to 2022) is about 1.8 sigma;
 `scripts/check_runoff_sensitivity.py` translates it into points of runoff share.
 
+## A broken daily run must announce itself
+
+It broke on 2026-09-22 and nobody knew until 2026-10-05. Fail-closed worked
+exactly as designed - the site kept serving the last good forecast rather than
+a wrong one - but a red cron job notifies no one, and the page went on calling
+a fortnight-old forecast current. Two guards, neither of which needs anyone to
+remember to look:
+
+1. **The run opens an issue about itself** (`daily.yml`, `Report a failure`).
+   GitHub notifies the repository owner when an issue is opened, with no
+   subscription to configure. One issue is REUSED across a run of failures, so
+   a week of breakage is one thread, and the next success closes it - which
+   also means a transient runner hiccup leaves nothing behind.
+2. **The page says when it is stale** (`renderStale` in `app.js`, three days).
+   This is the only guard that survives the job not running AT ALL - a runner
+   GitHub never allocates, or a scheduled workflow disabled for repository
+   inactivity. It reads `generated_at` from the data itself, so it cannot
+   disagree with the numbers beside it.
+
+Three days, not two: a single GitHub infrastructure failure (`The job was not
+acquired by Runner of type hosted`, seen on 2026-10-05) should not put a
+warning on a forecast that is actually fine.
+
+**Do not style the stale banner as an error.** The forecast on screen is a
+correct forecast of the data it had; it is out of date, which is a different
+claim, and the colour should say so.
+
 ## The upstream feed restructures without warning
 
 On **2026-09-22** `presidentielle2027.json` stopped being a bare JSON array and

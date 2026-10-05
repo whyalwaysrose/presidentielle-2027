@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
 <meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 
@@ -42,6 +42,11 @@
 </header>
 
 <div id="load-error" class="wrap error-banner" role="alert" hidden></div>
+
+<!-- Says so when the daily run has stopped publishing. A page that calls
+     itself a daily forecast and quietly serves a fortnight-old one is
+     misleading, which is what happened between 2026-09-22 and 10-05. -->
+<div id="stale-banner" class="wrap stale-banner" role="status" hidden></div>
 
 <!-- Switching scenario or language rewrites most of the page. Without an
      announcement a screen-reader user gets no indication anything happened. -->
@@ -243,9 +248,9 @@
 <script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script src="js/i18n.js?v=13"></script>
-<script src="js/charts.js?v=13"></script>
-<script src="js/scenarios.js?v=13"></script>
-<script src="js/app.js?v=13"></script>
+<script src="js/i18n.js?v=14"></script>
+<script src="js/charts.js?v=14"></script>
+<script src="js/scenarios.js?v=14"></script>
+<script src="js/app.js?v=14"></script>
 </body>
 </html>

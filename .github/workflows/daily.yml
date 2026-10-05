@@ -14,6 +14,9 @@ concurrency:
 
 permissions:
   contents: write
+  # So a failing run can open an issue about itself. A red cron job notifies
+  # nobody by default, and this one stayed red for a fortnight unnoticed.
+  issues: write
 
 jobs:
   forecast:
@@ -72,6 +75,43 @@ jobs:
             git commit -m "Forecast update $(date -u +%Y-%m-%d)"
             git push
           fi
+
+      # --- tell somebody ---------------------------------------------------
+      # A scheduled workflow that fails notifies nobody. This one broke on
+      # 2026-09-22 when the upstream feed changed shape and went on failing
+      # for fourteen days while the site served a fortnight-old forecast.
+      #
+      # An issue is the cheapest channel that reaches a human without anyone
+      # subscribing to anything: GitHub notifies the repository owner when one
+      # is opened. One issue is reused for a run of failures, so a week of
+      # breakage is one thread rather than seven, and a later success closes
+      # it - which also keeps a transient runner hiccup from leaving litter.
+      - name: Report a failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create daily-run --color b60205 \
+            --description "The daily forecast run is failing" 2>/dev/null || true
+          body=$(printf 'The daily forecast run failed on %s.\n\n%s\n\nThe site keeps serving the last good forecast until this is fixed, and says on the page itself once it is more than three days old.' "$(date -u +%F)" "$RUN_URL")
+          existing=$(gh issue list --label daily-run --state open --json number --jq '.[0].number')
+          if [ -z "$existing" ]; then
+            gh issue create --title "Daily forecast is failing" \
+              --label daily-run --body "$body"
+          else
+            gh issue comment "$existing" --body "$body"
+          fi
+
+      - name: Close the failure issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          for n in $(gh issue list --label daily-run --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Fixed: the run succeeded on $(date -u +%F). $RUN_URL"
+          done
 
   # Deploys the forecast this run just committed. pages.yml cannot do it: a
   # commit made with GITHUB_TOKEN does not trigger other workflows. Shares the

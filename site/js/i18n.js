@@ -107,6 +107,11 @@
       'diag.hypotheses': 'hypothèses de premier tour',
       'diag.sims': 'simulations',
       'diag.fit': 'Convergence',
+      'stale.warning': function (a) {
+        return 'Cette prévision date du ' + a.date + ', soit il y a ' + a.days +
+          ' jours. La mise à jour quotidienne ne s’exécute plus : les chiffres ' +
+          'ci-dessous ne tiennent pas compte des sondages publiés depuis.';
+      },
       'error.load': 'Impossible de charger les données de la prévision.',
       'error.schema': 'Cette page attend une version de données différente. Videz le cache et rechargez.'
     },
@@ -199,6 +204,11 @@
       'diag.hypotheses': 'first-round hypotheses',
       'diag.sims': 'simulations',
       'diag.fit': 'Convergence',
+      'stale.warning': function (a) {
+        return 'This forecast is from ' + a.date + ', ' + a.days + ' days ago. ' +
+          'The daily update has stopped running, so the figures below do not ' +
+          'reflect any poll published since.';
+      },
       'error.load': 'Could not load the forecast data.',
       'error.schema': 'This page expects a different data version. Clear the cache and reload.'
     }
