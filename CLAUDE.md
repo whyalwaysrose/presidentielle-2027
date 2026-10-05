@@ -320,11 +320,19 @@ a wrong one - but a red cron job notifies no one, and the page went on calling
 a fortnight-old forecast current. Two guards, neither of which needs anyone to
 remember to look:
 
-1. **The run opens an issue about itself** (`daily.yml`, `Report a failure`).
+1. **The run opens an issue about itself** (`daily.yml`, the `notify` job).
    GitHub notifies the repository owner when an issue is opened, with no
    subscription to configure. One issue is REUSED across a run of failures, so
    a week of breakage is one thread, and the next success closes it - which
    also means a transient runner hiccup leaves nothing behind.
+
+   **It is a job needing BOTH `forecast` and `pages`, never a step.** As a step
+   inside `forecast` it could only ever see its own job, so a `pages` failure -
+   the forecast computed but never published - left the run red with nobody
+   told. That was found by TESTING the notifier on a throwaway branch (where
+   `pages` always fails, since it may only deploy from main), which is the only
+   reason it was caught: an untested notifier reproduces the exact problem it
+   exists to prevent.
 2. **The page says when it is stale** (`renderStale` in `app.js`, three days).
    This is the only guard that survives the job not running AT ALL - a runner
    GitHub never allocates, or a scheduled workflow disabled for repository

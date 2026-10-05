@@ -76,43 +76,6 @@ jobs:
             git push
           fi
 
-      # --- tell somebody ---------------------------------------------------
-      # A scheduled workflow that fails notifies nobody. This one broke on
-      # 2026-09-22 when the upstream feed changed shape and went on failing
-      # for fourteen days while the site served a fortnight-old forecast.
-      #
-      # An issue is the cheapest channel that reaches a human without anyone
-      # subscribing to anything: GitHub notifies the repository owner when one
-      # is opened. One issue is reused for a run of failures, so a week of
-      # breakage is one thread rather than seven, and a later success closes
-      # it - which also keeps a transient runner hiccup from leaving litter.
-      - name: Report a failure
-        if: failure()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          gh label create daily-run --color b60205 \
-            --description "The daily forecast run is failing" 2>/dev/null || true
-          body=$(printf 'The daily forecast run failed on %s.\n\n%s\n\nThe site keeps serving the last good forecast until this is fixed, and says on the page itself once it is more than three days old.' "$(date -u +%F)" "$RUN_URL")
-          existing=$(gh issue list --label daily-run --state open --json number --jq '.[0].number')
-          if [ -z "$existing" ]; then
-            gh issue create --title "Daily forecast is failing" \
-              --label daily-run --body "$body"
-          else
-            gh issue comment "$existing" --body "$body"
-          fi
-
-      - name: Close the failure issue
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          for n in $(gh issue list --label daily-run --state open --json number --jq '.[].number'); do
-            gh issue close "$n" --comment "Fixed: the run succeeded on $(date -u +%F). $RUN_URL"
-          done
-
   # Deploys the forecast this run just committed. pages.yml cannot do it: a
   # commit made with GITHUB_TOKEN does not trigger other workflows. Shares the
   # `pages` concurrency group with that file so the two never collide.
@@ -138,3 +101,63 @@ jobs:
           path: site
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  # --- tell somebody -------------------------------------------------------
+  # A scheduled workflow that fails notifies nobody. This one broke on
+  # 2026-09-22 when the upstream feed changed shape, and went on failing for
+  # fourteen days while the site served a fortnight-old forecast.
+  #
+  # An issue is the cheapest channel that reaches a person without anyone
+  # subscribing to anything: GitHub notifies the repository owner when one is
+  # opened. One issue is REUSED across consecutive failures, so a week of
+  # breakage is one thread rather than seven, and the next success closes it,
+  # which also stops a transient runner hiccup from leaving litter behind.
+  #
+  # It is a JOB needing BOTH others, not a step inside `forecast`. As a step it
+  # could only see its own job, so a `pages` failure - the forecast computed
+  # but never published - left the run red with nobody told. Found by testing
+  # the notifier rather than trusting it.
+  #
+  # It cannot cover a run that never starts: GitHub failed to allocate a runner
+  # twice on 2026-10-05 ("The job was not acquired by Runner of type hosted"),
+  # and no step runs in a job that never began. The page reporting the age of
+  # its own data (`renderStale` in site/js/app.js) is the guard for that.
+  notify:
+    needs: [forecast, pages]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or close the failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FORECAST: ${{ needs.forecast.result }}
+          PAGES: ${{ needs.pages.result }}
+        run: |
+          set -euo pipefail
+          gh label create daily-run --repo "$REPO" --color b60205 --description "The daily forecast run is failing" 2>/dev/null || true
+          open=$(gh issue list --repo "$REPO" --label daily-run --state open --json number --jq '.[0].number // empty')
+
+          if [ "$FORECAST" = success ] && [ "$PAGES" = success ]; then
+            for n in $open; do
+              gh issue close "$n" --repo "$REPO" --comment "Fixed: the run succeeded on $(date -u +%F). $RUN_URL"
+            done
+            exit 0
+          fi
+
+          body="The daily forecast run failed on $(date -u +%F).
+
+          - forecast: $FORECAST
+          - pages: $PAGES
+
+          $RUN_URL
+
+          The site keeps serving the last good forecast until this is fixed, and says on the page itself once that forecast is more than three days old."
+          if [ -z "$open" ]; then
+            gh issue create --repo "$REPO" --title "Daily forecast is failing" --label daily-run --body "$body"
+          else
+            gh issue comment "$open" --repo "$REPO" --body "$body"
+          fi
