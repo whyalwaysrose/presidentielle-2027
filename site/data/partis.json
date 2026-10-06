@@ -1,0 +1,646 @@
+{
+ "avertissement": {
+  "fr": "Les scores sont ceux du ministère de l'Intérieur. Les « principes » sont un résumé rédigé par ce site à partir de ce que chaque parti publie, et non les mots du parti : le lien permet de vérifier.",
+  "en": "The vote shares are the Interior Ministry's. The \"principles\" are a summary written by this site from what each party publishes - not the party's own words - and the link is there so you can check them against the source."
+ },
+ "elections": [
+  {
+   "annee": 2002,
+   "date": "2002-04-21",
+   "exprimes": 28499487,
+   "source": "https://www.data.gouv.fr/datasets/election-presidentielle-2002-resultats-572116"
+  },
+  {
+   "annee": 2007,
+   "date": "2007-04-22",
+   "exprimes": 36719396,
+   "source": "https://www.data.gouv.fr/datasets/election-presidentielle-2007-resultats-572120"
+  },
+  {
+   "annee": 2012,
+   "date": "2012-04-22",
+   "exprimes": 35883209,
+   "source": "https://www.data.gouv.fr/datasets/election-presidentielle-2012-resultats-572124"
+  },
+  {
+   "annee": 2017,
+   "date": "2017-04-23",
+   "exprimes": 36054394,
+   "source": "https://www.data.gouv.fr/datasets/election-presidentielle-des-23-avril-et-7-mai-2017-resultats-definitifs-du-1er-tour-1"
+  },
+  {
+   "annee": 2022,
+   "date": "2022-04-10",
+   "exprimes": 35132947,
+   "source": "https://www.data.gouv.fr/datasets/election-presidentielle-des-10-et-24-avril-2022-resultats-definitifs-du-1er-tour"
+  }
+ ],
+ "partis": [
+  {
+   "id": "renaissance",
+   "nom": "Renaissance",
+   "nom_en": "Renaissance",
+   "bloc": "centre",
+   "site": "https://parti-renaissance.fr",
+   "fonde": 2016,
+   "lignee": {
+    "fr": "Fondé en 2016 sous le nom d'En Marche, puis La République en marche, renommé Renaissance en 2022.",
+    "en": "Founded in 2016 as En Marche, then La République en marche, renamed Renaissance in 2022."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2017,
+     "candidat": "MACRON Emmanuel",
+     "voix": 8656346,
+     "part": 0.24009
+    },
+    {
+     "annee": 2022,
+     "candidat": "MACRON",
+     "voix": 9783058,
+     "part": 0.27846
+    }
+   ],
+   "meilleur": 0.27846,
+   "dernier": 0.27846,
+   "principes": {
+    "fr": "Centre libéral et pro-européen : offre de travail et baisse du chômage, réindustrialisation, souveraineté européenne en matière de défense et d'énergie.",
+    "en": "Liberal, pro-European centre: employment and lower unemployment, reindustrialisation, and European sovereignty in defence and energy.",
+    "source": "positions",
+    "url": "https://parti-renaissance.fr"
+   }
+  },
+  {
+   "id": "rn",
+   "nom": "Rassemblement national",
+   "nom_en": "National Rally",
+   "bloc": "rn",
+   "site": "https://rassemblementnational.fr",
+   "fonde": 1972,
+   "lignee": {
+    "fr": "Fondé en 1972 sous le nom de Front national, renommé Rassemblement national en 2018.",
+    "en": "Founded in 1972 as the Front national, renamed Rassemblement national in 2018."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "LE PEN Jean-Marie",
+     "voix": 4804772,
+     "part": 0.16859
+    },
+    {
+     "annee": 2007,
+     "candidat": "LE PEN Jean-Marie",
+     "voix": 3834530,
+     "part": 0.10443
+    },
+    {
+     "annee": 2012,
+     "candidat": "LE PEN Marine",
+     "voix": 6421426,
+     "part": 0.17895
+    },
+    {
+     "annee": 2017,
+     "candidat": "LE PEN Marine",
+     "voix": 7678491,
+     "part": 0.21297
+    },
+    {
+     "annee": 2022,
+     "candidat": "LE PEN",
+     "voix": 8133828,
+     "part": 0.23152
+    }
+   ],
+   "meilleur": 0.23152,
+   "dernier": 0.23152,
+   "principes": {
+    "fr": "Priorité nationale dans l'accès à l'emploi, au logement et aux aides sociales ; forte réduction de l'immigration ; renégociation de la place de la France dans l'Union européenne ; baisse des taxes sur l'énergie.",
+    "en": "National preference in access to jobs, housing and welfare; sharp reduction in immigration; renegotiating France's place in the European Union; lower energy taxes.",
+    "source": "positions",
+    "url": "https://rassemblementnational.fr"
+   }
+  },
+  {
+   "id": "lfi",
+   "nom": "La France insoumise",
+   "nom_en": "France Unbowed",
+   "bloc": "gauche_radicale",
+   "site": "https://lafranceinsoumise.fr",
+   "fonde": 2016,
+   "lignee": {
+    "fr": "Fondée en 2016. En 2012, Jean-Luc Mélenchon était le candidat du Front de gauche, une alliance avec le Parti communiste : ce score n'est pas celui de LFI, qui n'existait pas.",
+    "en": "Founded in 2016. In 2012 Jean-Luc Mélenchon stood for the Front de gauche, an alliance with the Communist party: that result is not LFI's, which did not yet exist."
+   },
+   "lignee_contestee": true,
+   "resultats": [
+    {
+     "annee": 2012,
+     "candidat": "MÉLENCHON Jean-Luc",
+     "voix": 3984822,
+     "part": 0.11105
+    },
+    {
+     "annee": 2017,
+     "candidat": "MÉLENCHON Jean-Luc",
+     "voix": 7059951,
+     "part": 0.19581
+    },
+    {
+     "annee": 2022,
+     "candidat": "MÉLENCHON",
+     "voix": 7712520,
+     "part": 0.21952
+    }
+   ],
+   "meilleur": 0.21952,
+   "dernier": 0.21952,
+   "principes": {
+    "fr": "Planification écologique, retraite à 60 ans, hausse du SMIC, VIe République, désobéissance aux traités européens jugés contraires à ce programme.",
+    "en": "Ecological planning, retirement at 60, a higher minimum wage, a Sixth Republic, and disobeying European treaties judged incompatible with that programme.",
+    "source": "positions",
+    "url": "https://lafranceinsoumise.fr"
+   }
+  },
+  {
+   "id": "modem",
+   "nom": "MoDem",
+   "nom_en": "MoDem",
+   "bloc": "centre",
+   "site": "https://www.mouvementdemocrate.fr",
+   "fonde": 2007,
+   "lignee": {
+    "fr": "François Bayrou a été candidat pour l'UDF en 2002, puis a fondé le Mouvement démocrate en 2007. Le score de 2002 est celui de l'UDF.",
+    "en": "François Bayrou stood for the UDF in 2002, then founded the Mouvement démocrate in 2007. The 2002 figure is the UDF's."
+   },
+   "lignee_contestee": true,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "BAYROU Francois",
+     "voix": 1949219,
+     "part": 0.06839
+    },
+    {
+     "annee": 2007,
+     "candidat": "BAYROU François",
+     "voix": 6820119,
+     "part": 0.18574
+    },
+    {
+     "annee": 2012,
+     "candidat": "BAYROU François",
+     "voix": 3275122,
+     "part": 0.09127
+    }
+   ],
+   "meilleur": 0.18574,
+   "dernier": 0.09127,
+   "principes": {
+    "fr": "Centrisme pro-européen : équilibre des comptes publics, fédéralisme européen, humanisme démocrate-chrétien, proportionnelle.",
+    "en": "Pro-European centrism: balanced public finances, European federalism, Christian-democratic humanism, and proportional representation.",
+    "source": "positions",
+    "url": "https://www.mouvementdemocrate.fr"
+   }
+  },
+  {
+   "id": "reconquete",
+   "nom": "Reconquête",
+   "nom_en": "Reconquête",
+   "bloc": "reconquete",
+   "site": "https://www.parti-reconquete.fr",
+   "fonde": 2021,
+   "lignee": {
+    "fr": "Fondé en 2021 par Éric Zemmour, pour l'élection de 2022.",
+    "en": "Founded in 2021 by Éric Zemmour, for the 2022 election."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2022,
+     "candidat": "ZEMMOUR",
+     "voix": 2485226,
+     "part": 0.07074
+    }
+   ],
+   "meilleur": 0.07074,
+   "dernier": 0.07074,
+   "principes": {
+    "fr": "Arrêt de l'immigration et « remigration », assimilation, fermeté pénale, baisse des impôts et des dépenses sociales.",
+    "en": "Halting immigration and \"remigration\", assimilation, a tough penal line, and lower taxes and welfare spending.",
+    "source": "positions",
+    "url": "https://www.parti-reconquete.fr"
+   }
+  },
+  {
+   "id": "lr",
+   "nom": "Les Républicains",
+   "nom_en": "The Republicans",
+   "bloc": "droite",
+   "site": "https://republicains.fr",
+   "fonde": 1976,
+   "lignee": {
+    "fr": "RPR de 1976 à 2002, UMP de 2002 à 2015, Les Républicains depuis. Le score de 2002 est celui de Jacques Chirac pour le RPR.",
+    "en": "RPR from 1976 to 2002, UMP from 2002 to 2015, Les Républicains since. The 2002 figure is Jacques Chirac's, for the RPR."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "CHIRAC Jacques",
+     "voix": 5666021,
+     "part": 0.19881
+    },
+    {
+     "annee": 2007,
+     "candidat": "SARKOZY Nicolas",
+     "voix": 11448663,
+     "part": 0.31179
+    },
+    {
+     "annee": 2012,
+     "candidat": "SARKOZY Nicolas",
+     "voix": 9753629,
+     "part": 0.27182
+    },
+    {
+     "annee": 2017,
+     "candidat": "FILLON François",
+     "voix": 7212995,
+     "part": 0.20006
+    },
+    {
+     "annee": 2022,
+     "candidat": "PÉCRESSE",
+     "voix": 1679001,
+     "part": 0.04779
+    }
+   ],
+   "meilleur": 0.31179,
+   "dernier": 0.04779,
+   "principes": {
+    "fr": "Droite libérale-conservatrice : réduction de la dépense publique et des impôts de production, fermeté pénale et migratoire, attachement au cadre européen.",
+    "en": "Liberal-conservative right: lower public spending and business taxes, a tougher line on crime and immigration, and commitment to the European framework.",
+    "source": "positions",
+    "url": "https://republicains.fr"
+   }
+  },
+  {
+   "id": "ecologistes",
+   "nom": "Les Écologistes",
+   "nom_en": "The Ecologists",
+   "bloc": "ecologiste",
+   "site": "https://www.lesecologistes.fr",
+   "fonde": 1984,
+   "lignee": {
+    "fr": "Les Verts de 1984 à 2010, Europe Écologie Les Verts de 2010 à 2023, Les Écologistes depuis. Pas de candidat en 2017 : Yannick Jadot s'est retiré en faveur de Benoît Hamon.",
+    "en": "Les Verts from 1984 to 2010, Europe Écologie Les Verts from 2010 to 2023, Les Écologistes since. No candidate in 2017: Yannick Jadot withdrew in favour of Benoît Hamon."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "MAMERE Noel",
+     "voix": 1495774,
+     "part": 0.05248
+    },
+    {
+     "annee": 2007,
+     "candidat": "VOYNET Dominique",
+     "voix": 576666,
+     "part": 0.0157
+    },
+    {
+     "annee": 2012,
+     "candidat": "JOLY Eva",
+     "voix": 828345,
+     "part": 0.02308
+    },
+    {
+     "annee": 2022,
+     "candidat": "JADOT",
+     "voix": 1627853,
+     "part": 0.04633
+    }
+   ],
+   "meilleur": 0.05248,
+   "dernier": 0.04633,
+   "principes": {
+    "fr": "Écologie politique : sortie des énergies fossiles, rénovation thermique, agriculture sans pesticides, élargissement des libertés publiques.",
+    "en": "Political ecology: phasing out fossil fuels, home insulation, pesticide-free farming, and broader civil liberties.",
+    "source": "positions",
+    "url": "https://www.lesecologistes.fr"
+   }
+  },
+  {
+   "id": "pcf",
+   "nom": "Parti communiste français",
+   "nom_en": "French Communist Party",
+   "bloc": "gauche_radicale",
+   "site": "https://www.pcf.fr",
+   "fonde": 1920,
+   "lignee": {
+    "fr": "Fondé en 1920. Pas de candidat en 2012 ni en 2017 : le PCF soutenait Jean-Luc Mélenchon.",
+    "en": "Founded in 1920. No candidate in 2012 or 2017: the PCF backed Jean-Luc Mélenchon."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "HUE Robert",
+     "voix": 960548,
+     "part": 0.0337
+    },
+    {
+     "annee": 2007,
+     "candidat": "BUFFET Marie-George",
+     "voix": 707268,
+     "part": 0.01926
+    },
+    {
+     "annee": 2022,
+     "candidat": "ROUSSEL",
+     "voix": 802422,
+     "part": 0.02284
+    }
+   ],
+   "meilleur": 0.0337,
+   "dernier": 0.02284,
+   "principes": {
+    "fr": "Hausse des salaires, industrie et énergie publiques y compris nucléaire, services publics, souveraineté industrielle.",
+    "en": "Higher wages, public industry and energy including nuclear power, public services, and industrial sovereignty.",
+    "source": "positions",
+    "url": "https://www.pcf.fr"
+   }
+  },
+  {
+   "id": "dlf",
+   "nom": "Debout la France",
+   "nom_en": "Debout la France",
+   "bloc": "souverainiste",
+   "site": "https://www.debout-la-france.fr",
+   "fonde": 2008,
+   "lignee": {
+    "fr": "Fondé en 2008 par Nicolas Dupont-Aignan, issu d'une scission du RPR puis de l'UMP.",
+    "en": "Founded in 2008 by Nicolas Dupont-Aignan, from a split with the RPR and then the UMP."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2012,
+     "candidat": "DUPONT-AIGNAN Nicolas",
+     "voix": 643907,
+     "part": 0.01794
+    },
+    {
+     "annee": 2017,
+     "candidat": "DUPONT-AIGNAN Nicolas",
+     "voix": 1695000,
+     "part": 0.04701
+    },
+    {
+     "annee": 2022,
+     "candidat": "DUPONT-AIGNAN",
+     "voix": 725176,
+     "part": 0.02064
+    }
+   ],
+   "meilleur": 0.04701,
+   "dernier": 0.02064,
+   "principes": {
+    "fr": "Souverainisme gaulliste : reprise du contrôle des frontières et de la monnaie, protectionnisme ciblé, refus de la supranationalité européenne.",
+    "en": "Gaullist sovereigntism: taking back control of borders and currency, targeted protectionism, and rejection of European supranationalism.",
+    "source": "positions",
+    "url": "https://www.debout-la-france.fr"
+   }
+  },
+  {
+   "id": "ps",
+   "nom": "Parti socialiste",
+   "nom_en": "Socialist Party",
+   "bloc": "socialiste",
+   "site": "https://www.parti-socialiste.fr",
+   "fonde": 1969,
+   "lignee": {
+    "fr": "Fondé en 1969, héritier de la SFIO (1905).",
+    "en": "Founded in 1969, successor to the SFIO (1905)."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "JOSPIN Lionel",
+     "voix": 4610267,
+     "part": 0.16177
+    },
+    {
+     "annee": 2007,
+     "candidat": "ROYAL Ségolène",
+     "voix": 9500112,
+     "part": 0.25872
+    },
+    {
+     "annee": 2012,
+     "candidat": "HOLLANDE François",
+     "voix": 10272705,
+     "part": 0.28628
+    },
+    {
+     "annee": 2017,
+     "candidat": "HAMON Benoît",
+     "voix": 2291288,
+     "part": 0.06355
+    },
+    {
+     "annee": 2022,
+     "candidat": "HIDALGO",
+     "voix": 616478,
+     "part": 0.01755
+    }
+   ],
+   "meilleur": 0.28628,
+   "dernier": 0.01755,
+   "principes": {
+    "fr": "Social-démocratie européenne : services publics, redistribution par l'impôt, transition écologique négociée, maintien dans le cadre européen.",
+    "en": "European social democracy: public services, redistribution through taxation, a negotiated ecological transition, and remaining within the European framework.",
+    "source": "positions",
+    "url": "https://www.parti-socialiste.fr"
+   }
+  },
+  {
+   "id": "npa",
+   "nom": "Nouveau Parti anticapitaliste",
+   "nom_en": "New Anticapitalist Party",
+   "bloc": "extreme_gauche",
+   "site": null,
+   "fonde": 2009,
+   "lignee": {
+    "fr": "Ligue communiste révolutionnaire jusqu'en 2009, puis Nouveau Parti anticapitaliste. Le parti s'est scindé en 2022 et ce site ne désigne pas de successeur.",
+    "en": "Ligue communiste révolutionnaire until 2009, then the Nouveau Parti anticapitaliste. The party split in 2022 and this site does not name a successor."
+   },
+   "lignee_contestee": true,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "BESANCENOT Olivier",
+     "voix": 1210562,
+     "part": 0.04248
+    },
+    {
+     "annee": 2007,
+     "candidat": "BESANCENOT Olivier",
+     "voix": 1498581,
+     "part": 0.04081
+    },
+    {
+     "annee": 2012,
+     "candidat": "POUTOU Philippe",
+     "voix": 411160,
+     "part": 0.01146
+    },
+    {
+     "annee": 2017,
+     "candidat": "POUTOU Philippe",
+     "voix": 394505,
+     "part": 0.01094
+    },
+    {
+     "annee": 2022,
+     "candidat": "POUTOU",
+     "voix": 268904,
+     "part": 0.00765
+    }
+   ],
+   "meilleur": 0.04248,
+   "dernier": 0.00765,
+   "principes": {
+    "fr": "Anticapitalisme révolutionnaire : partage du temps de travail, blocage des prix, rupture avec les institutions de la Ve République.",
+    "en": "Revolutionary anticapitalism: sharing out working time, price controls, and a break with the institutions of the Fifth Republic.",
+    "source": "positions",
+    "url": null
+   }
+  },
+  {
+   "id": "lo",
+   "nom": "Lutte ouvrière",
+   "nom_en": "Workers' Struggle",
+   "bloc": "extreme_gauche",
+   "site": "https://www.lutte-ouvriere.org",
+   "fonde": 1968,
+   "lignee": {
+    "fr": "Fondé en 1968. Présente un candidat à chaque élection présidentielle depuis 1974.",
+    "en": "Founded in 1968. Has stood a candidate at every presidential election since 1974."
+   },
+   "lignee_contestee": false,
+   "resultats": [
+    {
+     "annee": 2002,
+     "candidat": "LAGUILLER Arlette",
+     "voix": 1630118,
+     "part": 0.0572
+    },
+    {
+     "annee": 2007,
+     "candidat": "LAGUILLER Arlette",
+     "voix": 487857,
+     "part": 0.01329
+    },
+    {
+     "annee": 2012,
+     "candidat": "ARTHAUD Nathalie",
+     "voix": 202548,
+     "part": 0.00564
+    },
+    {
+     "annee": 2017,
+     "candidat": "ARTHAUD Nathalie",
+     "voix": 232384,
+     "part": 0.00645
+    },
+    {
+     "annee": 2022,
+     "candidat": "ARTHAUD",
+     "voix": 197094,
+     "part": 0.00561
+    }
+   ],
+   "meilleur": 0.0572,
+   "dernier": 0.00561,
+   "principes": {
+    "fr": "Communisme révolutionnaire : augmentation générale des salaires indexée sur les prix, contrôle des comptes des entreprises par les salariés, expropriation des grands groupes.",
+    "en": "Revolutionary communism: a general wage rise indexed to prices, workers' control of company accounts, and expropriation of large firms.",
+    "source": "positions",
+    "url": "https://www.lutte-ouvriere.org"
+   }
+  },
+  {
+   "id": "horizons",
+   "nom": "Horizons",
+   "nom_en": "Horizons",
+   "bloc": "centre",
+   "site": "https://horizonsleparti.fr",
+   "fonde": 2021,
+   "lignee": {
+    "fr": "Fondé en 2021 par Édouard Philippe. N'a jamais présenté de candidat à une élection présidentielle - ce qui n'est pas un détail : son chef de file est deuxième dans cette prévision.",
+    "en": "Founded in 2021 by Édouard Philippe. Has never contested a presidential election - which is not a detail: its leader is second in this forecast."
+   },
+   "lignee_contestee": false,
+   "resultats": [],
+   "meilleur": null,
+   "dernier": null,
+   "principes": {
+    "fr": "Droite libérale et pro-européenne : réduction de la dette publique, travail et autorité, décentralisation.",
+    "en": "Liberal, pro-European right: cutting public debt, work and authority, and decentralisation.",
+    "source": "positions",
+    "url": "https://horizonsleparti.fr"
+   }
+  },
+  {
+   "id": "place_publique",
+   "nom": "Place publique",
+   "nom_en": "Place publique",
+   "bloc": "socialiste",
+   "site": "https://place-publique.eu",
+   "fonde": 2018,
+   "lignee": {
+    "fr": "Fondé en 2018. N'a jamais présenté de candidat à une élection présidentielle.",
+    "en": "Founded in 2018. Has never contested a presidential election."
+   },
+   "lignee_contestee": false,
+   "resultats": [],
+   "meilleur": null,
+   "dernier": null,
+   "principes": {
+    "fr": "Social-écologie pro-européenne : justice fiscale, transition écologique, défense de l'État de droit et soutien à l'Ukraine.",
+    "en": "Pro-European social ecology: tax justice, ecological transition, defence of the rule of law, and support for Ukraine.",
+    "source": "positions",
+    "url": "https://place-publique.eu"
+   }
+  },
+  {
+   "id": "udr",
+   "nom": "Union des droites pour la République",
+   "nom_en": "Union of the Right for the Republic",
+   "bloc": "reconquete",
+   "site": "https://www.udr.fr",
+   "fonde": 2024,
+   "lignee": {
+    "fr": "Fondée en 2024 par Éric Ciotti après sa rupture avec Les Républicains. N'a jamais présenté de candidat à une élection présidentielle.",
+    "en": "Founded in 2024 by Éric Ciotti after his break with Les Républicains. Has never contested a presidential election."
+   },
+   "lignee_contestee": false,
+   "resultats": [],
+   "meilleur": null,
+   "dernier": null,
+   "principes": {
+    "fr": "Union des droites : baisse de l'immigration et de la fiscalité, sécurité, alliance assumée avec le Rassemblement national.",
+    "en": "A union of the rights: lower immigration and taxation, security, and an avowed alliance with the Rassemblement national.",
+    "source": "positions",
+    "url": "https://www.udr.fr"
+   }
+  }
+ ]
+}

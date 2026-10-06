@@ -107,6 +107,32 @@ def cmd_fetch(args) -> int:
     return 0
 
 
+def _write_parties() -> dict:
+    """Write `site/data/partis.json` - each party's record and principles."""
+    from . import parties
+    from .outputs import write_json
+
+    payload = parties.build()
+    paths.ensure_dirs()
+    write_json(payload, paths.SITE_DATA / "partis.json")
+    return payload
+
+
+def cmd_partis(args) -> int:
+    """Rebuild the party section without refitting the model."""
+    payload = _write_parties()
+    stood = [p for p in payload["partis"] if p["resultats"]]
+    print(f"{len(payload['partis'])} parties, {len(stood)} with a presidential record, "
+          f"across {len(payload['elections'])} elections "
+          f"({payload['elections'][0]['annee']}-{payload['elections'][-1]['annee']})")
+    for p in payload["partis"]:
+        record = "  ".join(
+            f"{r['annee']} {100 * r['part']:.1f}%" for r in p["resultats"]
+        ) or "never contested a presidential election"
+        print(f"  {p['nom'][:32]:33} {record}")
+    return 0
+
+
 def cmd_audit(args) -> int:
     cfg = load_model_config()
     roster = load_roster()
@@ -773,6 +799,10 @@ def cmd_run(args) -> int:
     )
 
     write_json(payload, paths.SITE_DATA / "forecast.json")
+    # The party records are static - they change when a config changes, not
+    # when the model runs - but they are rewritten here so the published pair
+    # can never be out of step with each other. It is a small file.
+    _write_parties()
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
     write_json(payload, paths.RUNS / f"{stamp}.json")
 
@@ -935,6 +965,9 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("fetch", help="refresh the cached poll file").set_defaults(fn=cmd_fetch)
+    sub.add_parser(
+        "partis", help="rebuild site/data/partis.json (party records and principles)"
+    ).set_defaults(fn=cmd_partis)
     sub.add_parser("audit", help="describe the data and the ballot model").set_defaults(
         fn=cmd_audit
     )

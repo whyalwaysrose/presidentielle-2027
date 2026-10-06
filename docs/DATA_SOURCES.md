@@ -144,6 +144,31 @@ regionalist nuances have no position on a left-right axis, so their votes leave
 the transfer pool; that is 0.8% of the first-round vote, reported by the loader
 rather than assumed away, and duels where it exceeds 5% are dropped.
 
+## 3c. Past presidential results, 2002–2017 — official
+
+**data.gouv.fr**, Ministère de l'Intérieur, **Licence Ouverte** (`fr-lo` in the
+dataset metadata), one dataset per cycle. `scripts/extract_resultats_historiques.py`
+downloads each and writes `config/resultats_historiques.yaml`; the dataset page
+for every cycle travels with the figures, and the site cites it.
+
+Only **first-round national totals**. A runoff measures a coalition against one
+opponent, so putting Chirac's 82.2% of 2002 on a chart of party support would
+be nonsense.
+
+Three layouts across four cycles, which is why it is a script and not a
+transcription: 2007 and 2012 publish a "France entière" summary sheet, 2017
+publishes the same under another name and stacks Métropole and overseas blocks
+beneath it, and **2002 publishes no national sheet at all** — it is summed from
+36 679 communes. The script refuses to write any cycle whose candidate votes do
+not sum exactly to its Exprimés, which is what caught the 2017 stacking.
+
+2022 is deliberately **not** here: it lives in `config/resultats_2022.yaml`,
+where it is also the backtest's target, and two copies could drift apart.
+
+Party identity across these elections — that the Front national and the
+Rassemblement national are one line — is **this project's judgement**, not the
+Ministry's, and `config/partis.yaml` flags the contested ones.
+
 ## 4. Election dates — official
 
 First round **18 April 2027**, second round **2 May 2027**, both fixed by the

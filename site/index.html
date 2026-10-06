@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Présidentielle 2027 — prévision bayésienne">
 <meta name="twitter:description" content="Premier tour, qualification et seconds tours possibles, avec leur incertitude. Site personnel, non officiel.">
-<link rel="stylesheet" href="css/style.css?v=14">
+<link rel="stylesheet" href="css/style.css?v=15">
 </head>
 <body>
 
@@ -164,6 +164,20 @@
   </section>
 
   <!-- ---------------------------------------------------------------- -->
+  <!-- Each party's presidential record and what it says it stands for.
+       Rendered from data/partis.json, which is built from the Interior
+       Ministry's own vote counts; the "principles" are this site's summary and
+       are labelled as such wherever they appear. -->
+  <section class="card" id="parties-card" aria-labelledby="h-parties" hidden>
+    <div class="card-head">
+      <h2 id="h-parties" data-i18n="parties.title">D'ou viennent ces partis</h2>
+      <p class="card-note" data-i18n="parties.note"></p>
+    </div>
+    <div id="parties-list" class="parties"></div>
+    <p id="parties-disclaimer" class="parties-disclaimer"></p>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
   <section class="card" id="record-card" aria-labelledby="h-record" hidden>
     <div class="card-head">
       <h2 id="h-record" data-i18n="record.title">Ce que vaut ce modele</h2>
@@ -248,9 +262,9 @@
 <script data-goatcounter="https://whyalwaysrose.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script src="js/i18n.js?v=14"></script>
-<script src="js/charts.js?v=14"></script>
-<script src="js/scenarios.js?v=14"></script>
-<script src="js/app.js?v=14"></script>
+<script src="js/i18n.js?v=15"></script>
+<script src="js/charts.js?v=15"></script>
+<script src="js/scenarios.js?v=15"></script>
+<script src="js/app.js?v=15"></script>
 </body>
 </html>

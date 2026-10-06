@@ -1,0 +1,465 @@
+# The parties behind the candidates: what they have scored, and what they say.
+#
+# WHAT IS A FACT HERE AND WHAT IS NOT
+# -----------------------------------
+# Three different kinds of claim live in this file, and the site labels them
+# differently because they deserve different trust:
+#
+#   1. RESULTS - facts. No percentage is written here. Each party lists the
+#      CANDIDATE who carried its line in each election, and the share is
+#      computed from the Interior Ministry's own figures
+#      (config/resultats_historiques.yaml, config/resultats_2022.yaml). To
+#      change a number you would have to change the Ministry's.
+#
+#   2. LINEAGE - a judgement, and sometimes a contested one. Parties rename,
+#      split and merge: the Front national became the Rassemblement national,
+#      the UMP became Les Républicains. Saying that the same party scored both
+#      results is a claim about continuity, so every line says what happened
+#      and `lignee_contestee: true` marks the ones where reasonable people
+#      disagree. The site footnotes those rather than hiding them.
+#
+#   3. PRINCIPES - THE SITE'S OWN SUMMARY, never the party's words. One or two
+#      descriptive sentences drawn from what the party publishes, written to
+#      describe positions rather than to judge them. `source: programme` means
+#      a published manifesto was the basis and `url` points at it;
+#      `source: positions` means no 2027 manifesto exists yet and the summary
+#      comes from the party's current published positions. Readers get the
+#      link so they can check the summary against the source, which is the
+#      whole point of including it.
+#
+# NO 2027 MANIFESTOS EXIST YET for most parties: candidacies do not close until
+# 12 March 2027. Where `url` is a party's site rather than a manifesto, that is
+# why.
+#
+# A party with no `resultats` has never contested a presidential election. That
+# is information, not a gap - Horizons leads this forecast's second-placed
+# candidate and has never run one.
+
+avertissement:
+  fr: >-
+    Les scores sont ceux du ministère de l'Intérieur. Les « principes » sont un
+    résumé rédigé par ce site à partir de ce que chaque parti publie, et non les
+    mots du parti : le lien permet de vérifier.
+  en: >-
+    The vote shares are the Interior Ministry's. The "principles" are a summary
+    written by this site from what each party publishes - not the party's own
+    words - and the link is there so you can check them against the source.
+
+partis:
+
+  # --- Rassemblement national ---------------------------------------------
+  rn:
+    nom: Rassemblement national
+    nom_en: National Rally
+    bloc: rn
+    site: https://rassemblementnational.fr
+    fonde: 1972
+    lignee:
+      fr: Fondé en 1972 sous le nom de Front national, renommé Rassemblement national en 2018.
+      en: Founded in 1972 as the Front national, renamed Rassemblement national in 2018.
+    resultats:
+      2002: LE PEN Jean-Marie
+      2007: LE PEN Jean-Marie
+      2012: LE PEN Marine
+      2017: LE PEN Marine
+      2022: LE PEN
+    principes:
+      source: positions
+      url: https://rassemblementnational.fr
+      fr: >-
+        Priorité nationale dans l'accès à l'emploi, au logement et aux aides
+        sociales ; forte réduction de l'immigration ; renégociation de la place
+        de la France dans l'Union européenne ; baisse des taxes sur l'énergie.
+      en: >-
+        National preference in access to jobs, housing and welfare; sharp
+        reduction in immigration; renegotiating France's place in the European
+        Union; lower energy taxes.
+
+  # --- La France insoumise -------------------------------------------------
+  lfi:
+    nom: La France insoumise
+    nom_en: France Unbowed
+    bloc: gauche_radicale
+    site: https://lafranceinsoumise.fr
+    fonde: 2016
+    lignee:
+      fr: >-
+        Fondée en 2016. En 2012, Jean-Luc Mélenchon était le candidat du Front
+        de gauche, une alliance avec le Parti communiste : ce score n'est pas
+        celui de LFI, qui n'existait pas.
+      en: >-
+        Founded in 2016. In 2012 Jean-Luc Mélenchon stood for the Front de
+        gauche, an alliance with the Communist party: that result is not LFI's,
+        which did not yet exist.
+    lignee_contestee: true
+    resultats:
+      2012: MÉLENCHON Jean-Luc
+      2017: MÉLENCHON Jean-Luc
+      2022: MÉLENCHON
+    principes:
+      source: positions
+      url: https://lafranceinsoumise.fr
+      fr: >-
+        Planification écologique, retraite à 60 ans, hausse du SMIC, VIe
+        République, désobéissance aux traités européens jugés contraires à ce
+        programme.
+      en: >-
+        Ecological planning, retirement at 60, a higher minimum wage, a Sixth
+        Republic, and disobeying European treaties judged incompatible with
+        that programme.
+
+  # --- Parti socialiste ----------------------------------------------------
+  ps:
+    nom: Parti socialiste
+    nom_en: Socialist Party
+    bloc: socialiste
+    site: https://www.parti-socialiste.fr
+    fonde: 1969
+    lignee:
+      fr: Fondé en 1969, héritier de la SFIO (1905).
+      en: Founded in 1969, successor to the SFIO (1905).
+    resultats:
+      2002: JOSPIN Lionel
+      2007: ROYAL Ségolène
+      2012: HOLLANDE François
+      2017: HAMON Benoît
+      2022: HIDALGO
+    principes:
+      source: positions
+      url: https://www.parti-socialiste.fr
+      fr: >-
+        Social-démocratie européenne : services publics, redistribution par
+        l'impôt, transition écologique négociée, maintien dans le cadre
+        européen.
+      en: >-
+        European social democracy: public services, redistribution through
+        taxation, a negotiated ecological transition, and remaining within the
+        European framework.
+
+  # --- Les Républicains ----------------------------------------------------
+  lr:
+    nom: Les Républicains
+    nom_en: The Republicans
+    bloc: droite
+    site: https://republicains.fr
+    fonde: 1976
+    lignee:
+      fr: >-
+        RPR de 1976 à 2002, UMP de 2002 à 2015, Les Républicains depuis. Le
+        score de 2002 est celui de Jacques Chirac pour le RPR.
+      en: >-
+        RPR from 1976 to 2002, UMP from 2002 to 2015, Les Républicains since.
+        The 2002 figure is Jacques Chirac's, for the RPR.
+    resultats:
+      2002: CHIRAC Jacques
+      2007: SARKOZY Nicolas
+      2012: SARKOZY Nicolas
+      2017: FILLON François
+      2022: PÉCRESSE
+    principes:
+      source: positions
+      url: https://republicains.fr
+      fr: >-
+        Droite libérale-conservatrice : réduction de la dépense publique et des
+        impôts de production, fermeté pénale et migratoire, attachement au
+        cadre européen.
+      en: >-
+        Liberal-conservative right: lower public spending and business taxes,
+        a tougher line on crime and immigration, and commitment to the European
+        framework.
+
+  # --- Renaissance ---------------------------------------------------------
+  renaissance:
+    nom: Renaissance
+    nom_en: Renaissance
+    bloc: centre
+    site: https://parti-renaissance.fr
+    fonde: 2016
+    lignee:
+      fr: Fondé en 2016 sous le nom d'En Marche, puis La République en marche, renommé Renaissance en 2022.
+      en: Founded in 2016 as En Marche, then La République en marche, renamed Renaissance in 2022.
+    resultats:
+      2017: MACRON Emmanuel
+      2022: MACRON
+    principes:
+      source: positions
+      url: https://parti-renaissance.fr
+      fr: >-
+        Centre libéral et pro-européen : offre de travail et baisse du chômage,
+        réindustrialisation, souveraineté européenne en matière de défense et
+        d'énergie.
+      en: >-
+        Liberal, pro-European centre: employment and lower unemployment,
+        reindustrialisation, and European sovereignty in defence and energy.
+
+  # --- Horizons ------------------------------------------------------------
+  horizons:
+    nom: Horizons
+    nom_en: Horizons
+    bloc: centre
+    site: https://horizonsleparti.fr
+    fonde: 2021
+    lignee:
+      fr: >-
+        Fondé en 2021 par Édouard Philippe. N'a jamais présenté de candidat à
+        une élection présidentielle - ce qui n'est pas un détail : son chef de
+        file est deuxième dans cette prévision.
+      en: >-
+        Founded in 2021 by Édouard Philippe. Has never contested a presidential
+        election - which is not a detail: its leader is second in this forecast.
+    resultats: {}
+    principes:
+      source: positions
+      url: https://horizonsleparti.fr
+      fr: >-
+        Droite libérale et pro-européenne : réduction de la dette publique,
+        travail et autorité, décentralisation.
+      en: >-
+        Liberal, pro-European right: cutting public debt, work and authority,
+        and decentralisation.
+
+  # --- Les Écologistes -----------------------------------------------------
+  ecologistes:
+    nom: Les Écologistes
+    nom_en: The Ecologists
+    bloc: ecologiste
+    site: https://www.lesecologistes.fr
+    fonde: 1984
+    lignee:
+      fr: >-
+        Les Verts de 1984 à 2010, Europe Écologie Les Verts de 2010 à 2023,
+        Les Écologistes depuis. Pas de candidat en 2017 : Yannick Jadot s'est
+        retiré en faveur de Benoît Hamon.
+      en: >-
+        Les Verts from 1984 to 2010, Europe Écologie Les Verts from 2010 to
+        2023, Les Écologistes since. No candidate in 2017: Yannick Jadot
+        withdrew in favour of Benoît Hamon.
+    resultats:
+      # Unaccented: the 2002 file is published per commune, and it stores
+      # names in plain ASCII where later cycles do not.
+      2002: MAMERE Noel
+      2007: VOYNET Dominique
+      2012: JOLY Eva
+      2022: JADOT
+    principes:
+      source: positions
+      url: https://www.lesecologistes.fr
+      fr: >-
+        Écologie politique : sortie des énergies fossiles, rénovation thermique,
+        agriculture sans pesticides, élargissement des libertés publiques.
+      en: >-
+        Political ecology: phasing out fossil fuels, home insulation,
+        pesticide-free farming, and broader civil liberties.
+
+  # --- Parti communiste français -------------------------------------------
+  pcf:
+    nom: Parti communiste français
+    nom_en: French Communist Party
+    bloc: gauche_radicale
+    site: https://www.pcf.fr
+    fonde: 1920
+    lignee:
+      fr: >-
+        Fondé en 1920. Pas de candidat en 2012 ni en 2017 : le PCF soutenait
+        Jean-Luc Mélenchon.
+      en: >-
+        Founded in 1920. No candidate in 2012 or 2017: the PCF backed
+        Jean-Luc Mélenchon.
+    resultats:
+      2002: HUE Robert
+      2007: BUFFET Marie-George
+      2022: ROUSSEL
+    principes:
+      source: positions
+      url: https://www.pcf.fr
+      fr: >-
+        Hausse des salaires, industrie et énergie publiques y compris
+        nucléaire, services publics, souveraineté industrielle.
+      en: >-
+        Higher wages, public industry and energy including nuclear power,
+        public services, and industrial sovereignty.
+
+  # --- Reconquête ----------------------------------------------------------
+  reconquete:
+    nom: Reconquête
+    nom_en: Reconquête
+    bloc: reconquete
+    site: https://www.parti-reconquete.fr
+    fonde: 2021
+    lignee:
+      fr: Fondé en 2021 par Éric Zemmour, pour l'élection de 2022.
+      en: Founded in 2021 by Éric Zemmour, for the 2022 election.
+    resultats:
+      2022: ZEMMOUR
+    principes:
+      source: positions
+      url: https://www.parti-reconquete.fr
+      fr: >-
+        Arrêt de l'immigration et « remigration », assimilation, fermeté
+        pénale, baisse des impôts et des dépenses sociales.
+      en: >-
+        Halting immigration and "remigration", assimilation, a tough penal
+        line, and lower taxes and welfare spending.
+
+  # --- Debout la France ----------------------------------------------------
+  dlf:
+    nom: Debout la France
+    nom_en: Debout la France
+    bloc: souverainiste
+    site: https://www.debout-la-france.fr
+    fonde: 2008
+    lignee:
+      fr: Fondé en 2008 par Nicolas Dupont-Aignan, issu d'une scission du RPR puis de l'UMP.
+      en: Founded in 2008 by Nicolas Dupont-Aignan, from a split with the RPR and then the UMP.
+    resultats:
+      2012: DUPONT-AIGNAN Nicolas
+      2017: DUPONT-AIGNAN Nicolas
+      2022: DUPONT-AIGNAN
+    principes:
+      source: positions
+      url: https://www.debout-la-france.fr
+      fr: >-
+        Souverainisme gaulliste : reprise du contrôle des frontières et de la
+        monnaie, protectionnisme ciblé, refus de la supranationalité
+        européenne.
+      en: >-
+        Gaullist sovereigntism: taking back control of borders and currency,
+        targeted protectionism, and rejection of European supranationalism.
+
+  # --- Lutte ouvrière ------------------------------------------------------
+  lo:
+    nom: Lutte ouvrière
+    nom_en: Workers' Struggle
+    bloc: extreme_gauche
+    site: https://www.lutte-ouvriere.org
+    fonde: 1968
+    lignee:
+      fr: Fondé en 1968. Présente un candidat à chaque élection présidentielle depuis 1974.
+      en: Founded in 1968. Has stood a candidate at every presidential election since 1974.
+    resultats:
+      2002: LAGUILLER Arlette
+      2007: LAGUILLER Arlette
+      2012: ARTHAUD Nathalie
+      2017: ARTHAUD Nathalie
+      2022: ARTHAUD
+    principes:
+      source: positions
+      url: https://www.lutte-ouvriere.org
+      fr: >-
+        Communisme révolutionnaire : augmentation générale des salaires indexée
+        sur les prix, contrôle des comptes des entreprises par les salariés,
+        expropriation des grands groupes.
+      en: >-
+        Revolutionary communism: a general wage rise indexed to prices, workers'
+        control of company accounts, and expropriation of large firms.
+
+  # --- Nouveau Parti anticapitaliste ---------------------------------------
+  npa:
+    nom: Nouveau Parti anticapitaliste
+    nom_en: New Anticapitalist Party
+    bloc: extreme_gauche
+    # No link: the NPA split in 2022 and the old domain no longer resolves.
+    # Naming one of the successors as "the" NPA would be taking a side in
+    # someone else's dispute, so the site gives the record and no link.
+    site: null
+    fonde: 2009
+    lignee:
+      fr: >-
+        Ligue communiste révolutionnaire jusqu'en 2009, puis Nouveau Parti
+        anticapitaliste. Le parti s'est scindé en 2022 et ce site ne désigne
+        pas de successeur.
+      en: >-
+        Ligue communiste révolutionnaire until 2009, then the Nouveau Parti
+        anticapitaliste. The party split in 2022 and this site does not name a
+        successor.
+    lignee_contestee: true
+    resultats:
+      2002: BESANCENOT Olivier
+      2007: BESANCENOT Olivier
+      2012: POUTOU Philippe
+      2017: POUTOU Philippe
+      2022: POUTOU
+    principes:
+      source: positions
+      url: null
+      fr: >-
+        Anticapitalisme révolutionnaire : partage du temps de travail, blocage
+        des prix, rupture avec les institutions de la Ve République.
+      en: >-
+        Revolutionary anticapitalism: sharing out working time, price controls,
+        and a break with the institutions of the Fifth Republic.
+
+  # --- MoDem ---------------------------------------------------------------
+  modem:
+    nom: MoDem
+    nom_en: MoDem
+    bloc: centre
+    site: https://www.mouvementdemocrate.fr
+    fonde: 2007
+    lignee:
+      fr: >-
+        François Bayrou a été candidat pour l'UDF en 2002, puis a fondé le
+        Mouvement démocrate en 2007. Le score de 2002 est celui de l'UDF.
+      en: >-
+        François Bayrou stood for the UDF in 2002, then founded the Mouvement
+        démocrate in 2007. The 2002 figure is the UDF's.
+    lignee_contestee: true
+    resultats:
+      2002: BAYROU Francois
+      2007: BAYROU François
+      2012: BAYROU François
+    principes:
+      source: positions
+      url: https://www.mouvementdemocrate.fr
+      fr: >-
+        Centrisme pro-européen : équilibre des comptes publics, fédéralisme
+        européen, humanisme démocrate-chrétien, proportionnelle.
+      en: >-
+        Pro-European centrism: balanced public finances, European federalism,
+        Christian-democratic humanism, and proportional representation.
+
+  # --- Place publique ------------------------------------------------------
+  place_publique:
+    nom: Place publique
+    nom_en: Place publique
+    bloc: socialiste
+    site: https://place-publique.eu
+    fonde: 2018
+    lignee:
+      fr: Fondé en 2018. N'a jamais présenté de candidat à une élection présidentielle.
+      en: Founded in 2018. Has never contested a presidential election.
+    resultats: {}
+    principes:
+      source: positions
+      url: https://place-publique.eu
+      fr: >-
+        Social-écologie pro-européenne : justice fiscale, transition
+        écologique, défense de l'État de droit et soutien à l'Ukraine.
+      en: >-
+        Pro-European social ecology: tax justice, ecological transition,
+        defence of the rule of law, and support for Ukraine.
+
+  # --- UDR -----------------------------------------------------------------
+  udr:
+    nom: Union des droites pour la République
+    nom_en: Union of the Right for the Republic
+    bloc: reconquete
+    site: https://www.udr.fr
+    fonde: 2024
+    lignee:
+      fr: >-
+        Fondée en 2024 par Éric Ciotti après sa rupture avec Les Républicains.
+        N'a jamais présenté de candidat à une élection présidentielle.
+      en: >-
+        Founded in 2024 by Éric Ciotti after his break with Les Républicains.
+        Has never contested a presidential election.
+    resultats: {}
+    principes:
+      source: positions
+      url: https://www.udr.fr
+      fr: >-
+        Union des droites : baisse de l'immigration et de la fiscalité,
+        sécurité, alliance assumée avec le Rassemblement national.
+      en: >-
+        A union of the rights: lower immigration and taxation, security, and an
+        avowed alliance with the Rassemblement national.

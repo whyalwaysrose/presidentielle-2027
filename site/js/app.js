@@ -21,7 +21,7 @@
      Three days rather than two: a single infrastructure hiccup at GitHub (a
      job no runner picks up) should not put a warning on a correct forecast. */
   var STALE_DAYS = 3;
-  var BUILD = '2026-10-05.1';
+  var BUILD = '2026-10-06.1';
 
   var state = { data: null, scenario: null };
 
@@ -563,6 +563,146 @@
   }
 
   /* --- render all ------------------------------------------------------- */
+  /* --- where the parties come from -------------------------------------- */
+  /* Rendered as plain elements rather than an SVG: every number is visible
+     text, so there is no chart to describe to a screen reader and nothing to
+     keep in step with a hidden table. The bars are decoration over the
+     figures, not the figures themselves. */
+  function renderParties() {
+    var data = state.parties;
+    var card = document.getElementById('parties-card');
+    if (!data || !data.partis || !data.partis.length) { card.hidden = true; return; }
+    card.hidden = false;
+
+    var years = data.elections.map(function (e) { return e.annee; });
+    var mount = document.getElementById('parties-list');
+    mount.innerHTML = '';
+
+    /* One scale for every party, so the rows can be compared with each other.
+       Scaling each row to its own maximum would make 0.6% and 31% look alike. */
+    var peak = 0;
+    data.partis.forEach(function (p) {
+      p.resultats.forEach(function (r) { if (r.part > peak) peak = r.part; });
+    });
+    peak = peak || 1;
+
+    data.partis.forEach(function (p) {
+      var colour = blocColour(state.data, p.bloc);
+      var row = document.createElement('article');
+      row.className = 'party';
+
+      var head = document.createElement('div');
+      head.className = 'party-head';
+      var swatch = document.createElement('span');
+      swatch.className = 'party-swatch';
+      swatch.style.background = colour;
+      head.appendChild(swatch);
+      var name = document.createElement('h3');
+      name.className = 'party-name';
+      name.textContent = I18n.lang === 'en' ? p.nom_en : p.nom;
+      head.appendChild(name);
+      if (p.site) {
+        var link = document.createElement('a');
+        link.className = 'party-site';
+        link.href = p.site;
+        link.rel = 'noopener nofollow';
+        link.textContent = I18n.t('parties.site');
+        head.appendChild(link);
+      }
+      row.appendChild(head);
+
+      if (p.resultats.length) {
+        var byYear = {};
+        p.resultats.forEach(function (r) { byYear[r.annee] = r; });
+        var scale = document.createElement('ol');
+        scale.className = 'party-years';
+        /* I18n.t CALLS a function-valued string and returns the result, so
+           the argument goes to t() - calling what it returns is a TypeError. */
+        scale.setAttribute('aria-label', I18n.t(
+          'parties.chartTitle', I18n.lang === 'en' ? p.nom_en : p.nom));
+        years.forEach(function (y) {
+          var cell = document.createElement('li');
+          cell.className = 'party-year';
+          var r = byYear[y];
+          var bar = document.createElement('span');
+          bar.className = 'party-bar';
+          if (r) {
+            bar.style.height = Math.max(2, Math.round((r.part / peak) * 100)) + '%';
+            bar.style.background = colour;
+          } else {
+            bar.className = 'party-bar party-bar-absent';
+          }
+          var value = document.createElement('span');
+          value.className = 'party-value';
+          /* An election a party sat out is shown as that, never as zero. */
+          value.textContent = r ? I18n.pct(r.part, 1) : '\u2013';
+          if (!r) value.title = I18n.t('parties.absent');
+          var label = document.createElement('span');
+          label.className = 'party-year-label';
+          label.textContent = y;
+          cell.appendChild(value);
+          cell.appendChild(document.createElement('span')).className = 'party-bar-track';
+          cell.lastChild.appendChild(bar);
+          cell.appendChild(label);
+          if (!r) cell.setAttribute('aria-label', y + ' : ' + I18n.t('parties.absent'));
+          scale.appendChild(cell);
+        });
+        row.appendChild(scale);
+      } else {
+        var none = document.createElement('p');
+        none.className = 'party-never';
+        none.textContent = I18n.t('parties.never');
+        row.appendChild(none);
+      }
+
+      var lineage = p.lignee && (I18n.lang === 'en' ? p.lignee.en : p.lignee.fr);
+      if (lineage) {
+        var note = document.createElement('p');
+        note.className = 'party-lineage';
+        if (p.lignee_contestee) {
+          var flag = document.createElement('strong');
+          flag.textContent = I18n.t('parties.lineageFlag') + ' ';
+          note.appendChild(flag);
+        }
+        note.appendChild(document.createTextNode(lineage));
+        row.appendChild(note);
+      }
+
+      var principles = p.principes && (I18n.lang === 'en' ? p.principes.en : p.principes.fr);
+      if (principles) {
+        var para = document.createElement('p');
+        para.className = 'party-principles';
+        /* Labelled every time. These are not the party's words, and a reader
+           skimming one card must not have to have read the preamble. */
+        var tag = document.createElement('span');
+        tag.className = 'party-tag';
+        tag.textContent = I18n.t('parties.summaryLabel');
+        para.appendChild(tag);
+        para.appendChild(document.createTextNode(' ' + principles + ' '));
+        var basis = p.principes.source === 'programme'
+          ? I18n.t('parties.fromProgramme') : I18n.t('parties.fromPositions');
+        if (p.principes.url) {
+          var src = document.createElement('a');
+          src.href = p.principes.url;
+          src.rel = 'noopener nofollow';
+          src.textContent = '(' + basis + ')';
+          para.appendChild(src);
+        } else {
+          var plain = document.createElement('span');
+          plain.className = 'party-basis';
+          plain.textContent = '(' + basis + ')';
+          para.appendChild(plain);
+        }
+        row.appendChild(para);
+      }
+      mount.appendChild(row);
+    });
+
+    var disclaimer = document.getElementById('parties-disclaimer');
+    disclaimer.textContent = (data.avertissement &&
+      (I18n.lang === 'en' ? data.avertissement.en : data.avertissement.fr)) || '';
+  }
+
   /* --- is this forecast still current? ---------------------------------- */
   function renderStale(data) {
     var el = document.getElementById('stale-banner');
@@ -583,6 +723,7 @@
     var data = state.data;
     if (!data) return;
     renderStale(data);
+    renderParties();
     renderHeader(data);
     renderChange(data);
     renderScenarios(data);
@@ -659,6 +800,15 @@
         }
         state.data = data;
         renderAll();
+        fetch('data/partis.json?v=' + encodeURIComponent(BUILD))
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (p) { if (p) { state.parties = p; renderParties(); } })
+          .catch(function (err) {
+            /* Context only, so it must never break the forecast - but a
+               silent catch hid a TypeError in this very section until the
+               card rendered empty, so it is reported even while swallowed. */
+            if (window.console) console.error('parties section failed', err);
+          });
       })
       .catch(function (err) {
         showError(I18n.t('error.load'), err && err.message);
