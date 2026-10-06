@@ -15,9 +15,19 @@ from presidentielle import parties
 from presidentielle.config import load_roster
 
 
+def _published_forecast():
+    """The forecast the published party file was built against, if there is one."""
+    import json
+
+    from presidentielle import paths
+
+    path = paths.SITE_DATA / "forecast.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
 @pytest.fixture(scope="module")
 def payload():
-    return parties.build()
+    return parties.build(forecast=_published_forecast())
 
 
 @pytest.fixture(scope="module")
@@ -164,3 +174,69 @@ def test_the_published_file_is_not_stale(payload):
     assert on_disk == json.loads(json.dumps(payload, default=str)), (
         "site/data/partis.json is out of date - run `presidentielle partis`"
     )
+
+
+# ---------------------------------------------------------------- projection
+
+
+def test_the_2027_point_is_one_named_candidate_not_a_party_total(payload):
+    """A party's 2027 share is not a well-defined quantity: the Socialists have
+    several people in the field and at most one will stand, so summing their
+    medians would count alternatives as additions and invent support nobody
+    projects. The forward point is therefore ONE candidate, named."""
+    forecast = _published_forecast()
+    if not forecast:
+        pytest.skip("no published forecast to join against")
+    by_id = {c["id"]: c for c in forecast["candidats"]}
+    for party in payload["partis"]:
+        lead = party["candidat_2027"]
+        if not lead:
+            continue
+        source = by_id[lead["id"]]
+        assert lead["nom"] == source["nom"]
+        assert lead["part"] == (source["share"] or {}).get("q50")
+        # Never a sum: the projection equals that one candidate's own median.
+        assert lead["part"] <= 1.0
+
+
+def test_a_withdrawn_candidate_is_not_a_projection(payload):
+    """The MoDem's only name is François Bayrou, who stood down in March 2026.
+    Showing him at 0.0% would read as a forecast that the party is wiped out,
+    when the model expects it to field nobody."""
+    forecast = _published_forecast()
+    if not forecast:
+        pytest.skip("no published forecast to join against")
+    for party in payload["partis"]:
+        lead = party["candidat_2027"]
+        if lead:
+            assert lead["p_candidature"] > 0.05, party["id"]
+
+
+def test_a_party_with_no_past_can_still_have_a_projection(payload):
+    """Horizons has never contested a presidential election and its leader is
+    second in this forecast. Both halves of that have to show."""
+    forecast = _published_forecast()
+    if not forecast:
+        pytest.skip("no published forecast to join against")
+    horizons = next(p for p in payload["partis"] if p["id"] == "horizons")
+    assert horizons["resultats"] == []
+    assert horizons["candidat_2027"] and horizons["candidat_2027"]["part"] > 0
+
+
+# ------------------------------------------------------------ review dates
+
+
+def test_every_summary_records_when_a_person_last_checked_it(payload):
+    """Prose about a party ages silently - it changes line, or finally
+    publishes a 2027 manifesto. The date is shown on the page, and `audit`
+    warns once it passes the threshold."""
+    import datetime as dt
+
+    for party in payload["partis"]:
+        reviewed = party["principes"]["revu"]
+        assert reviewed, f"{party['id']}: no review date"
+        assert dt.date.fromisoformat(reviewed) <= dt.date.today()
+        assert party["principes"]["perime"] is False, (
+            f"{party['id']}: summary last checked {reviewed} - re-read it "
+            "against what the party publishes now, then update `revu`"
+        )

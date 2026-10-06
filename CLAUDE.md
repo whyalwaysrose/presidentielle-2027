@@ -142,6 +142,26 @@ sum EXACTLY to its Exprimés. That check earned its keep: the 2017 sheet stacks
 France entière, Métropole and overseas blocks on one sheet, and the first
 version read the last of them.
 
+**The line runs to 2027, and that last point is a different kind of number.**
+Given the run's own payload, each party also carries its leading current
+candidate and that candidate's PROJECTED first-round share. Three things keep
+it from reading as history: a dashed, tinted bar rather than a solid one, the
+candidate's name beneath it, and an accessible label that says "not a result".
+
+It is ONE NAMED CANDIDATE, never a party total - the Socialists have several
+people in the field and at most one will stand, so summing medians would count
+alternatives as additions. The lead is chosen by probability of standing, then
+share, and anyone below 5% likely to stand is dropped: the MoDem's only name
+withdrew in March 2026, and showing him at 0.0% would read as a forecast of
+wipeout when the model expects no candidate at all.
+
+**`revu` dates the prose.** Summaries age silently, and manifestos land between
+January and March 2027. The date shows on the page, `audit` warns past
+`parties.STALE_AFTER_DAYS`, and a test fails if one goes stale - but the
+WARNING is the mechanism, not a build break: a stale description is a reason to
+look, not a reason to stop publishing a forecast. When a real manifesto
+appears, flip `source: positions` to `programme` and give it the URL.
+
 `site/data/partis.json` is rewritten by every `run` and committed by the daily
 workflow, and a test fails if the committed copy differs from a fresh build.
 

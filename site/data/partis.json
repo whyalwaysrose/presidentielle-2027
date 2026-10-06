@@ -37,6 +37,15 @@
  ],
  "partis": [
   {
+   "candidat_2027": {
+    "id": "GA",
+    "nom": "Gabriel Attal",
+    "part": 0.08049,
+    "bas": 0.02627,
+    "haut": 0.19433,
+    "p_candidature": 0.84825,
+    "autres": []
+   },
    "id": "renaissance",
    "nom": "Renaissance",
    "nom_en": "Renaissance",
@@ -68,10 +77,21 @@
     "fr": "Centre libéral et pro-européen : offre de travail et baisse du chômage, réindustrialisation, souveraineté européenne en matière de défense et d'énergie.",
     "en": "Liberal, pro-European centre: employment and lower unemployment, reindustrialisation, and European sovereignty in defence and energy.",
     "source": "positions",
-    "url": "https://parti-renaissance.fr"
+    "url": "https://parti-renaissance.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "MLP",
+    "nom": "Marine Le Pen",
+    "part": 0.30946,
+    "bas": 0.18601,
+    "haut": 0.46917,
+    "p_candidature": 0.98403,
+    "autres": []
+   },
    "id": "rn",
    "nom": "Rassemblement national",
    "nom_en": "National Rally",
@@ -121,10 +141,21 @@
     "fr": "Priorité nationale dans l'accès à l'emploi, au logement et aux aides sociales ; forte réduction de l'immigration ; renégociation de la place de la France dans l'Union européenne ; baisse des taxes sur l'énergie.",
     "en": "National preference in access to jobs, housing and welfare; sharp reduction in immigration; renegotiating France's place in the European Union; lower energy taxes.",
     "source": "positions",
-    "url": "https://rassemblementnational.fr"
+    "url": "https://rassemblementnational.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "JLM",
+    "nom": "Jean-Luc Mélenchon",
+    "part": 0.14644,
+    "bas": 0.06532,
+    "haut": 0.27284,
+    "p_candidature": 1.0,
+    "autres": []
+   },
    "id": "lfi",
    "nom": "La France insoumise",
    "nom_en": "France Unbowed",
@@ -162,10 +193,13 @@
     "fr": "Planification écologique, retraite à 60 ans, hausse du SMIC, VIe République, désobéissance aux traités européens jugés contraires à ce programme.",
     "en": "Ecological planning, retirement at 60, a higher minimum wage, a Sixth Republic, and disobeying European treaties judged incompatible with that programme.",
     "source": "positions",
-    "url": "https://lafranceinsoumise.fr"
+    "url": "https://lafranceinsoumise.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": null,
    "id": "modem",
    "nom": "MoDem",
    "nom_en": "MoDem",
@@ -203,10 +237,21 @@
     "fr": "Centrisme pro-européen : équilibre des comptes publics, fédéralisme européen, humanisme démocrate-chrétien, proportionnelle.",
     "en": "Pro-European centrism: balanced public finances, European federalism, Christian-democratic humanism, and proportional representation.",
     "source": "positions",
-    "url": "https://www.mouvementdemocrate.fr"
+    "url": "https://www.mouvementdemocrate.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "EZ",
+    "nom": "Éric Zemmour",
+    "part": 0.03727,
+    "bas": 0.01895,
+    "haut": 0.07294,
+    "p_candidature": 0.95314,
+    "autres": []
+   },
    "id": "reconquete",
    "nom": "Reconquête",
    "nom_en": "Reconquête",
@@ -232,10 +277,23 @@
     "fr": "Arrêt de l'immigration et « remigration », assimilation, fermeté pénale, baisse des impôts et des dépenses sociales.",
     "en": "Halting immigration and \"remigration\", assimilation, a tough penal line, and lower taxes and welfare spending.",
     "source": "positions",
-    "url": "https://www.parti-reconquete.fr"
+    "url": "https://www.parti-reconquete.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "BR",
+    "nom": "Bruno Retailleau",
+    "part": 0.07256,
+    "bas": 0.03486,
+    "haut": 0.13827,
+    "p_candidature": 0.99766,
+    "autres": [
+     "David Lisnard"
+    ]
+   },
    "id": "lr",
    "nom": "Les Républicains",
    "nom_en": "The Republicans",
@@ -285,10 +343,21 @@
     "fr": "Droite libérale-conservatrice : réduction de la dépense publique et des impôts de production, fermeté pénale et migratoire, attachement au cadre européen.",
     "en": "Liberal-conservative right: lower public spending and business taxes, a tougher line on crime and immigration, and commitment to the European framework.",
     "source": "positions",
-    "url": "https://republicains.fr"
+    "url": "https://republicains.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "MT",
+    "nom": "Marine Tondelier",
+    "part": 0.03806,
+    "bas": 0.0194,
+    "haut": 0.07411,
+    "p_candidature": 0.9024,
+    "autres": []
+   },
    "id": "ecologistes",
    "nom": "Les Écologistes",
    "nom_en": "The Ecologists",
@@ -332,10 +401,21 @@
     "fr": "Écologie politique : sortie des énergies fossiles, rénovation thermique, agriculture sans pesticides, élargissement des libertés publiques.",
     "en": "Political ecology: phasing out fossil fuels, home insulation, pesticide-free farming, and broader civil liberties.",
     "source": "positions",
-    "url": "https://www.lesecologistes.fr"
+    "url": "https://www.lesecologistes.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "FRo",
+    "nom": "Fabien Roussel",
+    "part": 0.02393,
+    "bas": 0.00588,
+    "haut": 0.08187,
+    "p_candidature": 0.95079,
+    "autres": []
+   },
    "id": "pcf",
    "nom": "Parti communiste français",
    "nom_en": "French Communist Party",
@@ -373,10 +453,21 @@
     "fr": "Hausse des salaires, industrie et énergie publiques y compris nucléaire, services publics, souveraineté industrielle.",
     "en": "Higher wages, public industry and energy including nuclear power, public services, and industrial sovereignty.",
     "source": "positions",
-    "url": "https://www.pcf.fr"
+    "url": "https://www.pcf.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "NDA",
+    "nom": "Nicolas Dupont-Aignan",
+    "part": 0.01788,
+    "bas": 0.0088,
+    "haut": 0.03538,
+    "p_candidature": 0.93765,
+    "autres": []
+   },
    "id": "dlf",
    "nom": "Debout la France",
    "nom_en": "Debout la France",
@@ -414,10 +505,23 @@
     "fr": "Souverainisme gaulliste : reprise du contrôle des frontières et de la monnaie, protectionnisme ciblé, refus de la supranationalité européenne.",
     "en": "Gaullist sovereigntism: taking back control of borders and currency, targeted protectionism, and rejection of European supranationalism.",
     "source": "positions",
-    "url": "https://www.debout-la-france.fr"
+    "url": "https://www.debout-la-france.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "FH",
+    "nom": "François Hollande",
+    "part": 0.03728,
+    "bas": 0.00898,
+    "haut": 0.10238,
+    "p_candidature": 0.19049,
+    "autres": [
+     "Olivier Faure"
+    ]
+   },
    "id": "ps",
    "nom": "Parti socialiste",
    "nom_en": "Socialist Party",
@@ -467,10 +571,13 @@
     "fr": "Social-démocratie européenne : services publics, redistribution par l'impôt, transition écologique négociée, maintien dans le cadre européen.",
     "en": "European social democracy: public services, redistribution through taxation, a negotiated ecological transition, and remaining within the European framework.",
     "source": "positions",
-    "url": "https://www.parti-socialiste.fr"
+    "url": "https://www.parti-socialiste.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": null,
    "id": "npa",
    "nom": "Nouveau Parti anticapitaliste",
    "nom_en": "New Anticapitalist Party",
@@ -520,10 +627,21 @@
     "fr": "Anticapitalisme révolutionnaire : partage du temps de travail, blocage des prix, rupture avec les institutions de la Ve République.",
     "en": "Revolutionary anticapitalism: sharing out working time, price controls, and a break with the institutions of the Fifth Republic.",
     "source": "positions",
-    "url": null
+    "url": null,
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "NA",
+    "nom": "Nathalie Arthaud",
+    "part": 0.00723,
+    "bas": 0.00361,
+    "haut": 0.01447,
+    "p_candidature": 0.99151,
+    "autres": []
+   },
    "id": "lo",
    "nom": "Lutte ouvrière",
    "nom_en": "Workers' Struggle",
@@ -573,10 +691,21 @@
     "fr": "Communisme révolutionnaire : augmentation générale des salaires indexée sur les prix, contrôle des comptes des entreprises par les salariés, expropriation des grands groupes.",
     "en": "Revolutionary communism: a general wage rise indexed to prices, workers' control of company accounts, and expropriation of large firms.",
     "source": "positions",
-    "url": "https://www.lutte-ouvriere.org"
+    "url": "https://www.lutte-ouvriere.org",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "EP",
+    "nom": "Édouard Philippe",
+    "part": 0.15383,
+    "bas": 0.06757,
+    "haut": 0.29041,
+    "p_candidature": 0.84818,
+    "autres": []
+   },
    "id": "horizons",
    "nom": "Horizons",
    "nom_en": "Horizons",
@@ -595,10 +724,21 @@
     "fr": "Droite libérale et pro-européenne : réduction de la dette publique, travail et autorité, décentralisation.",
     "en": "Liberal, pro-European right: cutting public debt, work and authority, and decentralisation.",
     "source": "positions",
-    "url": "https://horizonsleparti.fr"
+    "url": "https://horizonsleparti.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": {
+    "id": "RG",
+    "nom": "Raphaël Glucksmann",
+    "part": 0.095,
+    "bas": 0.04428,
+    "haut": 0.17751,
+    "p_candidature": 0.84934,
+    "autres": []
+   },
    "id": "place_publique",
    "nom": "Place publique",
    "nom_en": "Place publique",
@@ -617,10 +757,13 @@
     "fr": "Social-écologie pro-européenne : justice fiscale, transition écologique, défense de l'État de droit et soutien à l'Ukraine.",
     "en": "Pro-European social ecology: tax justice, ecological transition, defence of the rule of law, and support for Ukraine.",
     "source": "positions",
-    "url": "https://place-publique.eu"
+    "url": "https://place-publique.eu",
+    "revu": "2026-10-06",
+    "perime": false
    }
   },
   {
+   "candidat_2027": null,
    "id": "udr",
    "nom": "Union des droites pour la République",
    "nom_en": "Union of the Right for the Republic",
@@ -639,7 +782,9 @@
     "fr": "Union des droites : baisse de l'immigration et de la fiscalité, sécurité, alliance assumée avec le Rassemblement national.",
     "en": "A union of the rights: lower immigration and taxation, security, and an avowed alliance with the Rassemblement national.",
     "source": "positions",
-    "url": "https://www.udr.fr"
+    "url": "https://www.udr.fr",
+    "revu": "2026-10-06",
+    "perime": false
    }
   }
  ]

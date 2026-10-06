@@ -29,6 +29,7 @@ one differently.
 
 from __future__ import annotations
 
+import datetime as dt
 import logging
 from pathlib import Path
 
@@ -80,12 +81,72 @@ def load_results(
     return out
 
 
+STALE_AFTER_DAYS = 182
+
+
+def _current_candidates(party: dict, forecast: dict | None) -> dict | None:
+    """This cycle's candidates for a party, and the leading one.
+
+    WHY NOT A PARTY TOTAL. A party's 2027 "share" is not a well-defined
+    quantity: the Socialists have five people in the field and at most one will
+    stand, so adding their medians would count an alternative as an addition
+    and invent support nobody projects. The forward-looking point is therefore
+    ONE NAMED CANDIDATE's projected first-round share, labelled with their
+    name, and the others are listed beside it.
+
+    Matching is on the roster's `parti` string, with `noms_roster` for the
+    cases where the roster abbreviates (UDR).
+    """
+    if not forecast:
+        return None
+    names = {party["nom"].casefold()}
+    names |= {str(n).casefold() for n in (party.get("noms_roster") or [])}
+
+    mine = [
+        c for c in forecast.get("candidats", [])
+        if str(c.get("parti", "")).casefold() in names
+        # Someone who has withdrawn is not a projection. The MoDem's only
+        # name is François Bayrou, who stood down in March 2026; showing him
+        # at 0.0% would read as a forecast that the party will be wiped out,
+        # when the model is saying it expects no candidate at all.
+        and (c.get("p_standing") or 0) > 0.05
+    ]
+    if not mine:
+        return None
+    # The leading candidate is the one most likely to be on the ballot, broken
+    # by projected share - not the highest share, which could be someone with a
+    # 3% chance of standing at all.
+    mine.sort(
+        key=lambda c: (c.get("p_standing") or 0, (c.get("share") or {}).get("q50") or 0),
+        reverse=True,
+    )
+    lead = mine[0]
+    share = lead.get("share") or {}
+    return {
+        "id": lead["id"],
+        "nom": lead["nom"],
+        "part": share.get("q50"),
+        "bas": share.get("q05"),
+        "haut": share.get("q95"),
+        "p_candidature": lead.get("p_standing"),
+        "autres": [c["nom"] for c in mine[1:]],
+    }
+
+
 def build(
     parties: Path | None = None,
     historic: Path | None = None,
     results_2022: Path | None = None,
+    forecast: dict | None = None,
 ) -> dict:
-    """The payload the page renders: parties, their records, their sources."""
+    """The payload the page renders: parties, their records, their sources.
+
+    ``forecast`` is the run's own payload. Given it, each party also carries
+    its leading 2027 candidate and that candidate's PROJECTED first-round
+    share, so a party's line runs to the present instead of stopping in 2022.
+    That projection is a different kind of number from the five before it - a
+    model output, not a count - and the page draws it differently.
+    """
     config = _load(parties or PARTIES_FILE)
     results = load_results(historic, results_2022)
     years = sorted(results)
@@ -112,7 +173,12 @@ def build(
             })
 
         principles = party.get("principes") or {}
+        reviewed = principles.get("revu")
+        stale = None
+        if reviewed:
+            stale = (dt.date.today() - reviewed).days > STALE_AFTER_DAYS
         out.append({
+            "candidat_2027": _current_candidates(party, forecast),
             "id": key,
             "nom": party["nom"],
             "nom_en": party.get("nom_en") or party["nom"],
@@ -134,6 +200,10 @@ def build(
                 # the party currently publishes.
                 "source": principles.get("source"),
                 "url": principles.get("url"),
+                # Shown on the page: prose ages, and a reader is entitled to
+                # know when a description of a party was last checked.
+                "revu": reviewed.isoformat() if reviewed else None,
+                "perime": stale,
             },
         })
 

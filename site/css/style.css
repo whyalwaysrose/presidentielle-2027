@@ -599,6 +599,31 @@ main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
 .party-bar-absent { height: 2px; background: var(--border-strong); }
 .party-year-label { font-size: var(--fs-2xs); color: var(--text-faint); }
 
+/* The 2027 column is a projection, never a count: hollow instead of solid,
+   with the candidate's name under it. A reader who takes in only the shape
+   should still see that the last bar is a different kind of thing. */
+.party-years { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.party-years-lonely { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.party-years-lonely .party-year-forecast { grid-column: 6; }
+.party-year-forecast .party-value { color: var(--text-dim); }
+.party-bar-forecast {
+  border: 1.5px dashed;
+  border-bottom: 0;
+}
+.party-forecast-who {
+  font-size: var(--fs-2xs);
+  color: var(--text-faint);
+  text-align: center;
+  line-height: 1.15;
+}
+.party-reviewed {
+  font-size: var(--fs-2xs);
+  color: var(--text-faint);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.party-reviewed-stale { color: var(--warn, #E8A33D); }
+
 .party-never, .party-lineage, .party-principles {
   margin: 0;
   font-size: var(--fs-sm);

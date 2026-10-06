@@ -27,6 +27,13 @@
 #      link so they can check the summary against the source, which is the
 #      whole point of including it.
 #
+# `revu` is the date a person last checked a summary against what the party
+# actually publishes. Prose goes stale silently - a party changes line, or
+# finally publishes a 2027 manifesto - so the date is shown on the page and
+# `presidentielle audit` warns once it passes six months. It is deliberately
+# NOT a failing test: a stale summary is a reason to look, not a reason to
+# stop publishing a forecast.
+#
 # NO 2027 MANIFESTOS EXIST YET for most parties: candidacies do not close until
 # 12 March 2027. Where `url` is a party's site rather than a manifesto, that is
 # why.
@@ -65,6 +72,7 @@ partis:
       2022: LE PEN
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://rassemblementnational.fr
       fr: >-
         Priorité nationale dans l'accès à l'emploi, au logement et aux aides
@@ -98,6 +106,7 @@ partis:
       2022: MÉLENCHON
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://lafranceinsoumise.fr
       fr: >-
         Planification écologique, retraite à 60 ans, hausse du SMIC, VIe
@@ -126,6 +135,7 @@ partis:
       2022: HIDALGO
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.parti-socialiste.fr
       fr: >-
         Social-démocratie européenne : services publics, redistribution par
@@ -158,6 +168,7 @@ partis:
       2022: PÉCRESSE
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://republicains.fr
       fr: >-
         Droite libérale-conservatrice : réduction de la dépense publique et des
@@ -183,6 +194,7 @@ partis:
       2022: MACRON
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://parti-renaissance.fr
       fr: >-
         Centre libéral et pro-européen : offre de travail et baisse du chômage,
@@ -210,6 +222,7 @@ partis:
     resultats: {}
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://horizonsleparti.fr
       fr: >-
         Droite libérale et pro-européenne : réduction de la dette publique,
@@ -243,6 +256,7 @@ partis:
       2022: JADOT
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.lesecologistes.fr
       fr: >-
         Écologie politique : sortie des énergies fossiles, rénovation thermique,
@@ -271,6 +285,7 @@ partis:
       2022: ROUSSEL
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.pcf.fr
       fr: >-
         Hausse des salaires, industrie et énergie publiques y compris
@@ -293,6 +308,7 @@ partis:
       2022: ZEMMOUR
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.parti-reconquete.fr
       fr: >-
         Arrêt de l'immigration et « remigration », assimilation, fermeté
@@ -317,6 +333,7 @@ partis:
       2022: DUPONT-AIGNAN
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.debout-la-france.fr
       fr: >-
         Souverainisme gaulliste : reprise du contrôle des frontières et de la
@@ -344,6 +361,7 @@ partis:
       2022: ARTHAUD
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.lutte-ouvriere.org
       fr: >-
         Communisme révolutionnaire : augmentation générale des salaires indexée
@@ -381,6 +399,7 @@ partis:
       2022: POUTOU
     principes:
       source: positions
+      revu: 2026-10-06
       url: null
       fr: >-
         Anticapitalisme révolutionnaire : partage du temps de travail, blocage
@@ -410,6 +429,7 @@ partis:
       2012: BAYROU François
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.mouvementdemocrate.fr
       fr: >-
         Centrisme pro-européen : équilibre des comptes publics, fédéralisme
@@ -431,6 +451,7 @@ partis:
     resultats: {}
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://place-publique.eu
       fr: >-
         Social-écologie pro-européenne : justice fiscale, transition
@@ -443,6 +464,8 @@ partis:
   udr:
     nom: Union des droites pour la République
     nom_en: Union of the Right for the Republic
+    # The roster abbreviates this one; every other party matches by name.
+    noms_roster: [UDR]
     bloc: reconquete
     site: https://www.udr.fr
     fonde: 2024
@@ -456,6 +479,7 @@ partis:
     resultats: {}
     principes:
       source: positions
+      revu: 2026-10-06
       url: https://www.udr.fr
       fr: >-
         Union des droites : baisse de l'immigration et de la fiscalité,

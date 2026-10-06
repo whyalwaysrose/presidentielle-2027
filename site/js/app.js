@@ -21,7 +21,7 @@
      Three days rather than two: a single infrastructure hiccup at GitHub (a
      job no runner picks up) should not put a warning on a correct forecast. */
   var STALE_DAYS = 3;
-  var BUILD = '2026-10-06.1';
+  var BUILD = '2026-10-06.3';
 
   var state = { data: null, scenario: null };
 
@@ -563,6 +563,61 @@
   }
 
   /* --- render all ------------------------------------------------------- */
+  /* The 2027 point is a MODEL OUTPUT sitting beside five counted results, so
+     it is drawn as an outline rather than a solid bar, labelled 'projection',
+     carries the candidate's name, and says in its accessible label that it is
+     not a result. Three signals, because the one thing this section must
+     never do is let a forecast read as history. */
+  /* A dashed outline in the party's own colour is invisible when that colour
+     is dark (the RN's navy on a dark page), so the projection also gets a
+     translucent fill of it. The dash still marks it as a projection; the fill
+     just makes it findable. */
+  function tint(hex, alpha) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ''));
+    if (!m) return 'rgba(125,136,148,' + alpha + ')';
+    var n = parseInt(m[1], 16);
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' +
+      (n & 255) + ',' + alpha + ')';
+  }
+
+  function forecastCell(p, peak, colour) {
+    var c = p.candidat_2027;
+    var cell = document.createElement('li');
+    cell.className = 'party-year party-year-forecast';
+
+    var value = document.createElement('span');
+    value.className = 'party-value';
+    value.textContent = I18n.pct(c.part, 1);
+    cell.appendChild(value);
+
+    var track = document.createElement('span');
+    track.className = 'party-bar-track';
+    var bar = document.createElement('span');
+    bar.className = 'party-bar party-bar-forecast';
+    bar.style.height = Math.max(2, Math.round((c.part / peak) * 100)) + '%';
+    bar.style.borderColor = colour;
+    bar.style.background = tint(colour, 0.28);
+    track.appendChild(bar);
+    cell.appendChild(track);
+
+    var label = document.createElement('span');
+    label.className = 'party-year-label';
+    label.textContent = '2027';
+    cell.appendChild(label);
+
+    var who = document.createElement('span');
+    who.className = 'party-forecast-who';
+    who.textContent = c.nom;
+    cell.appendChild(who);
+
+    cell.setAttribute('aria-label', I18n.t('parties.projectedFor', c.nom) + ' : ' +
+      I18n.pct(c.part, 1));
+    if (c.autres && c.autres.length) {
+      cell.title = I18n.t('parties.alsoTested', c.autres.join(', '));
+    }
+    return cell;
+  }
+
   /* --- where the parties come from -------------------------------------- */
   /* Rendered as plain elements rather than an SVG: every number is visible
      text, so there is no chart to describe to a screen reader and nothing to
@@ -583,6 +638,10 @@
     var peak = 0;
     data.partis.forEach(function (p) {
       p.resultats.forEach(function (r) { if (r.part > peak) peak = r.part; });
+      /* Including the projection: the RN is forecast above anything it has
+         ever polled, and a bar scaled only to history would run off its
+         track. */
+      if (p.candidat_2027 && p.candidat_2027.part > peak) peak = p.candidat_2027.part;
     });
     peak = peak || 1;
 
@@ -647,12 +706,19 @@
           if (!r) cell.setAttribute('aria-label', y + ' : ' + I18n.t('parties.absent'));
           scale.appendChild(cell);
         });
+        if (p.candidat_2027) scale.appendChild(forecastCell(p, peak, colour));
         row.appendChild(scale);
       } else {
         var none = document.createElement('p');
         none.className = 'party-never';
         none.textContent = I18n.t('parties.never');
         row.appendChild(none);
+        if (p.candidat_2027) {
+          var only = document.createElement('ol');
+          only.className = 'party-years party-years-lonely';
+          only.appendChild(forecastCell(p, peak, colour));
+          row.appendChild(only);
+        }
       }
 
       var lineage = p.lignee && (I18n.lang === 'en' ? p.lignee.en : p.lignee.fr);
@@ -678,6 +744,21 @@
         tag.className = 'party-tag';
         tag.textContent = I18n.t('parties.summaryLabel');
         para.appendChild(tag);
+        if (p.principes.revu) {
+          /* Prose ages. Saying when it was last checked lets a reader weigh
+             it, and marks the ones overdue instead of hiding them. */
+          var when = document.createElement('span');
+          when.className = 'party-reviewed';
+          var d = new Date(p.principes.revu + 'T00:00:00Z');
+          var month = isNaN(d) ? p.principes.revu : d.toLocaleDateString(
+            I18n.lang === 'fr' ? 'fr-FR' : 'en-GB',
+            { month: 'long', year: 'numeric', timeZone: 'UTC' });
+          when.textContent = p.principes.perime
+            ? I18n.t('parties.reviewStale')
+            : I18n.t('parties.reviewed', month);
+          if (p.principes.perime) when.className += ' party-reviewed-stale';
+          para.appendChild(when);
+        }
         para.appendChild(document.createTextNode(' ' + principles + ' '));
         var basis = p.principes.source === 'programme'
           ? I18n.t('parties.fromProgramme') : I18n.t('parties.fromPositions');

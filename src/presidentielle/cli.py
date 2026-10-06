@@ -107,12 +107,23 @@ def cmd_fetch(args) -> int:
     return 0
 
 
-def _write_parties() -> dict:
-    """Write `site/data/partis.json` - each party's record and principles."""
+def _write_parties(forecast: dict | None = None) -> dict:
+    """Write `site/data/partis.json` - each party's record and principles.
+
+    Given the run's forecast, each party's line also carries its leading 2027
+    candidate and that candidate's projected share, so the history runs to the
+    present rather than stopping in 2022.
+    """
+    import json as _json
+
     from . import parties
     from .outputs import write_json
 
-    payload = parties.build()
+    if forecast is None:
+        published = paths.SITE_DATA / "forecast.json"
+        if published.exists():
+            forecast = _json.loads(published.read_text(encoding="utf-8"))
+    payload = parties.build(forecast=forecast)
     paths.ensure_dirs()
     write_json(payload, paths.SITE_DATA / "partis.json")
     return payload
@@ -179,7 +190,40 @@ def cmd_audit(args) -> int:
             print("  ", line)
 
     _print_commission_coverage(cfg)
+    _print_party_reviews()
     return 0
+
+
+def _print_party_reviews() -> None:
+    """Party summaries nobody has re-read lately.
+
+    A WARNING, never a failure: a stale description of a party is a reason to
+    look at it, not a reason to stop publishing a forecast. It matters most
+    between January and March 2027, when manifestos actually appear and
+    `source: positions` should start becoming `source: programme`.
+    """
+    from . import parties
+
+    try:
+        payload = parties.build()
+    except Exception as exc:  # noqa: BLE001
+        print(f"\nwarning: could not read the party section ({exc})")
+        return
+    stale = [p for p in payload["partis"] if p["principes"].get("perime")]
+    print()
+    if not stale:
+        print(f"Party summaries: all {len(payload['partis'])} checked within "
+              f"{parties.STALE_AFTER_DAYS} days.")
+        return
+    print(f"{len(stale)} party summary/-ies not checked for over "
+          f"{parties.STALE_AFTER_DAYS} days - re-read them against what the "
+          "party now publishes, then update `revu` in config/partis.yaml:")
+    for party in stale:
+        print(f"  {party['nom']} (last checked {party['principes']['revu']})")
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        for party in stale:
+            print(f"::notice title=Party summary needs re-reading::{party['nom']} "
+                  f"(last checked {party['principes']['revu']})")
 
 
 def _commission_coverage(cfg):
@@ -802,7 +846,7 @@ def cmd_run(args) -> int:
     # The party records are static - they change when a config changes, not
     # when the model runs - but they are rewritten here so the published pair
     # can never be out of step with each other. It is a small file.
-    _write_parties()
+    _write_parties(payload)
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
     write_json(payload, paths.RUNS / f"{stamp}.json")
 
