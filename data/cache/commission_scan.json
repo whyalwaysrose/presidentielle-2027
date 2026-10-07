@@ -331,6 +331,10 @@
   "extrait": "",
   "verdict": "autre"
  },
+ "10284-pres-barometre-election-v6-ifop-30-septembre.pdf": {
+  "extrait": "tes électorales interrogées, 1027 personnes ont exprimé une intention de vote. Sur toutes les personnes inscrites sur les listes voter in",
+  "verdict": "vote"
+ },
  "10285-pres-observatoire-politique-elabe-1er-octobre.pdf": {
   "extrait": "1 characters extracted",
   "verdict": "illisible"
@@ -346,6 +350,18 @@
  "10288-pres-barometre-popularite-yougov-huffpost-2-octobre.pdf": {
   "extrait": "",
   "verdict": "autre"
+ },
+ "10290-pres-blocages-des-lycees-csa-cnews-4-octobre.pdf": {
+  "extrait": "",
+  "verdict": "autre"
+ },
+ "10291-pres-avenir-jeunesse-ipsos-bva-6-octobre.pdf": {
+  "extrait": "",
+  "verdict": "autre"
+ },
+ "10292-pres-vote-blanc-ifop-6-octobre.pdf": {
+  "extrait": "es électorales interrogées, 1 077 personnes ont exprimé une intention de vote. Sur toutes les personnes inscrites sur les listes électora",
+  "verdict": "vote"
  },
  "9898-pres-ifop-valeurs-actuelles-29-janvier.pdf": {
   "extrait": "",
