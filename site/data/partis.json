@@ -40,9 +40,9 @@
    "candidat_2027": {
     "id": "GA",
     "nom": "Gabriel Attal",
-    "part": 0.07871,
-    "bas": 0.02604,
-    "haut": 0.1904,
+    "part": 0.07946,
+    "bas": 0.02622,
+    "haut": 0.19338,
     "p_candidature": 0.84825,
     "autres": []
    },
@@ -86,10 +86,10 @@
    "candidat_2027": {
     "id": "MLP",
     "nom": "Marine Le Pen",
-    "part": 0.31166,
-    "bas": 0.18459,
-    "haut": 0.47741,
-    "p_candidature": 0.98403,
+    "part": 0.31011,
+    "bas": 0.18571,
+    "haut": 0.47077,
+    "p_candidature": 0.98415,
     "autres": []
    },
    "id": "rn",
@@ -150,9 +150,9 @@
    "candidat_2027": {
     "id": "JLM",
     "nom": "Jean-Luc Mélenchon",
-    "part": 0.14595,
-    "bas": 0.06637,
-    "haut": 0.26995,
+    "part": 0.1462,
+    "bas": 0.0657,
+    "haut": 0.27218,
     "p_candidature": 1.0,
     "autres": []
    },
@@ -246,10 +246,10 @@
    "candidat_2027": {
     "id": "EZ",
     "nom": "Éric Zemmour",
-    "part": 0.03714,
-    "bas": 0.01854,
-    "haut": 0.07336,
-    "p_candidature": 0.95314,
+    "part": 0.03717,
+    "bas": 0.01875,
+    "haut": 0.07303,
+    "p_candidature": 0.95356,
     "autres": []
    },
    "id": "reconquete",
@@ -286,10 +286,10 @@
    "candidat_2027": {
     "id": "BR",
     "nom": "Bruno Retailleau",
-    "part": 0.07356,
-    "bas": 0.03524,
-    "haut": 0.14046,
-    "p_candidature": 0.99766,
+    "part": 0.07285,
+    "bas": 0.03517,
+    "haut": 0.13877,
+    "p_candidature": 0.99767,
     "autres": [
      "David Lisnard"
     ]
@@ -352,10 +352,10 @@
    "candidat_2027": {
     "id": "MT",
     "nom": "Marine Tondelier",
-    "part": 0.03867,
-    "bas": 0.01948,
-    "haut": 0.07545,
-    "p_candidature": 0.9024,
+    "part": 0.03864,
+    "bas": 0.01966,
+    "haut": 0.07538,
+    "p_candidature": 0.90358,
     "autres": []
    },
    "id": "ecologistes",
@@ -410,10 +410,10 @@
    "candidat_2027": {
     "id": "FRo",
     "nom": "Fabien Roussel",
-    "part": 0.02363,
-    "bas": 0.00568,
-    "haut": 0.07982,
-    "p_candidature": 0.95079,
+    "part": 0.02439,
+    "bas": 0.00574,
+    "haut": 0.08279,
+    "p_candidature": 0.95136,
     "autres": []
    },
    "id": "pcf",
@@ -462,10 +462,10 @@
    "candidat_2027": {
     "id": "NDA",
     "nom": "Nicolas Dupont-Aignan",
-    "part": 0.01786,
-    "bas": 0.00888,
-    "haut": 0.03574,
-    "p_candidature": 0.93765,
+    "part": 0.0178,
+    "bas": 0.00898,
+    "haut": 0.03516,
+    "p_candidature": 0.9382,
     "autres": []
    },
    "id": "dlf",
@@ -514,10 +514,10 @@
    "candidat_2027": {
     "id": "FH",
     "nom": "François Hollande",
-    "part": 0.03706,
-    "bas": 0.00835,
-    "haut": 0.10438,
-    "p_candidature": 0.19049,
+    "part": 0.03704,
+    "bas": 0.00812,
+    "haut": 0.10792,
+    "p_candidature": 0.18825,
     "autres": [
      "Olivier Faure"
     ]
@@ -636,10 +636,10 @@
    "candidat_2027": {
     "id": "NA",
     "nom": "Nathalie Arthaud",
-    "part": 0.00723,
-    "bas": 0.00357,
-    "haut": 0.01465,
-    "p_candidature": 0.99151,
+    "part": 0.00724,
+    "bas": 0.00358,
+    "haut": 0.01462,
+    "p_candidature": 0.99166,
     "autres": []
    },
    "id": "lo",
@@ -700,9 +700,9 @@
    "candidat_2027": {
     "id": "EP",
     "nom": "Édouard Philippe",
-    "part": 0.15221,
-    "bas": 0.0652,
-    "haut": 0.28798,
+    "part": 0.1522,
+    "bas": 0.06668,
+    "haut": 0.29055,
     "p_candidature": 0.84818,
     "autres": []
    },
@@ -733,9 +733,9 @@
    "candidat_2027": {
     "id": "RG",
     "nom": "Raphaël Glucksmann",
-    "part": 0.09513,
-    "bas": 0.0445,
-    "haut": 0.17881,
+    "part": 0.09524,
+    "bas": 0.04298,
+    "haut": 0.17931,
     "p_candidature": 0.84934,
     "autres": []
    },
