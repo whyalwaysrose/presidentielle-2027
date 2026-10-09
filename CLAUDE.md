@@ -690,37 +690,53 @@ being fitted; and a duel is an aggregate flow, so this is ecological inference.
 later. `cmd_backtest` passes `duels_2024=None` and says so - that is not an
 omission to tidy up.
 
-## The runoff fit is bimodal across seeds - open, and it fails closed
+## A chain gets stuck in the runoff fit about one run in ten
 
-Found while checking whether the 2024 duels were safe to add; it predates them.
-Four chains per seed:
+**This was recorded here as "the fit is bimodal across seeds". That was wrong,
+and the wrong description cost two failed fixes.** Measured properly on
+2026-10-09 at production settings, with `scripts/check_runoff_convergence.py`:
 
-| seed | duels off | duels on |
-|---|---|---|
-| 1 | **r-hat 1.54, ESS 7**, gamma 6.39 | r-hat 1.01, ESS 469, gamma 3.55 |
-| 2 | r-hat 1.01, ESS 422, gamma 3.71 | r-hat 1.01, ESS 569, gamma 3.58 |
-| 3 | **r-hat 1.54, ESS 7**, gamma 5.78 | **r-hat 1.54, ESS 7**, gamma 5.56 |
-| 4 | r-hat 1.01, ESS 474, gamma 3.72 | r-hat 1.01, ESS 593, gamma 3.55 |
+    1 seed in 10 missed.  That seed:  gamma = [3.72, 3.72, 12.04, 3.75]
 
-About half of seeds settle at gamma near 5.5-6.4 instead of 3.5. The duels
-reduce the rate, they do not remove it.
+Three chains agree to two decimals; a fourth is somewhere else. It is ONE STUCK
+CHAIN, not a second mode, and the difference matters:
 
-**MAE does not catch it.** The seed-3 failure scored 2.16 points against the
-tested matchups - the BEST in the table. So a bad fit looks completely normal
-everywhere a reader can see, while P(win) moves.
+- the stuck chain fits **21 log units worse** - about a billion times less
+  likely - so it is not a rival explanation of anything;
+- its left-right axis is SCRAMBLED: the radical left placed to the right of
+  the socialists, the mainstream right to the left of the centre, roughly 8
+  sigma from its own prior.
 
-Two consequences, both load-bearing:
+**The mechanism.** A chain wanders into high gamma during warm-up, the
+proximity softmax saturates, its gradients flatten, and it can no longer move
+bloc positions back PAST one another. It stays somewhere it strongly disprefers
+because it cannot leave.
 
-1. `diagnostics.runoff_fit` carries `max_rhat` and `min_ess_bulk`. Before this,
-   `diagnostics.max_rhat` covered only the FIRST-ROUND model - the transfer fit
-   that decides the presidency was published unchecked. Do not remove them.
-2. `presidentielle run` **exits 2** rather than publish an unconverged runoff
-   fit, unless `--allow-unconverged`. Same principle as the roster failing
-   closed: stale but correct beats fresh but quietly wrong. Re-running usually
-   clears it, because it is seed-dependent.
+**What the pipeline does.** `run` retries the runoff fit with another seed, up
+to three times, logs each attempt and publishes them in
+`diagnostics.runoff_fit.tentatives`. More than one entry means a chain got
+stuck. If every attempt misses it still fails closed. Re-running past a state
+that is a billion times less likely is not seed-shopping, and the number above
+is why.
 
-**The cause is not known.** If you go looking, start by reading the rejected
-hypothesis below so you do not repeat it.
+**Goodness of fit does not catch this** - the stuck chain's MAE is
+unremarkable. Only r-hat does.
+
+**Three fixes tried and rejected, so nobody repeats them:**
+
+1. `initvals` - **nutpie ignores them.** Output identical to baseline, digit
+   for digit, including the 12.04. A fix that changes nothing looks like
+   progress, which is worse than no fix.
+2. An `ordered` transform on the positions, to make the scrambled state
+   unreachable - nutpie then fails to initialise at all. It would also bind on
+   real data: the healthy fit puts the centre slightly LEFT of the socialists
+   (-0.142 against -0.113), so the textbook ordering is not quite what the data
+   says.
+3. Removing the scale ridge (centring and rescaling the position vector) - no
+   effect on the miss rate. See "Measured, then rejected" below.
+
+A real reparameterisation that keeps nutpie happy would be better than
+retrying. Until then, the pipeline absorbs it and says so.
 
 ## Measured, then rejected
 
@@ -759,7 +775,7 @@ and each has a script that reproduces it.
   missing Melenchon's late surge. It does not. **That miss remains
   unexplained**, and the survey weighting is not where to look.
 
-- **The scale ridge as the cause of the bimodal runoff fit.**
+- **The scale ridge as the cause of the stuck runoff chain.**
   `gamma * (x_j - x_k)^2` depends only on pairwise distances, so shifting every
   position, or rescaling the positions against gamma, leaves the likelihood
   exactly unchanged. Two redundant directions, with only the position prior

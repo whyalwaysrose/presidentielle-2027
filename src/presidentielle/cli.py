@@ -303,6 +303,54 @@ def cmd_calibrate(args) -> int:
     return 0
 
 
+# The geometry parameters, the ones a stuck chain scrambles. sigma terms and
+# the non-centred z's are excluded: they are nuisance and converge regardless.
+RUNOFF_GEOMETRY = ["positions", "gamma", "abstain", "delta_front_republicain"]
+RUNOFF_MAX_RHAT = 1.05
+RUNOFF_MIN_ESS = 200
+# Co-prime-ish stride, so retries land nowhere near each other.
+RUNOFF_SEED_STRIDE = 7919
+
+
+def runoff_convergence(idata) -> tuple[float, float]:
+    """(max r-hat, min bulk ESS) over the runoff model's geometry."""
+    import arviz
+
+    summary = arviz.summary(idata, var_names=RUNOFF_GEOMETRY)
+    return float(summary["r_hat"].max()), float(summary["ess_bulk"].min())
+
+
+def fit_until_converged(fit, check, first_seed: int, max_attempts: int = 3):
+    """Fit, and refit with another seed while a chain is stuck.
+
+    Separated from `cmd_run` so the RETRY ITSELF can be tested. An untested
+    retry that silently never retries would reproduce the bug it exists to
+    cover, which is how the failure notifier in `daily.yml` came to be half
+    blind.
+
+    Returns the last fit and the log of every attempt - which is published, so
+    a retry is visible rather than hidden.
+    """
+    attempts: list[dict] = []
+    idata = None
+    for attempt in range(max_attempts):
+        seed = first_seed + attempt * RUNOFF_SEED_STRIDE
+        idata = fit(seed)
+        rhat, ess = check(idata)
+        attempts.append({"seed": seed, "rhat": round(rhat, 3), "ess": int(ess)})
+        if rhat <= RUNOFF_MAX_RHAT and ess >= RUNOFF_MIN_ESS:
+            if attempt:
+                log.info("runoff fit converged on attempt %d (seed %d)",
+                         attempt + 1, seed)
+            break
+        log.warning(
+            "runoff fit did not converge (r-hat %.3f, bulk ESS %d) - a chain is "
+            "stuck, which happens about one run in ten; retrying with another seed",
+            rhat, ess,
+        )
+    return idata, attempts
+
+
 def _fail(message: str) -> int:
     print(f"error: {message}", file=sys.stderr)
     return 2
@@ -629,19 +677,47 @@ def cmd_run(args) -> int:
             # the alternative is a quietly different model.
             log.warning("no 2024 duels (%s); runoff rests on 2022 and 2027", exc)
 
-    rmodel = build_runoff_model(
-        rdata, cfg, data.bloc_keys, transfers=transfers, duels_2024=duels_2024
-    )
-    with rmodel:
-        ridata = __import__("pymc").sample(
-            draws=cfg.sampling.draws,
-            tune=cfg.sampling.tune,
-            chains=cfg.sampling.chains,
-            target_accept=cfg.sampling.target_accept,
-            random_seed=cfg.sampling.seed + 1,
-            progressbar=not args.quiet,
-            nuts_sampler="nutpie",
+    # RETRY ON A STUCK CHAIN, with the evidence for why that is legitimate.
+    #
+    # About one run in ten, one chain of four wanders into high gamma during
+    # warm-up, the proximity softmax saturates, its gradients flatten and it
+    # can no longer move bloc positions back past one another. Measured on
+    # 2026-10-09 (`scripts/check_runoff_convergence.py`): three chains at gamma
+    # 3.72 and one stuck at 12.04, with the left-right axis SCRAMBLED - the
+    # radical left placed right of the socialists, the mainstream right left of
+    # the centre.
+    #
+    # That is not a rival explanation of the data. The stuck chain fits 21 log
+    # units worse - about a billion times less likely - and sits roughly 8
+    # sigma from its own prior. It is a chain that cannot get out, not a mode
+    # worth averaging over, so re-running past it is not seed-shopping.
+    #
+    # Two structural fixes were tried first and rejected on evidence: passing
+    # `initvals` does nothing because nutpie ignores them (identical output,
+    # digit for digit), and an `ordered` transform on the positions makes
+    # nutpie fail to initialise at all. Until a real reparameterisation is
+    # found, the pipeline absorbs it rather than the model.
+    #
+    # Each attempt is logged and the count is published. If every attempt
+    # misses, the run still fails closed below.
+    import pymc as pm
+
+    def _fit(seed: int):
+        rmodel = build_runoff_model(
+            rdata, cfg, data.bloc_keys, transfers=transfers, duels_2024=duels_2024
         )
+        with rmodel:
+            return pm.sample(
+                draws=cfg.sampling.draws,
+                tune=cfg.sampling.tune,
+                chains=cfg.sampling.chains,
+                target_accept=cfg.sampling.target_accept,
+                random_seed=seed,
+                progressbar=not args.quiet,
+                nuts_sampler="nutpie",
+            )
+
+    ridata, attempts = fit_until_converged(_fit, runoff_convergence, cfg.sampling.seed + 1)
     rp = ridata.posterior
     # Does the transfer model reproduce the runoffs it was fitted to? This is
     # the check that matters most for P(win): the runoff decides the
@@ -650,18 +726,12 @@ def cmd_run(args) -> int:
     _mu = rp["mu"].mean(("chain", "draw")).values
     _resid = _mu - rdata.y
     _worst = int(np.argmax(np.abs(_resid)))
-    # And did the runoff model CONVERGE? This was unmonitored until it was
-    # caught misbehaving: `max_rhat` above covers only the first-round model,
-    # so the transfer fit - which decides P(win) - was published for weeks with
-    # nobody looking. Without the 2024 duels it is weakly identified and can
-    # wander to a second mode (measured: r-hat 1.54, bulk ESS 7, gamma 6.4
-    # against a usual 3.5). A bad fit here moves the headline and nothing else
-    # on the page looks wrong, which is exactly the class of failure this
-    # project keeps finding the hard way.
-    _rsum = az.summary(
-        ridata,
-        var_names=["positions", "gamma", "abstain", "delta_front_republicain"],
-    )
+    # And did the runoff model CONVERGE? `max_rhat` above covers only the
+    # first-round model, so the transfer fit - which decides P(win) - was
+    # published for weeks with nobody looking. A bad fit here moves the
+    # headline while nothing else on the page looks wrong: goodness of fit
+    # does NOT catch it, because the stuck chain's MAE is unremarkable.
+    _rsum = az.summary(ridata, var_names=RUNOFF_GEOMETRY)
     runoff_fit = {
         "mae_points": round(float(np.abs(_resid).mean()) * 100, 2),
         "bias_points": round(float(_resid.mean()) * 100, 2),
@@ -669,8 +739,14 @@ def cmd_run(args) -> int:
         "worst_error_points": round(float(_resid[_worst]) * 100, 2),
         "max_rhat": round(float(_rsum["r_hat"].max()), 3),
         "min_ess_bulk": int(_rsum["ess_bulk"].min()),
+        # Published so a retry is visible rather than hidden: more than one
+        # entry means a chain got stuck and the fit was re-run.
+        "tentatives": attempts,
     }
-    if runoff_fit["max_rhat"] > 1.05 or runoff_fit["min_ess_bulk"] < 200:
+    # The same thresholds the retry uses, so the two cannot drift apart and
+    # leave a run retrying three times and then publishing anyway.
+    if (runoff_fit["max_rhat"] > RUNOFF_MAX_RHAT
+            or runoff_fit["min_ess_bulk"] < RUNOFF_MIN_ESS):
         # FAILS CLOSED, like an unreadable roster. This fit is bimodal across
         # seeds - see runoff.py - and a run that lands in the second mode
         # reports a materially different P(win) while every other number on the

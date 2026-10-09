@@ -398,48 +398,41 @@ ecological inference: it says where a bloc's votes went, never who moved.
 These duels are **excluded from the backtest**, which replays 2022. They
 happened two years later.
 
-### The runoff fit is bimodal across seeds, and that is unresolved
+### A chain gets stuck in the runoff fit about one run in ten
 
-Found while checking whether the 2024 duels were safe to add, and it predates
-them. Four chains per seed, 500 draws:
+Found while checking whether the 2024 duels were safe to add, and originally
+written up here as the fit being *bimodal*. That was wrong. Measured at
+production settings across ten seeds on 2026-10-09:
 
-| seed | duels off | duels on |
-|---|---|---|
-| 1 | **r-hat 1.54, ESS 7**, gamma 6.39 | r-hat 1.01, ESS 469, gamma 3.55 |
-| 2 | r-hat 1.01, ESS 422, gamma 3.71 | r-hat 1.01, ESS 569, gamma 3.58 |
-| 3 | **r-hat 1.54, ESS 7**, gamma 5.78 | **r-hat 1.54, ESS 7**, gamma 5.56 |
-| 4 | r-hat 1.01, ESS 474, gamma 3.72 | r-hat 1.01, ESS 593, gamma 3.55 |
+| | |
+|---|---|
+| seeds that missed | 1 of 10 |
+| that seed's per-chain γ | 3.72, 3.72, **12.04**, 3.75 |
+| how much worse the odd chain fits | **21 log units** |
+| its bloc ordering | scrambled — radical left right of the socialists |
 
-Roughly half of seeds land in a second mode at γ near 5.5–6.4 rather than the
-usual 3.5. The duels reduce the rate but do not remove it.
+Three chains agree to two decimals and one sits elsewhere, fitting about a
+billion times worse and roughly 8σ from its own prior. That is a chain that
+cannot get out, not a second explanation of the data: during warm-up it reaches
+a high γ, the proximity softmax saturates, the gradients flatten, and it can no
+longer move bloc positions past one another.
 
-**Goodness of fit does not detect this.** The seed-3 failure had an MAE of
-2.16 points against the tested matchups — the *best* in the table, better than
-any converged fit. A bad run therefore looks entirely normal in every figure
-the page shows, while P(win) moves. That combination is why
-`diagnostics.runoff_fit` now carries `max_rhat` and `min_ess_bulk`, and why
-`presidentielle run` **exits 2 rather than publishing** a runoff fit that has
-not converged, unless `--allow-unconverged` is passed.
+`presidentielle run` therefore refits with another seed, up to three times,
+and publishes every attempt in `diagnostics.runoff_fit.tentatives`; if all
+three miss it still refuses to publish. Discarding a state a billion times less
+likely is not seed-shopping — but the published attempt count is there so the
+reader can see when it happened.
 
-**This was unmonitored before.** `diagnostics.max_rhat` covers only the
-first-round model, so the transfer fit — the one that decides the presidency —
-was published without anyone checking it had converged, at the same four chains
-where it fails perhaps half the time. Whether any past published run was
-affected cannot be recovered after the fact.
+**Goodness of fit does not detect this.** The stuck chain's error against the
+tested matchups is unremarkable; only r-hat shows it. That is why
+`diagnostics.runoff_fit` carries r-hat and bulk ESS at all.
 
-**One hypothesis has been tried and rejected.** `γ·(x_j − x_k)²` depends only
-on pairwise distances, so shifting every position, or rescaling the positions
-against γ, leaves the likelihood exactly unchanged — two genuinely redundant
-directions that only the position prior stands on. The failing fits were
-consistent with it: they showed positions compressed by about
-√(γ_bad/γ_good). Removing both directions by construction changed the failure
-rate not at all, and on one seed made it worse — taking the duels-off failure
-rate from two seeds in four to three. The arithmetic that suggested the
-diagnosis was a coincidence, and the reparameterisation was reverted rather
-than kept on a falsified rationale.
-
-So the cause is still open. What is closed is the silence: a bad fit can no
-longer reach the page.
+Three fixes were tried and rejected on evidence, recorded so they are not
+repeated: `initvals` (nutpie ignores them — the output was identical digit for
+digit), an `ordered` transform on the positions (nutpie then fails to
+initialise, and it would bind on real data, where the centre sits a hair left
+of the socialists), and removing the scale ridge (no effect).
+`scripts/check_runoff_convergence.py` reproduces all of it.
 
 ### Checking it against the polls it was fitted to
 
