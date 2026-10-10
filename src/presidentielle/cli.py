@@ -574,6 +574,13 @@ def cmd_run(args) -> int:
     # the same directory, and 'most recent run' would then mean this one.
     previous = changes.previous_run(paths.RUNS)
     cfg = load_model_config()
+    if getattr(args, "seed", None):
+        # Same data, different randomness. The point is to see how much of a
+        # change between two runs is the model and how much is the sampler and
+        # the simulation; a published run never passes this.
+        from dataclasses import replace as _replace
+        cfg = _replace(cfg, sampling=_replace(cfg.sampling, seed=args.seed))
+        log.warning("SEED OVERRIDE: %d - for reproducibility checks", args.seed)
     if args.draws:
         # Smoke-test override. Never used for a published run: the workflow
         # calls `run` with no overrides so the config alone decides.
@@ -692,11 +699,11 @@ def cmd_run(args) -> int:
     # sigma from its own prior. It is a chain that cannot get out, not a mode
     # worth averaging over, so re-running past it is not seed-shopping.
     #
-    # Two structural fixes were tried first and rejected on evidence: passing
-    # `initvals` does nothing because nutpie ignores them (identical output,
-    # digit for digit), and an `ordered` transform on the positions makes
-    # nutpie fail to initialise at all. Until a real reparameterisation is
-    # found, the pipeline absorbs it rather than the model.
+    # SINCE FIXED AT THE SOURCE: `positions` is now drawn with an `ordered`
+    # transform (see runoff.py), which took the miss rate from 1 in 10 to 0 in
+    # 10 and roughly doubled bulk ESS. This retry is kept as a backstop and
+    # should essentially never fire; if it starts firing, something else has
+    # changed. `initvals` remain useless - nutpie ignores them.
     #
     # Each attempt is logged and the count is published. If every attempt
     # misses, the run still fails closed below.
@@ -1124,6 +1131,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     run.add_argument("--quiet", action="store_true", help="no sampling progress bar")
     run.add_argument("--draws", type=int, help="override draws/tune for a smoke test")
+    run.add_argument(
+        "--seed", type=int,
+        help="override the sampling seed, to measure how much the published "
+             "figures move between runs on identical data",
+    )
     run.add_argument(
         "--scenario",
         help="comma-separated candidate ids to fix the ballot, e.g. MLP,EP,JLM,BR,RG",

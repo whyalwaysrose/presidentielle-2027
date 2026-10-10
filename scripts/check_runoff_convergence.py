@@ -15,8 +15,8 @@ WHAT IT MEASURES
 2. **What the stuck chain is**, when one appears: its log-likelihood against
    the healthy chains', and its bloc positions beside theirs.
 
-WHAT IT FOUND, 2026-10-09
--------------------------
+WHAT IT FOUND, 2026-10-09 (before the ordered axis; re-run it to see today's)
+-----------------------------------------------------------------------------
 One seed in ten missed. In that run three chains sat at gamma 3.72, 3.72, 3.75
 and one at 12.04. The stuck chain fitted **21 log units worse** - about a
 billion times less likely - and had the left-right axis scrambled: the radical
@@ -33,11 +33,15 @@ FIXES TRIED AND REJECTED, so nobody repeats them:
 * **`initvals`** - nutpie ignores them. The output was identical to baseline
   digit for digit, including the stuck chain's 12.04. A "fix" that changes
   nothing is worse than none, because it looks like progress.
-* **An `ordered` transform on the positions** - would make the scrambled state
-  unreachable, and nutpie then fails to initialise at all ("All initialization
-  points failed"). It would also bind on real data: the healthy fit puts the
-  centre a hair to the LEFT of the socialists (-0.142 against -0.113), so the
-  known ordering is not quite what the data says.
+* **An `ordered` transform on the positions** - THIS IS NOW THE FIX, and this
+  note used to say the opposite. The first attempt ordered the vector in the
+  ROSTER's order, which is not monotonic (socialiste -0.35 is listed before
+  ecologiste -0.45), so the transform got a non-increasing starting point and
+  nutpie reported "All initialization points failed". That was recorded as
+  nutpie being incompatible. It was not. Ordered in SORTED space and permuted
+  back, the miss rate goes to 0 in 10 and bulk ESS roughly doubles. The fear
+  that it would bind on real data was also unfounded: the fit resolves the
+  near-tie between the centre and the socialists in the expected order.
 * Earlier, and separately, **removing the scale ridge** (centring and scaling
   the position vector): no effect on the miss rate. See CLAUDE.md.
 

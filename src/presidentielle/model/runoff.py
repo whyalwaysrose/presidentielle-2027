@@ -59,6 +59,7 @@ from dataclasses import dataclass
 import numpy as np
 import pymc as pm
 import pytensor.tensor as pt
+from pymc.distributions.transforms import ordered
 
 from ..config import ModelConfig, Roster
 
@@ -295,7 +296,40 @@ def build_runoff_model(
         # Removing both by construction changed the failure rate not at all
         # (same seeds, same r-hat). The arithmetic that suggested it was a
         # coincidence. See CLAUDE.md, "Measured, then rejected".
-        positions = pm.Normal("positions", mu=prior_x, sigma=0.12, dims="bloc")
+        # ORDERED ALONG THE AXIS, which is what stops a chain getting stuck.
+        #
+        # The failure was never a second mode: one chain in ten wanders into
+        # high gamma during warm-up, the proximity softmax saturates, its
+        # gradients flatten, and it can no longer move bloc positions back PAST
+        # one another. It then sits somewhere it strongly disprefers - 21 log
+        # units worse, about 8 sigma from its own prior - with the left-right
+        # axis scrambled: the radical left to the RIGHT of the socialists.
+        #
+        # Ordering the positions makes that state unreachable rather than
+        # merely improbable. It is also the assumption the model already rests
+        # on: the whole content of a proximity model is a left-right axis, and
+        # nothing in 54 matchups can establish that the Greens sit right of the
+        # Socialists.
+        #
+        # ORDERED IN SORTED SPACE, NOT ROSTER ORDER. `PRIOR_POSITIONS` is not
+        # monotonic in the roster's own order - the Socialists (-0.35) are
+        # listed before the Greens (-0.45) - so the variable is defined over
+        # the blocs sorted by position and permuted back. An earlier attempt
+        # that skipped this handed the transform a non-increasing starting
+        # point, and nutpie reported "All initialization points failed", which
+        # was recorded here as nutpie being incompatible. It was not; it was
+        # this.
+        order = np.argsort(prior_x, kind="stable")
+        back = np.argsort(order, kind="stable")
+        model.add_coord("bloc_ordonne", [bloc_keys[i] for i in order])
+        ordered_positions = pm.Normal(
+            "positions_ordonnees",
+            mu=prior_x[order], sigma=0.12, dims="bloc_ordonne",
+            transform=ordered, initval=prior_x[order],
+        )
+        positions = pm.Deterministic(
+            "positions", ordered_positions[back], dims="bloc"
+        )
         gamma = pm.HalfNormal("gamma", sigma=3.0)
         abstain = pm.Normal("abstain", mu=0.0, sigma=1.0, dims="bloc")
 

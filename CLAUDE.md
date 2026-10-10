@@ -690,53 +690,79 @@ being fitted; and a duel is an aggregate flow, so this is ecological inference.
 later. `cmd_backtest` passes `duels_2024=None` and says so - that is not an
 omission to tidy up.
 
-## A chain gets stuck in the runoff fit about one run in ten
+## How reproducible the published number is: about 0.1 of a point
 
-**This was recorded here as "the fit is bimodal across seeds". That was wrong,
-and the wrong description cost two failed fixes.** Measured properly on
-2026-10-09 at production settings, with `scripts/check_runoff_convergence.py`:
+Measured 2026-10-10, and never measured before that: the pipeline runs on one
+fixed seed, so two runs of identical code give identical output and the
+run-to-run spread was simply invisible. `presidentielle run --seed N` exists to
+make it visible; a published run never passes it.
 
-    1 seed in 10 missed.  That seed:  gamma = [3.72, 3.72, 12.04, 3.75]
+Same data, same code, different seed, 80 000 simulated worlds:
 
-Three chains agree to two decimals; a fourth is somewhere else. It is ONE STUCK
-CHAIN, not a second mode, and the difference matters:
+| | seed A | seed B |
+|---|---|---|
+| Le Pen | 56.1% | 56.2% |
+| Philippe | 25.6% | 26.0% |
+| Melenchon | 7.4% | 7.8% |
 
-- the stuck chain fits **21 log units worse** - about a billion times less
-  likely - so it is not a rival explanation of anything;
-- its left-right axis is SCRAMBLED: the radical left placed to the right of
-  the socialists, the mainstream right to the left of the centre, roughly 8
-  sigma from its own prior.
+So the leader is stable to about a tenth of a point and the rest to about half
+a point. **Use this before attributing any movement to a model change**: the
+ordered axis moved Le Pen 3.5 points, which is an order of magnitude outside
+this, so it was the model. A half-point wobble in a minor candidate is not.
 
-**The mechanism.** A chain wanders into high gamma during warm-up, the
+It also sets what the page can honestly claim. One decimal place on the leader
+is justified; on a candidate at 4% it is noise, which is a reason to be careful
+about ever reporting those to a decimal.
+
+## The runoff axis is ORDERED, and that is what fixed the stuck chain
+
+**History worth knowing, because two of the three things written here before
+were wrong.** The fit was first recorded as "bimodal across seeds". It was not:
+measured at production settings, one seed in ten missed, and in that seed three
+chains sat at gamma 3.72 while a fourth was stuck at 12.04, fitting **21 log
+units worse** - about a billion times less likely - with the left-right axis
+SCRAMBLED, the radical left placed to the right of the socialists, roughly 8
+sigma from its own prior. A chain wanders into high gamma during warm-up, the
 proximity softmax saturates, its gradients flatten, and it can no longer move
-bloc positions back PAST one another. It stays somewhere it strongly disprefers
-because it cannot leave.
+positions back PAST one another.
 
-**What the pipeline does.** `run` retries the runoff fit with another seed, up
-to three times, logs each attempt and publishes them in
-`diagnostics.runoff_fit.tentatives`. More than one entry means a chain got
-stuck. If every attempt misses it still fails closed. Re-running past a state
-that is a billion times less likely is not seed-shopping, and the number above
-is why.
+**The fix: `positions` is drawn with an `ordered` transform.** The scrambled
+state is now unreachable rather than merely improbable, which is also the
+assumption the model already rested on - the entire content of a proximity
+model is a left-right axis, and nothing in 54 matchups can establish that the
+Greens sit right of the Socialists. Measured over ten seeds:
 
-**Goodness of fit does not catch this** - the stuck chain's MAE is
-unremarkable. Only r-hat does.
+| | before | after |
+|---|---|---|
+| seeds missed | 1 of 10 | **0 of 10** |
+| bulk ESS | 800-1072 (7 on the bad seed) | **1429-1942** |
+| per-chain gamma | 3.66-3.81, plus a 12.04 | 3.80-3.92 |
 
-**Three fixes tried and rejected, so nobody repeats them:**
+**ORDERED IN SORTED SPACE, NOT ROSTER ORDER - this is the trap.**
+`PRIOR_POSITIONS` is monotonic in its own order but the ROSTER is not: it lists
+socialiste (-0.35) before ecologiste (-0.45). So the variable is defined over
+blocs sorted by position and permuted back to roster order. An earlier attempt
+skipped that, handed the transform a non-increasing starting point, and nutpie
+answered "All initialization points failed" - which was then written up here as
+**"nutpie cannot do ordered transforms"**. That was wrong and would have sent
+the next person down a dead end. nutpie is fine with it; the starting point was
+invalid.
 
-1. `initvals` - **nutpie ignores them.** Output identical to baseline, digit
-   for digit, including the 12.04. A fix that changes nothing looks like
-   progress, which is worse than no fix.
-2. An `ordered` transform on the positions, to make the scrambled state
-   unreachable - nutpie then fails to initialise at all. It would also bind on
-   real data: the healthy fit puts the centre slightly LEFT of the socialists
-   (-0.142 against -0.113), so the textbook ordering is not quite what the data
-   says.
-3. Removing the scale ridge (centring and rescaling the position vector) - no
-   effect on the miss rate. See "Measured, then rejected" below.
+`tests/test_runoff.py` pins the transform, the permutation round-trip and the
+left-to-right prior. It checks the MODEL GRAPH, because
+`sample_prior_predictive` ignores transforms and this suite must not sample.
 
-A real reparameterisation that keeps nutpie happy would be better than
-retrying. Until then, the pipeline absorbs it and says so.
+**The retry stays as a backstop.** `run` still refits with another seed if a
+fit misses (`diagnostics.runoff_fit.tentatives` records every attempt) and
+still fails closed if all three miss. With the ordering in place it should
+essentially never fire - if it starts firing, something else has changed.
+
+**Goodness of fit never caught any of this**: the stuck chain's MAE was
+unremarkable. Only r-hat did.
+
+**One thing that remains true:** `initvals` do nothing, because nutpie ignores
+them. The output came back identical to baseline digit for digit, including the
+12.04, and was only caught by diffing against the baseline.
 
 ## Measured, then rejected
 

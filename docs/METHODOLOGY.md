@@ -398,41 +398,42 @@ ecological inference: it says where a bloc's votes went, never who moved.
 These duels are **excluded from the backtest**, which replays 2022. They
 happened two years later.
 
-### A chain gets stuck in the runoff fit about one run in ten
+### The axis is ordered, which is what stopped chains getting stuck
 
-Found while checking whether the 2024 duels were safe to add, and originally
-written up here as the fit being *bimodal*. That was wrong. Measured at
-production settings across ten seeds on 2026-10-09:
+The runoff fit used to miss about one run in ten, and this document described
+it as *bimodal*. That was wrong. Measured at production settings across ten
+seeds: three chains agreed to two decimals and a fourth sat at γ = 12.04,
+fitting **21 log units worse** — roughly a billion times less likely — with the
+left–right axis scrambled, the radical left placed to the right of the
+Socialists and about 8σ from its own prior.
 
-| | |
-|---|---|
-| seeds that missed | 1 of 10 |
-| that seed's per-chain γ | 3.72, 3.72, **12.04**, 3.75 |
-| how much worse the odd chain fits | **21 log units** |
-| its bloc ordering | scrambled — radical left right of the socialists |
+The mechanism is saturation. A chain reaches a high γ during warm-up, the
+proximity softmax becomes near-deterministic, its gradients flatten, and it can
+no longer move bloc positions *past* one another. It then stays somewhere it
+strongly disprefers because it cannot leave.
 
-Three chains agree to two decimals and one sits elsewhere, fitting about a
-billion times worse and roughly 8σ from its own prior. That is a chain that
-cannot get out, not a second explanation of the data: during warm-up it reaches
-a high γ, the proximity softmax saturates, the gradients flatten, and it can no
-longer move bloc positions past one another.
+`positions` is therefore drawn with an **ordered** transform, over the blocs
+sorted by position and permuted back. That makes the scrambled state
+unreachable rather than merely unlikely — and it is the assumption the model
+already rested on, since the whole content of a proximity model is a left–right
+axis. Nothing in 54 hypothetical matchups could establish that the Greens sit
+to the right of the Socialists.
 
-`presidentielle run` therefore refits with another seed, up to three times,
-and publishes every attempt in `diagnostics.runoff_fit.tentatives`; if all
-three miss it still refuses to publish. Discarding a state a billion times less
-likely is not seed-shopping — but the published attempt count is there so the
-reader can see when it happened.
+| | before | after |
+|---|---|---|
+| seeds that missed | 1 of 10 | **0 of 10** |
+| bulk ESS | 800–1072 (7 on the bad seed) | **1429–1942** |
+| per-chain γ | 3.66–3.81, plus one at 12.04 | 3.80–3.92 |
 
-**Goodness of fit does not detect this.** The stuck chain's error against the
-tested matchups is unremarkable; only r-hat shows it. That is why
-`diagnostics.runoff_fit` carries r-hat and bulk ESS at all.
+The published forecast did not move. `presidentielle run` still refits with
+another seed if a fit misses and still refuses to publish if three do, and
+every attempt is recorded in `diagnostics.runoff_fit.tentatives`; with the
+ordering in place that backstop should never fire.
 
-Three fixes were tried and rejected on evidence, recorded so they are not
-repeated: `initvals` (nutpie ignores them — the output was identical digit for
-digit), an `ordered` transform on the positions (nutpie then fails to
-initialise, and it would bind on real data, where the centre sits a hair left
-of the socialists), and removing the scale ridge (no effect).
-`scripts/check_runoff_convergence.py` reproduces all of it.
+**Goodness of fit never detected any of this** — the stuck chain's error
+against the tested matchups was unremarkable. Only r-hat showed it, which is
+why `diagnostics.runoff_fit` carries r-hat and bulk ESS at all.
+`scripts/check_runoff_convergence.py` reproduces the measurement.
 
 ### Checking it against the polls it was fitted to
 

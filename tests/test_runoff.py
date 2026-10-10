@@ -183,3 +183,75 @@ def test_the_position_prior_still_orders_the_blocs():
     pos = prior.prior["positions"].values.reshape(-1, K)
     assert (pos[:, BLOCS.index("extreme_gauche")] < pos[:, RN]).all()
     assert pos[:, GAUCHE].mean() < pos[:, CENTRE].mean() < pos[:, RN].mean()
+
+
+# ------------------------------------------------------- the ordered axis
+
+
+def test_the_axis_is_ordered_by_construction():
+    """THE fix for the stuck chain, and the reason it works.
+
+    One run in ten used to land a chain at gamma 12 with the left-right axis
+    scrambled - the radical left placed to the RIGHT of the socialists - 21 log
+    units worse than its siblings and unable to climb back, because at that
+    gamma the proximity softmax saturates and positions can no longer move past
+    one another. Ordering them makes that state unreachable rather than merely
+    improbable: the miss rate went from 1 in 10 to 0 in 10, and bulk ESS from
+    roughly 900 to 1500.
+
+    Checked on the MODEL GRAPH, not on draws: `sample_prior_predictive` ignores
+    transforms (forward sampling bypasses them), and this suite does not sample
+    - see CLAUDE.md.
+    """
+    from pymc.distributions.transforms import Ordered
+
+    from presidentielle.config import load_model_config
+    from presidentielle.model.runoff import build_runoff_model
+
+    model = build_runoff_model(_tiny_runoff_data(), load_model_config(), BLOCS)
+    ordered_rv = next(
+        (rv for rv in model.free_RVs if rv.name == "positions_ordonnees"), None
+    )
+    assert ordered_rv is not None, "the ordered axis variable is gone"
+    assert isinstance(model.rvs_to_transforms[ordered_rv], Ordered), (
+        "positions_ordonnees has lost its ordering transform - a chain can "
+        "scramble the axis again"
+    )
+    assert "positions" in {d.name for d in model.deterministics}, (
+        "everything downstream reads `positions`; it must survive as a "
+        "deterministic in the roster's own order"
+    )
+
+
+def test_the_ordering_is_applied_in_sorted_space_not_roster_order():
+    """The subtlety that cost a wrongly abandoned fix.
+
+    The prior positions are monotonic in `PRIOR_POSITIONS`' own order but NOT
+    in the ROSTER's, which lists the socialists (-0.35) before the greens
+    (-0.45). Ordering the vector as the roster lists it would assert something
+    false, and handing a transform a non-increasing starting point makes nutpie
+    fail to initialise at all - which was once recorded here as nutpie being
+    unable to do ordered transforms. It was this instead.
+    """
+    from presidentielle.config import load_roster
+
+    roster_order = list(load_roster().blocs)
+    prior = np.array([PRIOR_POSITIONS[b] for b in roster_order])
+    assert not (np.diff(prior) > 0).all(), (
+        "the roster's bloc order is monotonic now, so the permutation may be "
+        "removable - but check the sampler still initialises before removing it"
+    )
+    order = np.argsort(prior, kind="stable")
+    assert (np.diff(prior[order]) > 0).all(), "sorted space must be increasing"
+    # The permutation has to round-trip, or positions attach to the wrong blocs.
+    back = np.argsort(order, kind="stable")
+    assert (prior[order][back] == prior).all()
+
+
+def test_the_prior_still_orders_the_blocs_left_to_right():
+    """Ordering is only meaningful against the right axis: if these priors were
+    ever reshuffled, the constraint would enforce a different politics."""
+    assert PRIOR_POSITIONS["extreme_gauche"] < PRIOR_POSITIONS["gauche_radicale"]
+    assert PRIOR_POSITIONS["gauche_radicale"] < PRIOR_POSITIONS["centre"]
+    assert PRIOR_POSITIONS["centre"] < PRIOR_POSITIONS["droite"]
+    assert PRIOR_POSITIONS["droite"] < PRIOR_POSITIONS["rn"]
