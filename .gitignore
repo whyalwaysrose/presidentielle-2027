@@ -11,3 +11,7 @@ __pycache__/
 # reproducible offline, keeps `pytest` hermetic (the suite asserts the roster
 # covers every polled candidate, and would otherwise have to hit the network),
 # and gives the daily workflow a previous state to diff against.
+
+# Scratch output from reproducibility checks (presidentielle run --seed).
+*.tmp.json
+*.tmp.txt
