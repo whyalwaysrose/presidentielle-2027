@@ -43,8 +43,12 @@
   /* The same data the chart draws, as a table. Hidden visually, not from
      assistive technology - display:none or hidden would remove it from both. */
   function dataTable(caption, headers, rows) {
+    /* The class goes on a wrapping <div>, not on the table: see style.css.
+       A table ignores `width: 1px`, so hiding it that way left a box wide
+       enough to scroll the whole page sideways on a phone. */
+    var wrap = document.createElement('div');
+    wrap.className = 'sr-only';
     var table = document.createElement('table');
-    table.className = 'sr-only';
     var cap = document.createElement('caption');
     cap.textContent = caption;
     table.appendChild(cap);
@@ -72,7 +76,8 @@
       tbody.appendChild(tr);
     });
     table.appendChild(tbody);
-    return table;
+    wrap.appendChild(table);
+    return wrap;
   }
 
   function el(name, attrs, text) {

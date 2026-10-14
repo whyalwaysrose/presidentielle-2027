@@ -220,6 +220,55 @@ def test_an_uncorroborated_declaration_is_ignored_and_reported(setup, candidacie
         assert (before < threshold) == (cid in withf.uncorroborated), cid
 
 
+# The threshold is an asserted number, so what makes it safe is not its value
+# but the empty space around it. METHODOLOGY.md says a test fails if anyone
+# lands near the line; this is that test.
+CORROBORATION_MARGIN = 0.10
+
+
+def test_nobody_sits_near_the_corroboration_threshold(setup, candidacies):
+    """0.25 is a hand-picked number deciding whether a declared candidate
+    appears on the ballot at all, so it would be a poor one if a candidate sat
+    just either side of it. They do not: the testing frequencies cluster at the
+    extremes, and the threshold floats in a wide gap between them.
+
+    When this fails, the right fix is usually NOT to nudge the threshold - that
+    would be fitting the rule to one person. Decide the close case explicitly
+    in `field.overrides`, which outranks both signals."""
+    cfg, roster, hyps = setup
+    threshold = cfg.field_.declaration_corroboration
+    facts, _ = hard_overrides(
+        candidacies, as_of=AS_OF, declared_floor=cfg.field_.declared_floor
+    )
+    plain = build_ballot_model(hyps, cfg=cfg, roster=roster, as_of=AS_OF, facts=None)
+
+    tested = {}
+    for cid, v in facts.items():
+        if v <= 0:
+            continue  # a withdrawal never consults the threshold
+        try:
+            tested[cid] = _p_on_ballot(plain, cid)
+        except KeyError:
+            continue  # declared but never polled; nothing to floor
+
+    below = {c: p for c, p in tested.items() if p < threshold}
+    above = {c: p for c, p in tested.items() if p >= threshold}
+    assert below and above, "need declarations on both sides to test the gap"
+
+    nearest_below = max(below, key=below.get)
+    nearest_above = min(above, key=above.get)
+    assert threshold - below[nearest_below] >= CORROBORATION_MARGIN, (
+        f"{nearest_below} is tested at {below[nearest_below]:.3f}, within "
+        f"{CORROBORATION_MARGIN} of the {threshold} threshold - the line now "
+        "decides a close case. Settle it in field.overrides instead."
+    )
+    assert above[nearest_above] - threshold >= CORROBORATION_MARGIN, (
+        f"{nearest_above} is tested at {above[nearest_above]:.3f}, within "
+        f"{CORROBORATION_MARGIN} of the {threshold} threshold - the line now "
+        "decides a close case. Settle it in field.overrides instead."
+    )
+
+
 def test_a_withdrawal_is_applied_however_rarely_the_candidate_is_tested(setup):
     """The rule is asymmetric on purpose: believing someone who says they are
     out costs nothing, so corroboration is never required for a withdrawal."""

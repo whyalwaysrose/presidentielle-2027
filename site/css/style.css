@@ -488,6 +488,14 @@ main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
   white-space: nowrap;
   border: 0;
 }
+/* PUT THIS ON A BLOCK, NEVER ON A <table>. A table does not shrink to a
+   declared `width: 1px` - its used width is never below its minimum content
+   width, and `table-layout: fixed` only narrows it - so the box stays hundreds
+   of pixels wide. `clip` and `clip-path` affect painting, not layout, so that
+   box goes on extending the document's scrollable area: a sideways scroll on
+   every phone. A block wrapper does respect the width, and `overflow: hidden`
+   on it keeps the table inside. `display: block` on the table itself would
+   work too, and cost it the semantics these tables exist for. */
 
 /* Off-screen until focused, then the first thing in the tab order. */
 .skip-link {

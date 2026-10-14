@@ -21,7 +21,7 @@
      Three days rather than two: a single infrastructure hiccup at GitHub (a
      job no runner picks up) should not put a warning on a correct forecast. */
   var STALE_DAYS = 3;
-  var BUILD = '2026-10-14.1';
+  var BUILD = '2026-10-14.3';
 
   var state = { data: null, scenario: null };
 
