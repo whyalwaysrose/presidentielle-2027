@@ -108,9 +108,8 @@ def pdf_text(data: bytes) -> str:
     is there, but the TJ operands are glyph ids in hex - `[<0003>-0.83] TJ` -
     rather than the literal `(...)` strings this reads. Turning those into
     characters means parsing each font's ToUnicode CMap, which is a PDF
-    library's job, not a regex's. Four such notices were read by hand on
-    2026-10-14 and none was a voting-intention poll; the Observatoire ones
-    recur monthly, so expect more.
+    library's job, not a regex's, so `notice_text` hands that case to pypdf
+    instead. Callers should use `notice_text`, not this directly.
 
     This stays a hand-rolled reader on purpose. It runs against arbitrary PDFs
     fetched from the internet on a schedule, every pattern is linear and
@@ -135,6 +134,62 @@ def pdf_text(data: bytes) -> str:
         for raw in _TJ_ONE.findall(body):
             out.append(raw.decode("latin-1"))
     return re.sub(r"\s+", " ", " ".join(out))
+
+
+# A PDF this large is not a notice. Notices run to a few hundred KB; the cap
+# is here so the fallback cannot be handed something enormous to parse.
+MAX_FALLBACK_BYTES = 8 * 1024 * 1024
+# Reading more pages than this buys nothing: `classify` only needs to find one
+# phrase, and the question wording is at the front of every notice.
+MAX_FALLBACK_PAGES = 40
+
+
+def pdf_text_pypdf(data: bytes) -> str:
+    """The same text via pypdf, or "" if that is not possible.
+
+    SECOND READER, NOT THE FIRST. `pdf_text` stays the primary because it is
+    hand-rolled, linear and bounded, and it runs unattended against arbitrary
+    PDFs fetched from the internet. This one is a full PDF parser and is given
+    work only when the primary found nothing at all.
+
+    Optional by design: pypdf is an extra (`pip install -e ".[notices]"`). If
+    it is not installed, this returns "" and the notice is reported as
+    unreadable exactly as before - never an ImportError on a scheduled run.
+    """
+    if not data or len(data) > MAX_FALLBACK_BYTES:
+        return ""
+    # Only worth trying where there is a text layer to decode. A scan has no
+    # ToUnicode map, and running a parser over one buys nothing.
+    if b"/ToUnicode" not in data:
+        return ""
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        return ""
+    try:
+        reader = PdfReader(io.BytesIO(data))
+        out = [
+            page.extract_text() or ""
+            for page in reader.pages[:MAX_FALLBACK_PAGES]
+        ]
+    except Exception as exc:  # noqa: BLE001 - a malformed PDF must not stop a run
+        log.warning("pypdf could not read a notice: %s", type(exc).__name__)
+        return ""
+    return re.sub(r"\s+", " ", " ".join(out)).strip()
+
+
+def notice_text(data: bytes) -> str:
+    """A notice's text: the bounded reader first, pypdf only if it found none.
+
+    Elabe is why this exists. Its notices embed subset CID fonts, so their TJ
+    operands are hex glyph ids rather than literal strings and `pdf_text`
+    returns nothing for them - four landed on a person's desk on 2026-10-14,
+    and the Observatoire ones recur monthly.
+    """
+    text = pdf_text(data)
+    if text.strip():
+        return text
+    return pdf_text_pypdf(data)
 
 
 # ---------------------------------------------------------------------------
@@ -201,12 +256,14 @@ class CoverageReport:
     pending_vote: list[dict] = field(default_factory=list)     # within grace
     known_gaps: list[dict] = field(default_factory=list)       # reviewed, still absent
     declined: list[dict] = field(default_factory=list)         # upstream said no
+    undated: list[str] = field(default_factory=list)           # no date to place it
     unreadable: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
-        return not self.missing_vote and not self.unreadable and not self.errors
+        return not (self.missing_vote or self.undated or self.unreadable
+                    or self.errors)
 
     def as_dict(self) -> dict:
         return {
@@ -218,6 +275,7 @@ class CoverageReport:
             "en_attente": self.pending_vote,
             "lacunes_connues": self.known_gaps,
             "ecartees_upstream": self.declined,
+            "sans_date": self.undated,
             "illisibles": self.unreadable,
             "erreurs": self.errors,
         }
@@ -239,6 +297,10 @@ class CoverageReport:
         for n in self.declined:
             out.append(f"declined upstream (not a gap to report): {n['fichier']} "
                        f"- {n['note']}")
+        for f in self.undated:
+            out.append(f"no publication date in the catalog: {f} - cannot be "
+                       "placed in time, so check it by hand and record it in "
+                       "config/notices_commission.yaml")
         for f in self.unreadable:
             out.append(f"could not read {f} - check it by hand, then record it in "
                        "config/notices_commission.yaml")
@@ -331,7 +393,13 @@ def check(
     With ``download`` false, only verdicts already cached are used - that is
     what the test suite and the offline `audit` rely on.
     """
-    notices = [n for n in load_catalog() if n.published and n.published >= since]
+    catalog = load_catalog()
+    notices = [n for n in catalog if n.published and n.published >= since]
+    # A notice the catalog gives no date for cannot be placed inside or
+    # outside the window, and dropping it would be the one thing this check
+    # exists to prevent: a notice disappearing quietly. It is reported instead,
+    # unless the feed already has it or someone has ruled on it.
+    undated = [n for n in catalog if not n.published]
     report = CoverageReport(
         latest_notice=max((n.published for n in notices), default=None),
         notices_considered=len(notices),
@@ -339,6 +407,10 @@ def check(
     )
     scan = _load_scan()
     reviews = load_reviews()
+    report.undated = sorted({
+        n.filename for n in undated
+        if n.filename not in feed_filenames and n.filename not in reviews
+    })
     dirty = False
     for n in notices:
         if n.filename in feed_filenames:
@@ -367,14 +439,21 @@ def check(
             try:
                 resp = requests.get(PDF_BASE + n.pdf_path, timeout=timeout)
                 resp.raise_for_status()
-                v, evidence = classify(pdf_text(resp.content))
+                v, evidence = classify(notice_text(resp.content))
             except requests.RequestException as exc:
                 # Not cached: a transient failure is retried on the next run.
                 report.errors.append(f"{n.filename}: {type(exc).__name__}")
                 continue
             verdict = {"verdict": v, "extrait": evidence[:200]}
-            scan[n.filename] = verdict
-            dirty = True
+            # "illisible" is a statement about this reader, not about the
+            # notice, so it is NOT cached: cache it and the notice stays
+            # unreadable for ever, even after the reader learns to read it.
+            # That is exactly what happened to the four Elabe notices, which
+            # pypdf reads fine. Re-reading costs one download, and only until
+            # someone records a verdict for it.
+            if v != "illisible":
+                scan[n.filename] = verdict
+                dirty = True
         if verdict["verdict"] == "illisible":
             report.unreadable.append(n.filename)
         elif verdict["verdict"] == "vote":
@@ -416,6 +495,8 @@ def github_annotations(report: CoverageReport) -> list[str]:
         )
     for n in report.known_gaps:
         out.append(f"::notice title=Known gap in the feed::{n['fichier']}")
+    for f in report.undated:
+        out.append(f"::notice title=Notice has no date::{f}")
     for f in report.unreadable:
         out.append(f"::notice title=Notice not readable::{f}")
     for e in report.errors:

@@ -37,6 +37,35 @@ def _pdf(*streams: tuple[bytes, bytes]) -> bytes:
     return b"".join(parts)
 
 
+def _hex_string_pdf(content: bytes) -> bytes:
+    """A complete, valid one-page PDF carrying `content` as its page stream.
+
+    Unlike `_pdf`, this one is structurally real - it has a catalog, a page
+    tree and an xref - because pypdf will not open anything less.
+    """
+    objs = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] "
+        b"/Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
+        b"<< /Length %d >>\nstream\n%s\nendstream" % (len(content), content),
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /ToUnicode 6 0 R >>",
+        b"<< /Length 0 >>\nstream\n\nendstream",
+    ]
+    out = bytearray(b"%PDF-1.7\n")
+    offsets = []
+    for i, obj in enumerate(objs, start=1):
+        offsets.append(len(out))
+        out += b"%d 0 obj\n" % i + obj + b"\nendobj\n"
+    start = len(out)
+    out += b"xref\n0 %d\n0000000000 65535 f \n" % (len(objs) + 1)
+    for off in offsets:
+        out += b"%010d 00000 n \n" % off
+    out += (b"trailer\n<< /Size %d /Root 1 0 R >>\nstartxref\n%d\n%%%%EOF\n"
+            % (len(objs) + 1, start))
+    return bytes(out)
+
+
 def test_text_comes_out_of_tj_operators():
     pdf = _pdf((b"", b"BT [(Intentions ) -20 (de vote)] TJ ET BT (au 1er tour) Tj ET"))
     assert C.pdf_text(pdf) == "Intentions de vote au 1er tour"
@@ -113,6 +142,7 @@ def sandbox(tmp_path, monkeypatch):
     def write(catalog, scan=None, reviews=None):
         rows = ["filename,categorie,year,pdf_path,http last-modified,pdf creation-date"]
         for name, published, cat in catalog:
+            # `published` of "" is a notice the catalog gives no date for.
             rows.append(f"{name},{cat},2026.0,archives/{name},,{published}")
         C.CATALOG_FILE.write_text("\n".join(rows) + "\n", encoding="utf-8")
         C._save_scan(scan or {})
@@ -214,6 +244,136 @@ def test_offline_an_unscanned_notice_is_flagged_not_skipped(sandbox):
     sandbox([("108-pres-new.pdf", "2026-06-01", "Pres")])
     r = _run()
     assert r.unreadable and not r.ok
+
+
+def _serve(monkeypatch, body: bytes):
+    """Make every notice download return `body`."""
+    class Response:
+        content = body
+
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setattr(C.requests, "get", lambda *a, **k: Response())
+
+
+def test_an_unreadable_verdict_is_never_cached(sandbox, monkeypatch):
+    """"Unreadable" says something about the reader, not about the notice. The
+    four Elabe notices sat cached as unreadable while pypdf could read them
+    perfectly well; cache that verdict and a reader that later learns to read
+    them never gets the chance."""
+    sandbox([("200-pres-scan.pdf", "2026-08-01", "Pres")])
+    _serve(monkeypatch, b"%PDF-1.7\nno text at all")
+    r = C.check(set(), as_of=TODAY, since=dt.date(2024, 7, 8))
+    assert r.unreadable == ["200-pres-scan.pdf"]
+    assert C._load_scan() == {}, "an unreadable verdict was cached"
+
+
+def test_a_verdict_the_reader_could_reach_is_cached(sandbox, monkeypatch):
+    """The counterpart: a notice that was actually read is cached, so the daily
+    run does not download the whole catalog every morning."""
+    sandbox([("201-pres-x.pdf", "2026-08-01", "Pres")])
+    body = b"BT [(Intentions de vote au premier tour. %s)] TJ ET" % (
+        PADDING.encode())
+    _serve(monkeypatch, _pdf((b"", body)))
+    r = C.check(set(), as_of=TODAY, since=dt.date(2024, 7, 8))
+    assert [n["fichier"] for n in r.missing_vote] == ["201-pres-x.pdf"]
+    assert C._load_scan()["201-pres-x.pdf"]["verdict"] == "vote"
+
+
+def test_a_notice_with_no_date_is_reported_not_dropped(sandbox):
+    """The catalog gives 10251a no date in either column, and a notice that
+    cannot be placed in time was being filtered out of the comparison
+    altogether - the exact failure this check exists to prevent. It is now
+    reported for a person instead."""
+    sandbox([("300-pres-undated.pdf", "", "Pres")])
+    r = _run()
+    assert r.undated == ["300-pres-undated.pdf"]
+    assert not r.ok
+    assert any("no publication date" in line for line in r.lines())
+    assert r.as_dict()["sans_date"] == ["300-pres-undated.pdf"]
+    assert any("::notice title=Notice has no date" in a
+               for a in C.github_annotations(r))
+
+
+def test_an_undated_notice_already_handled_is_not_nagged_about(sandbox):
+    """Once it is in the feed, or once someone has ruled on it, it stops being
+    an open question."""
+    sandbox([("300-pres-undated.pdf", "", "Pres")])
+    assert _run(feed={"300-pres-undated.pdf"}).undated == []
+
+    sandbox(
+        [("300-pres-undated.pdf", "", "Pres")],
+        reviews={"300-pres-undated.pdf": {
+            "statut": "pas_une_intention", "note": "read by hand"}},
+    )
+    assert _run().undated == []
+
+
+# ------------------------------------------------------------ second reader
+
+
+def test_the_bounded_reader_is_used_whenever_it_finds_anything(monkeypatch):
+    """pypdf is the fallback, never the default. The hand-rolled reader runs
+    unattended against arbitrary PDFs from the internet; handing a full parser
+    work it does not need would give that up for nothing."""
+    called = []
+    monkeypatch.setattr(C, "pdf_text_pypdf", lambda d: called.append(d) or "")
+    data = _pdf((b"", b"BT [(Intentions de vote)] TJ ET"))
+    assert "Intentions de vote" in C.notice_text(data)
+    assert not called, "the fallback ran even though the primary found text"
+
+
+def test_a_notice_the_bounded_reader_cannot_read_falls_back(monkeypatch):
+    """The Elabe case: subset CID fonts, so the TJ operands are hex glyph ids
+    and the primary returns nothing at all."""
+    monkeypatch.setattr(C, "pdf_text_pypdf", lambda d: "Intentions de vote 2027")
+    cid = _pdf((b"", b"BT /F1 12 Tf [<0003><0004>] TJ ET"))
+    assert C.pdf_text(cid).strip() == ""
+    assert C.notice_text(cid) == "Intentions de vote 2027"
+
+
+def test_without_pypdf_a_notice_is_unreadable_exactly_as_before(monkeypatch):
+    """The dependency is optional. A scheduled run on a machine without it
+    must report the notice for a person, not die with an ImportError."""
+    import builtins
+
+    real_import = builtins.__import__
+
+    def no_pypdf(name, *args, **kwargs):
+        if name == "pypdf":
+            raise ImportError("no pypdf")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", no_pypdf)
+    # Has a text layer, so the fallback would otherwise be attempted.
+    assert C.pdf_text_pypdf(b"%PDF-1.7\n/ToUnicode") == ""
+
+
+def test_the_fallback_is_not_handed_scans_or_anything_enormous():
+    """Two cheap guards before a parser is started: a PDF with no ToUnicode
+    map has no text layer to decode, and a notice is never megabytes long."""
+    assert C.pdf_text_pypdf(b"%PDF-1.7\nno text layer here") == ""
+    assert C.pdf_text_pypdf(b"/ToUnicode" + b"\0" * C.MAX_FALLBACK_BYTES) == ""
+    assert C.pdf_text_pypdf(b"") == ""
+
+
+def test_a_malformed_pdf_does_not_stop_the_run():
+    """Whatever pypdf raises on a truncated or hostile file, the run continues
+    and the notice is simply reported as unreadable."""
+    pytest.importorskip("pypdf")
+    assert C.pdf_text_pypdf(b"%PDF-1.7\n/ToUnicode garbage not a pdf") == ""
+
+
+def test_the_fallback_reads_a_hex_string_notice():
+    """End to end, with no monkeypatching: a PDF whose text is written as hex
+    strings rather than literal ones. The primary reader gets nothing from it;
+    pypdf gets the words."""
+    pytest.importorskip("pypdf")
+    body = b"BT /F1 24 Tf 72 700 Td <496E74656E74696F6E7320646520766F7465> Tj ET"
+    pdf = _hex_string_pdf(body)
+    assert C.pdf_text(pdf).strip() == ""
+    assert "Intentions de vote" in C.notice_text(pdf)
 
 
 # ------------------------------------------------------ the committed reviews

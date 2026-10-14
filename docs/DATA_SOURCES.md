@@ -58,33 +58,56 @@ The Commission files popularity barometers and opinion questions under the
 same "Pres" category as voting intentions, and filenames do not tell them
 apart — only 14 of the 46 notices in the feed say so in their name. So each
 notice the feed lacks is **read**: downloaded once, its text extracted, and
-classified by whether it asks a vote question. Verdicts are cached in
-`data/cache/commission_scan.json`.
+classified by whether it asks a vote question.
+
+Extraction is **two readers**. The first is hand-rolled, linear and bounded —
+it runs unattended against arbitrary PDFs from the internet, and
+`test_a_hostile_stream_is_fast` holds that line. It reads literal strings out
+of text operators, which is enough for most institutes. Elabe is not most
+institutes: it embeds subset CID fonts, so its text operands are hex glyph ids
+(`[<0003>-0.83] TJ`) and the first reader returns nothing. Only then is pypdf
+tried, as an optional extra (`pip install -e ".[notices]"`). Without it an
+unreadable notice is simply reported for a person, exactly as before.
+
+Verdicts are cached in `data/cache/commission_scan.json` — except
+"unreadable", which is **never** cached. That verdict describes the reader,
+not the notice, and caching it is how four Elabe notices stayed unreadable for
+weeks while a second reader could have handled them all along.
 
 **Calibrated on 2026-09-21** against the 135 presidential notices since the
 feed begins. Of the 44 in the feed — all genuine voting intentions — the
-classifier recognises 42. One is a scanned image with no text; one (a Cluster17
-barometer) carries its question in a form the extractor cannot read, so **a
-missing Cluster17 poll could pass unnoticed**. The classifier's false
-positives were institutes' own disclaimers ("*ne constitue nullement une
-intention de vote*"), now filtered.
+classifier recognises 42. The classifier's false positives were institutes'
+own disclaimers ("*ne constitue nullement une intention de vote*"), now
+filtered.
+
+The extraction gaps noted at calibration have since been chased down. The
+Elabe notices are read by the second reader; the Cluster17 barometers read
+fine. What is left is **one notice that cannot be fetched at all**:
+`10251a-pres-barometre-cluster17-le-point-10-septembre.pdf` returns 404 from
+both the mirror and the Commission's own site, and the catalog gives it no
+publication date in either column. A notice with no date used to be filtered
+out of the comparison silently — the precise failure this check exists to
+prevent — and is now reported instead.
 
 What it found on that first run:
 
 | notice | verdict |
 |---|---|
-| Toluna Harris Interactive / Regards, 24–25 Apr 2025 | **missing** — first-round voting intentions |
-| OpinionWay / Fondapol, 1–8 Jun 2026 | **missing** — second-round head-to-heads |
+| Toluna Harris Interactive / Regards, 24–25 Apr 2025 | first-round voting intentions, but **declined upstream** — its hypotheses name a "gauche unie" candidate rather than a person ([#4](https://github.com/MieuxVoter/presidentielle2027/issues/4)) |
+| OpinionWay / Fondapol, 1–8 Jun 2026 | **missing** — second-round head-to-heads, [reported upstream](https://github.com/MieuxVoter/presidentielle2027/issues/260) on 2026-10-14 |
 | Verian / L'Hémicycle, Dec 2025 | in the feed, as the earlier notice for the same fieldwork |
 | Odoxa / Mascaret, Mar 2026 | in the feed, under a non-Commission filename |
 | four others | not voting intentions (desired runoffs, potential vote, a legislative question, expectations of the next president) |
+| four Elabe notices, read 2026-10-14 | not voting intentions (the ideal president's profile, two image barometers, the 2027 state budget) |
 
 Human verdicts live in `config/notices_commission.yaml`, each with a note on
 what was read. A gap is **reported, never repaired**: the check does not add
 polls to the model, because a notice's numbers transcribed by hand are
 unreviewed input. It shows in `audit`, in `diagnostics.couverture_commission`
 in the published JSON, and on the GitHub run — as a warning for an unreviewed
-gap older than seven days, as a notice for known gaps and unreadable PDFs. It
+gap older than seven days, as a notice for known gaps, undated entries and
+unreadable PDFs. A poll upstream has read and declined is kept separate from a
+gap, because re-reporting it would relitigate someone else's decision. It
 never fails the run: a missing poll is upstream's to fix.
 
 ## 2. Historical polls, for calibration — official, via a compiled source

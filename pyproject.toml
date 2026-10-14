@@ -27,6 +27,9 @@ dev = ["pytest>=8.0", "ruff>=0.6"]
 # Only the one-off scripts in scripts/ that read the Ministry's
 # spreadsheets need these; nothing in src/ imports them.
 extract = ["xlrd>=2.0", "openpyxl>=3.1"]
+# The second reader for Commission notices. Optional on purpose: without
+# it an unreadable notice is reported for a person, exactly as before.
+notices = ["pypdf>=6.0"]
 
 [project.scripts]
 presidentielle = "presidentielle.cli:main"
