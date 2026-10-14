@@ -169,6 +169,49 @@ Party identity across these elections — that the Front national and the
 Rassemblement national are one line — is **this project's judgement**, not the
 Ministry's, and `config/partis.yaml` flags the contested ones.
 
+## 3d. European election results, 2009–2024 — official
+
+**data.gouv.fr**, Ministère de l'Intérieur, **Licence Ouverte** (`fr-lo`
+or `lov2`), one dataset per cycle. `scripts/extract_resultats_europeennes.py`
+downloads each and writes `config/resultats_europeennes.yaml`.
+
+**Why these are here at all.** A presidential first round measures a
+*candidate*. A European election is the cleanest measure of a *party* France
+produces: proportional representation with party lists, so the vote attaches to
+an organisation rather than to a personality. The pair also says something
+neither says alone — the Rassemblement national has topped three consecutive
+European elections without ever winning a presidency.
+
+They are **not** interchangeable, and the page does not splice them into one
+line: turnout is far lower (51.5% in 2024 against 73.7% at the 2022
+presidential first round), and the ballot is a list rather than a person. The
+two series are drawn to the same scale on separate rows, each labelled.
+
+Four cycles, four layouts, which is again why it is a script:
+
+| Cycle | File | Keyed by |
+|---|---|---|
+| 2009 | `Circo euro` sheet of the .xls, the eight constituencies of the time, summed | nuance |
+| 2014 | `Résultats` sheet of the .xlsx, France entière block | nuance |
+| 2019 | per-circonscription .txt, summed — **no nuance column this year** | list label |
+| 2024 | per-circonscription .csv, summed | nuance |
+
+The 2009 commune-level file published alongside the constituency one covers
+**7.5M of 17.2M valid votes** while its *shares* still look plausible — the
+trap the reconciliation check exists for. The script refuses to write any cycle
+whose list votes do not reconcile with the Ministry's own Exprimés, and
+`tests/test_parties.py` re-checks the committed file so a hand-edit cannot
+reintroduce it.
+
+**A nuance code is a grouping of lists, not a party.** `LEXG` is every far-left
+list at once, so Lutte ouvrière and the NPA cannot be told apart in 2009,
+2014 or 2024; `LDVD` likewise covers several sovereigntist and right-wing
+lists. `config/partis.yaml` therefore maps only what can be identified and
+leaves the rest blank. Every gap carries an `europeennes_note`, in both
+languages, saying which of the two reasons applies — the party did not stand,
+or the data cannot separate it — because those are different claims and a
+bare dash would not distinguish them.
+
 ## 4. Election dates — official
 
 First round **18 April 2027**, second round **2 May 2027**, both fixed by the

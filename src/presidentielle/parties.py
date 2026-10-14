@@ -1,4 +1,4 @@
-"""Each party's presidential record, joined to what it says it stands for.
+"""Each party's election record, joined to what it says it stands for.
 
 WHY THIS IS A MODULE AND NOT A TABLE IN THE PAGE
 -------------------------------------------------
@@ -10,9 +10,23 @@ election at all. That context is the point of this section.
 It is assembled rather than written down. `config/partis.yaml` names, for each
 party, the CANDIDATE who carried its line in each election; every percentage
 below is computed from the Interior Ministry's own vote counts in
-`config/resultats_historiques.yaml` (2002-2017) and `config/resultats_2022.yaml`
-(2022). Nothing here can disagree with the Ministry, because nothing here
-restates it.
+`config/resultats_historiques.yaml` (2002-2017), `config/resultats_2022.yaml`
+(2022) and `config/resultats_europeennes.yaml` (the Europeans). Nothing here
+can disagree with the Ministry, because nothing here restates it.
+
+TWO SERIES, NOT ONE LINE. The presidential rounds measure a CANDIDATE; the
+Europeans (`config/resultats_europeennes.yaml`, 2009-2024) measure the PARTY,
+because proportional representation with party lists attaches the vote to an
+organisation rather than to a personality. They are shown as separate rows
+rather than joined up, because turnout differs enormously and a single line
+would invite reading a European score as presidential support. The pair says
+what neither says alone: the Rassemblement national has topped three
+consecutive European elections without ever winning a presidency.
+
+A European year can be absent for two quite different reasons - the party did
+not stand, or the Ministry's nuance code cannot separate it from others
+(`LEXG` is every far-left list at once). Each such party carries an
+`europeennes_note` saying which, so a dash on the page is never mute.
 
 FAILS CLOSED, like the roster. A party naming a candidate who is not in the
 results for that year is an error - a typo, or a renamed file - and it raises
@@ -42,6 +56,7 @@ log = logging.getLogger(__name__)
 PARTIES_FILE = CONFIG / "partis.yaml"
 HISTORIC_FILE = CONFIG / "resultats_historiques.yaml"
 RESULTS_2022_FILE = CONFIG / "resultats_2022.yaml"
+EUROPEAN_FILE = CONFIG / "resultats_europeennes.yaml"
 
 
 def _load(path: Path) -> dict:
@@ -133,11 +148,32 @@ def _current_candidates(party: dict, forecast: dict | None) -> dict | None:
     }
 
 
+def load_european(path: Path | None = None) -> dict[int, dict]:
+    """European results by list grouping, {year: {...}}.
+
+    A different kind of measurement from the presidential series, and the page
+    says so: proportional representation with party lists, so the vote attaches
+    to an organisation rather than to a candidate. Turnout is also far lower,
+    which is why the two series are shown as separate rows rather than one line
+    that would invite reading a European score as presidential support.
+    """
+    out: dict[int, dict] = {}
+    for year, rec in _load(path or EUROPEAN_FILE).items():
+        out[int(year)] = {
+            "date": rec["date"],
+            "exprimes": rec["exprimes"],
+            "listes": rec["listes"],
+            "source": rec.get("source_page"),
+        }
+    return out
+
+
 def build(
     parties: Path | None = None,
     historic: Path | None = None,
     results_2022: Path | None = None,
     forecast: dict | None = None,
+    european: Path | None = None,
 ) -> dict:
     """The payload the page renders: parties, their records, their sources.
 
@@ -150,6 +186,8 @@ def build(
     config = _load(parties or PARTIES_FILE)
     results = load_results(historic, results_2022)
     years = sorted(results)
+    europeans = load_european(european)
+    european_years = sorted(europeans)
 
     out = []
     for key, party in (config.get("partis") or {}).items():
@@ -172,6 +210,31 @@ def build(
                 "part": round(votes / results[year]["exprimes"], 5),
             })
 
+        # The European series, which measures the party rather than a
+        # candidate. A year is absent either because the party did not stand or
+        # because the Ministry's nuance code cannot separate it from others;
+        # `europeennes_note` says which, and the page shows a dash either way
+        # rather than implying a zero.
+        european_record = []
+        for year in european_years:
+            liste = (party.get("europeennes") or {}).get(year)
+            if liste is None:
+                continue
+            entry = europeans[year]["listes"].get(liste)
+            if entry is None:
+                raise ValueError(
+                    f"{key}: {year} names the list {liste!r}, which is not in "
+                    "that year's results. Check config/partis.yaml against "
+                    "config/resultats_europeennes.yaml."
+                )
+            european_record.append({
+                "annee": year,
+                "liste": liste,
+                "libelle": entry.get("libelle") or "",
+                "voix": entry["voix"],
+                "part": round(entry["voix"] / europeans[year]["exprimes"], 5),
+            })
+
         principles = party.get("principes") or {}
         reviewed = principles.get("revu")
         stale = None
@@ -190,6 +253,14 @@ def build(
             # through 2002 and 2022 is entitled to know the party was renamed.
             "lignee_contestee": bool(party.get("lignee_contestee")),
             "resultats": record,
+            "europeennes": european_record,
+            # Bilingual, like `lignee`: it is shown on a page that runs
+            # in both languages, so an English-only note would surface
+            # untranslated on the French side.
+            "europeennes_note": party.get("europeennes_note") or {},
+            "meilleur_europeen": max(
+                (r["part"] for r in european_record), default=None
+            ),
             "meilleur": max((r["part"] for r in record), default=None),
             "dernier": record[-1]["part"] if record else None,
             "principes": {
@@ -213,6 +284,15 @@ def build(
 
     return {
         "avertissement": config.get("avertissement") or {},
+        "elections_europeennes": [
+            {
+                "annee": y,
+                "date": europeans[y]["date"],
+                "exprimes": europeans[y]["exprimes"],
+                "source": europeans[y]["source"],
+            }
+            for y in european_years
+        ],
         "elections": [
             {
                 "annee": y,

@@ -240,3 +240,124 @@ def test_every_summary_records_when_a_person_last_checked_it(payload):
             f"{party['id']}: summary last checked {reviewed} - re-read it "
             "against what the party publishes now, then update `revu`"
         )
+
+
+# ------------------------------------------------------------- the europeans
+
+
+def test_every_european_share_is_computed_from_the_ministry_figures(payload):
+    """As with the presidential series: no percentage is written down, so each
+    one must reproduce from the published vote counts, checked here
+    independently of the code that built it."""
+    results = parties.load_european()
+    for party in payload["partis"]:
+        for row in party["europeennes"]:
+            entry = results[row["annee"]]["listes"][row["liste"]]
+            expected = entry["voix"] / results[row["annee"]]["exprimes"]
+            assert row["voix"] == entry["voix"]
+            assert row["part"] == pytest.approx(expected, abs=1e-5)
+
+
+def test_the_european_record_matches_elections_people_remember(payload):
+    """Spot checks against the historical record. Four files in four different
+    layouts feed this, and a reader off by a column would not notice."""
+    share = {
+        (p["id"], r["annee"]): r["part"]
+        for p in payload["partis"]
+        for r in p["europeennes"]
+    }
+    # The RN's rise, which is the whole reason this series is on the page.
+    assert share[("rn", 2009)] == pytest.approx(0.063, abs=0.002)
+    assert share[("rn", 2014)] == pytest.approx(0.249, abs=0.002)
+    assert share[("rn", 2024)] == pytest.approx(0.314, abs=0.002)
+    # And the mirror image: the UMP won 2009 outright, LR took 7% in 2024.
+    assert share[("lr", 2009)] == pytest.approx(0.279, abs=0.002)
+    assert share[("lr", 2024)] == pytest.approx(0.072, abs=0.002)
+    # The Greens' 2009 surge, which no presidential result of theirs comes near.
+    assert share[("ecologistes", 2009)] == pytest.approx(0.163, abs=0.002)
+
+
+def test_the_rn_topped_three_european_elections_in_a_row(payload):
+    """The claim the section exists to let a reader check: three consecutive
+    national wins, no presidency. If a future remap broke it, the page would go
+    on asserting it in prose."""
+    results = parties.load_european()
+    rn = next(p for p in payload["partis"] if p["id"] == "rn")
+    by_year = {r["annee"]: r for r in rn["europeennes"]}
+    for year in (2014, 2019, 2024):
+        best = max(v["voix"] for v in results[year]["listes"].values())
+        assert by_year[year]["voix"] == best, f"{year}: the RN was not first"
+    # ...and has never won a presidential first round.
+    presidential = {r["annee"]: r["part"] for r in rn["resultats"]}
+    assert presidential and max(presidential.values()) < 0.33
+
+
+def test_every_list_reconciles_with_the_published_exprimes():
+    """The 2009 trap: a commune-level file covering 7.5M of 17.2M valid votes,
+    whose SHARES still look plausible. The extraction script refuses to write a
+    cycle that does not reconcile; this re-checks the committed file, so a
+    hand-edit cannot reintroduce it."""
+    for year, record in parties.load_european().items():
+        total = sum(v["voix"] for v in record["listes"].values())
+        assert total == pytest.approx(record["exprimes"], abs=max(2000, 0.001 * record["exprimes"])), (
+            f"{year}: list votes sum to {total:,} against {record['exprimes']:,} exprimes"
+        )
+        assert record["exprimes"] > 15_000_000
+
+
+def test_a_missing_european_year_is_always_explained(payload):
+    """A dash can mean two quite different things - the party did not stand, or
+    the Ministry's nuance code cannot separate it from others. Either way the
+    reader is told which, so no gap on the page is mute."""
+    complete = {e["annee"] for e in payload["elections_europeennes"]}
+    for party in payload["partis"]:
+        covered = {r["annee"] for r in party["europeennes"]}
+        if covered != complete:
+            note = party["europeennes_note"]
+            assert note.get("fr") and note.get("en"), (
+                f"{party['id']}: missing {sorted(complete - covered)} with no "
+                "`europeennes_note` saying why, in both languages"
+            )
+
+
+def test_an_unknown_list_fails_closed(tmp_path):
+    """The same guarantee as the presidential series. A party mapped to a list
+    that is not in that year's results is a typo, not an absence."""
+    bad = tmp_path / "partis.yaml"
+    bad.write_text(
+        yaml.safe_dump({
+            "partis": {
+                "x": {
+                    "nom": "X", "bloc": "centre", "resultats": {},
+                    "europeennes": {2024: "NO SUCH LIST"},
+                }
+            }
+        }),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="not in that year's results"):
+        parties.build(parties=bad)
+
+
+def test_every_european_election_carries_its_source(payload):
+    """Four separate data.gouv.fr datasets, each cited on the page."""
+    years = [e["annee"] for e in payload["elections_europeennes"]]
+    assert years == [2009, 2014, 2019, 2024]
+    for election in payload["elections_europeennes"]:
+        assert election["source"].startswith("https://www.data.gouv.fr/")
+
+
+def test_the_two_series_are_kept_apart(payload):
+    """A European score is not presidential support: turnout differs
+    enormously, and the vote attaches to a list rather than a person. The
+    payload therefore carries two separate series with their own best-ever
+    figures, and nothing that merges them."""
+    for party in payload["partis"]:
+        for row in party["europeennes"]:
+            assert "liste" in row and "candidat" not in row
+        for row in party["resultats"]:
+            assert "candidat" in row and "liste" not in row
+    # The Greens' best European score more than triples their best
+    # presidential one - the gap the page is there to show.
+    greens = next(p for p in payload["partis"] if p["id"] == "ecologistes")
+    assert greens["meilleur_europeen"] > 3 * greens["meilleur"]

@@ -21,7 +21,7 @@
      Three days rather than two: a single infrastructure hiccup at GitHub (a
      job no runner picks up) should not put a warning on a correct forecast. */
   var STALE_DAYS = 3;
-  var BUILD = '2026-10-06.3';
+  var BUILD = '2026-10-14.1';
 
   var state = { data: null, scenario: null };
 
@@ -618,6 +618,63 @@
     return cell;
   }
 
+  /* One row of bars: a run of years, each either a result or a dash. Used
+     twice per party - the presidential first rounds, and the Europeans - and
+     deliberately on ONE shared scale, because the comparison between the two
+     is the point. The RN's European scores tower over its presidential ones;
+     scaling each row to its own maximum would hide exactly that. */
+  function seriesScale(years, rows, opts) {
+    var byYear = {};
+    rows.forEach(function (r) { byYear[r.annee] = r; });
+    var scale = document.createElement('ol');
+    scale.className = 'party-years' + (opts.extra ? ' ' + opts.extra : '');
+    /* I18n.t CALLS a function-valued string and returns the result, so the
+       argument goes to t() - calling what it returns is a TypeError. */
+    scale.setAttribute('aria-label', opts.aria);
+    years.forEach(function (y) {
+      var cell = document.createElement('li');
+      cell.className = 'party-year';
+      var r = byYear[y];
+      var bar = document.createElement('span');
+      bar.className = 'party-bar' + (opts.barExtra ? ' ' + opts.barExtra : '');
+      if (r) {
+        bar.style.height = Math.max(2, Math.round((r.part / opts.peak) * 100)) + '%';
+        bar.style.background = opts.colour;
+      } else {
+        bar.className = 'party-bar party-bar-absent';
+      }
+      var value = document.createElement('span');
+      value.className = 'party-value';
+      /* An election a party sat out is shown as that, never as zero. */
+      value.textContent = r ? I18n.pct(r.part, 1) : '\u2013';
+      if (!r) value.title = opts.absent;
+      var label = document.createElement('span');
+      label.className = 'party-year-label';
+      label.textContent = y;
+      cell.appendChild(value);
+      cell.appendChild(document.createElement('span')).className = 'party-bar-track';
+      cell.lastChild.appendChild(bar);
+      cell.appendChild(label);
+      if (!r) cell.setAttribute('aria-label', y + ' : ' + opts.absent);
+      scale.appendChild(cell);
+    });
+    return scale;
+  }
+
+  /* Each row is captioned, because the two measure different things: a
+     presidential first round measures a CANDIDATE, a European election
+     measures a LIST. An uncaptioned pair would read as one time series. */
+  function seriesBlock(caption, scale) {
+    var wrap = document.createElement('div');
+    wrap.className = 'party-series';
+    var label = document.createElement('span');
+    label.className = 'party-series-label';
+    label.textContent = caption;
+    wrap.appendChild(label);
+    wrap.appendChild(scale);
+    return wrap;
+  }
+
   /* --- where the parties come from -------------------------------------- */
   /* Rendered as plain elements rather than an SVG: every number is visible
      text, so there is no chart to describe to a screen reader and nothing to
@@ -630,6 +687,8 @@
     card.hidden = false;
 
     var years = data.elections.map(function (e) { return e.annee; });
+    var euroYears = (data.elections_europeennes || []).map(
+      function (e) { return e.annee; });
     var mount = document.getElementById('parties-list');
     mount.innerHTML = '';
 
@@ -638,6 +697,9 @@
     var peak = 0;
     data.partis.forEach(function (p) {
       p.resultats.forEach(function (r) { if (r.part > peak) peak = r.part; });
+      /* The Europeans too, and they usually set it: the RN's 31% in 2024 is
+         the tallest bar on the page. */
+      (p.europeennes || []).forEach(function (r) { if (r.part > peak) peak = r.part; });
       /* Including the projection: the RN is forecast above anything it has
          ever polled, and a bar scaled only to history would run off its
          track. */
@@ -670,44 +732,15 @@
       }
       row.appendChild(head);
 
+      var who = I18n.lang === 'en' ? p.nom_en : p.nom;
       if (p.resultats.length) {
-        var byYear = {};
-        p.resultats.forEach(function (r) { byYear[r.annee] = r; });
-        var scale = document.createElement('ol');
-        scale.className = 'party-years';
-        /* I18n.t CALLS a function-valued string and returns the result, so
-           the argument goes to t() - calling what it returns is a TypeError. */
-        scale.setAttribute('aria-label', I18n.t(
-          'parties.chartTitle', I18n.lang === 'en' ? p.nom_en : p.nom));
-        years.forEach(function (y) {
-          var cell = document.createElement('li');
-          cell.className = 'party-year';
-          var r = byYear[y];
-          var bar = document.createElement('span');
-          bar.className = 'party-bar';
-          if (r) {
-            bar.style.height = Math.max(2, Math.round((r.part / peak) * 100)) + '%';
-            bar.style.background = colour;
-          } else {
-            bar.className = 'party-bar party-bar-absent';
-          }
-          var value = document.createElement('span');
-          value.className = 'party-value';
-          /* An election a party sat out is shown as that, never as zero. */
-          value.textContent = r ? I18n.pct(r.part, 1) : '\u2013';
-          if (!r) value.title = I18n.t('parties.absent');
-          var label = document.createElement('span');
-          label.className = 'party-year-label';
-          label.textContent = y;
-          cell.appendChild(value);
-          cell.appendChild(document.createElement('span')).className = 'party-bar-track';
-          cell.lastChild.appendChild(bar);
-          cell.appendChild(label);
-          if (!r) cell.setAttribute('aria-label', y + ' : ' + I18n.t('parties.absent'));
-          scale.appendChild(cell);
+        var scale = seriesScale(years, p.resultats, {
+          peak: peak, colour: colour,
+          absent: I18n.t('parties.absent'),
+          aria: I18n.t('parties.chartTitle', who)
         });
         if (p.candidat_2027) scale.appendChild(forecastCell(p, peak, colour));
-        row.appendChild(scale);
+        row.appendChild(seriesBlock(I18n.t('parties.seriesPresidential'), scale));
       } else {
         var none = document.createElement('p');
         none.className = 'party-never';
@@ -717,8 +750,38 @@
           var only = document.createElement('ol');
           only.className = 'party-years party-years-lonely';
           only.appendChild(forecastCell(p, peak, colour));
-          row.appendChild(only);
+          row.appendChild(seriesBlock(I18n.t('parties.seriesPresidential'), only));
         }
+      }
+
+      /* The European row, which measures the party rather than a candidate.
+         A party with no identifiable list in any cycle gets no row at all -
+         four dashes would say nothing its note does not say better. */
+      if (euroYears.length && p.europeennes && p.europeennes.length) {
+        row.appendChild(seriesBlock(
+          I18n.t('parties.seriesEuropean'),
+          seriesScale(euroYears, p.europeennes, {
+            peak: peak, colour: colour, extra: 'party-years-european',
+            barExtra: 'party-bar-european',
+            absent: I18n.t('parties.europeanAbsent'),
+            aria: I18n.t('parties.europeanChartTitle', who)
+          })));
+      }
+
+      /* Why a year is missing, or why there is no row at all. A dash can mean
+         the party did not stand OR that the Ministry's nuance code cannot
+         separate it from others, and those are different claims. */
+      var euroNote = p.europeennes_note &&
+        (I18n.lang === 'en' ? p.europeennes_note.en : p.europeennes_note.fr);
+      if (euroNote) {
+        var noteLine = document.createElement('p');
+        noteLine.className = 'party-euro-note';
+        var noteTag = document.createElement('span');
+        noteTag.className = 'party-series-label';
+        noteTag.textContent = I18n.t('parties.seriesEuropean');
+        noteLine.appendChild(noteTag);
+        noteLine.appendChild(document.createTextNode(' ' + euroNote));
+        row.appendChild(noteLine);
       }
 
       var lineage = p.lignee && (I18n.lang === 'en' ? p.lignee.en : p.lignee.fr);

@@ -3,6 +3,32 @@
   "fr": "Les scores sont ceux du ministère de l'Intérieur. Les « principes » sont un résumé rédigé par ce site à partir de ce que chaque parti publie, et non les mots du parti : le lien permet de vérifier.",
   "en": "The vote shares are the Interior Ministry's. The \"principles\" are a summary written by this site from what each party publishes - not the party's own words - and the link is there so you can check them against the source."
  },
+ "elections_europeennes": [
+  {
+   "annee": 2009,
+   "date": "2009-06-07",
+   "exprimes": 17218614,
+   "source": "https://www.data.gouv.fr/datasets/elections-europeennes-2009-resultats-571327"
+  },
+  {
+   "annee": 2014,
+   "date": "2014-05-25",
+   "exprimes": 18955761,
+   "source": "https://www.data.gouv.fr/datasets/elections-europeennes-2014-resulta-2"
+  },
+  {
+   "annee": 2019,
+   "date": "2019-05-26",
+   "exprimes": 22655174,
+   "source": "https://www.data.gouv.fr/datasets/resultats-des-elections-europeennes-2019"
+  },
+  {
+   "annee": 2024,
+   "date": "2024-06-09",
+   "exprimes": 24753773,
+   "source": "https://www.data.gouv.fr/datasets/resultats-des-elections-europeennes-du-9-juin-2024"
+  }
+ ],
  "elections": [
   {
    "annee": 2002,
@@ -71,6 +97,27 @@
      "part": 0.27846
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2019,
+     "liste": "RENAISSANCE",
+     "libelle": "LOISEAU Nathalie",
+     "voix": 5079015,
+     "part": 0.22419
+    },
+    {
+     "annee": 2024,
+     "liste": "LENS",
+     "libelle": "BESOIN D'EUROPE",
+     "voix": 3614646,
+     "part": 0.14602
+    }
+   ],
+   "europeennes_note": {
+    "fr": "Fondé en 2016 : il n'a donc disputé ni 2009 ni 2014. Ses deux scores sont ceux de la liste de la majorité présidentielle, qu'il conduisait.",
+    "en": "Founded in 2016, so it contested neither the 2009 nor the 2014 cycle. Both its figures are the presidential majority's list, which it led."
+   },
+   "meilleur_europeen": 0.22419,
    "meilleur": 0.27846,
    "dernier": 0.27846,
    "principes": {
@@ -135,6 +182,38 @@
      "part": 0.23152
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LFN",
+     "libelle": "Liste du Front national",
+     "voix": 1091691,
+     "part": 0.0634
+    },
+    {
+     "annee": 2014,
+     "liste": "LFN",
+     "libelle": "",
+     "voix": 4712461,
+     "part": 0.2486
+    },
+    {
+     "annee": 2019,
+     "liste": "PRENEZ LE POUVOIR",
+     "libelle": "BARDELLA Jordan",
+     "voix": 5286939,
+     "part": 0.23337
+    },
+    {
+     "annee": 2024,
+     "liste": "LRN",
+     "libelle": "La FRANCE REVIENT",
+     "voix": 7765936,
+     "part": 0.31373
+    }
+   ],
+   "europeennes_note": {},
+   "meilleur_europeen": 0.31373,
    "meilleur": 0.23152,
    "dernier": 0.23152,
    "principes": {
@@ -187,6 +266,27 @@
      "part": 0.21952
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2019,
+     "liste": "LA FRANCE INSOUMISE",
+     "libelle": "AUBRY Manon",
+     "voix": 1428548,
+     "part": 0.06306
+    },
+    {
+     "annee": 2024,
+     "liste": "LFI",
+     "libelle": "LFI - UP",
+     "voix": 2448703,
+     "part": 0.09892
+    }
+   ],
+   "europeennes_note": {
+    "fr": "LFI n'existait ni en 2009 ni en 2014 ; le Front de gauche de ces années est porté au compte du PCF.",
+    "en": "LFI did not exist in 2009 or 2014; the Front de gauche of those years is shown under the PCF."
+   },
+   "meilleur_europeen": 0.09892,
    "meilleur": 0.21952,
    "dernier": 0.21952,
    "principes": {
@@ -231,6 +331,27 @@
      "part": 0.09127
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LCMD",
+     "libelle": "Liste centre-MoDem",
+     "voix": 1455841,
+     "part": 0.08455
+    },
+    {
+     "annee": 2014,
+     "liste": "LUC",
+     "libelle": "",
+     "voix": 1884565,
+     "part": 0.09942
+    }
+   ],
+   "europeennes_note": {
+    "fr": "2014 était une liste commune UDI-MoDem. À partir de 2019, le MoDem s'est présenté au sein de la liste de la majorité présidentielle : il n'a donc pas de score propre.",
+    "en": "2014 was a joint UDI-MoDem list. From 2019 the MoDem stood inside the presidential majority's list, so it has no separate figure."
+   },
+   "meilleur_europeen": 0.09942,
    "meilleur": 0.18574,
    "dernier": 0.09127,
    "principes": {
@@ -271,6 +392,20 @@
      "part": 0.07074
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2024,
+     "liste": "LREC",
+     "libelle": "LA FRANCE FIERE, MENEE PAR MARION MARECHAL ET SOUTENUE PAR ÉRIC ZEMMOUR",
+     "voix": 1353127,
+     "part": 0.05466
+    }
+   ],
+   "europeennes_note": {
+    "fr": "Fondé en 2021 ; 2024 était sa première européenne.",
+    "en": "Founded in 2021; 2024 was its first European election."
+   },
+   "meilleur_europeen": 0.05466,
    "meilleur": 0.07074,
    "dernier": 0.07074,
    "principes": {
@@ -337,6 +472,41 @@
      "part": 0.04779
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LMAJ",
+     "libelle": "Liste de la majorité",
+     "voix": 4799908,
+     "part": 0.27876
+    },
+    {
+     "annee": 2014,
+     "liste": "LUMP",
+     "libelle": "",
+     "voix": 3943819,
+     "part": 0.20805
+    },
+    {
+     "annee": 2019,
+     "liste": "UNION DROITE-CENTRE",
+     "libelle": "BELLAMY François-Xavier",
+     "voix": 1920407,
+     "part": 0.08477
+    },
+    {
+     "annee": 2024,
+     "liste": "LLR",
+     "libelle": "LA DROITE POUR FAIRE ENTENDRE LA VOIX DE LA FRANCE EN EUROPE",
+     "voix": 1794171,
+     "part": 0.07248
+    }
+   ],
+   "europeennes_note": {
+    "fr": "2009 est la « liste de la majorité » de l'UMP ; 2019 était une liste commune avec le centre.",
+    "en": "2009 is the UMP's \"liste de la majorité\"; 2019 was a joint list with the centre."
+   },
+   "meilleur_europeen": 0.27876,
    "meilleur": 0.31179,
    "dernier": 0.04779,
    "principes": {
@@ -395,6 +565,38 @@
      "part": 0.04633
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LVEC",
+     "libelle": "Liste des Verts",
+     "voix": 2803759,
+     "part": 0.16283
+    },
+    {
+     "annee": 2014,
+     "liste": "LVEC",
+     "libelle": "",
+     "voix": 1696442,
+     "part": 0.08949
+    },
+    {
+     "annee": 2019,
+     "liste": "EUROPE ÉCOLOGIE",
+     "libelle": "JADOT Yannick",
+     "voix": 3055023,
+     "part": 0.13485
+    },
+    {
+     "annee": 2024,
+     "liste": "LVEC",
+     "libelle": "EUROPE ÉCOLOGIE",
+     "voix": 1361883,
+     "part": 0.05502
+    }
+   ],
+   "europeennes_note": {},
+   "meilleur_europeen": 0.16283,
    "meilleur": 0.05248,
    "dernier": 0.04633,
    "principes": {
@@ -447,6 +649,41 @@
      "part": 0.02284
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LCOP",
+     "libelle": "Liste du PCF et du Parti de gauche",
+     "voix": 1041911,
+     "part": 0.06051
+    },
+    {
+     "annee": 2014,
+     "liste": "LFG",
+     "libelle": "",
+     "voix": 1200713,
+     "part": 0.06334
+    },
+    {
+     "annee": 2019,
+     "liste": "POUR L'EUROPE DES GENS",
+     "libelle": "BROSSAT Ian",
+     "voix": 564949,
+     "part": 0.02494
+    },
+    {
+     "annee": 2024,
+     "liste": "LCOM",
+     "libelle": "GAUCHE UNIE",
+     "voix": 584067,
+     "part": 0.0236
+    }
+   ],
+   "europeennes_note": {
+    "fr": "2009 et 2014 correspondent au Front de gauche, l'alliance du PCF avec le Parti de gauche.",
+    "en": "2009 and 2014 are the Front de gauche, the PCF's alliance with the Parti de gauche."
+   },
+   "meilleur_europeen": 0.06334,
    "meilleur": 0.0337,
    "dernier": 0.02284,
    "principes": {
@@ -499,6 +736,20 @@
      "part": 0.02064
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2019,
+     "liste": "DEBOUT LA FRANCE",
+     "libelle": "DUPONT-AIGNAN Nicolas",
+     "voix": 795508,
+     "part": 0.03511
+    }
+   ],
+   "europeennes_note": {
+    "fr": "En 2009, 2014 et 2024, ses voix sont comprises dans une nuance mêlant plusieurs listes, impossible à séparer : seule 2019 peut lui être attribuée.",
+    "en": "In 2009, 2014 and 2024 its votes fall inside a mixed nuance code that cannot be split, so only 2019 can be attributed."
+   },
+   "meilleur_europeen": 0.03511,
    "meilleur": 0.04701,
    "dernier": 0.02064,
    "principes": {
@@ -565,6 +816,41 @@
      "part": 0.01755
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2009,
+     "liste": "LSOC",
+     "libelle": "Liste du Parti socialiste",
+     "voix": 2838160,
+     "part": 0.16483
+    },
+    {
+     "annee": 2014,
+     "liste": "LUG",
+     "libelle": "",
+     "voix": 2650357,
+     "part": 0.13982
+    },
+    {
+     "annee": 2019,
+     "liste": "ENVIE D'EUROPE",
+     "libelle": "GLUCKSMANN Raphaël",
+     "voix": 1403170,
+     "part": 0.06194
+    },
+    {
+     "annee": 2024,
+     "liste": "LUG",
+     "libelle": "REVEIL EUR",
+     "voix": 3424216,
+     "part": 0.13833
+    }
+   ],
+   "europeennes_note": {
+    "fr": "2014, 2019 et 2024 sont des listes d'union de la gauche conduites par le PS - en 2019 et 2024 avec Place publique, dont le score n'apparaît donc pas séparément.",
+    "en": "2014, 2019 and 2024 were joint lists of the left led by the PS - in 2019 and 2024 alongside Place publique, whose own figure is therefore not shown separately."
+   },
+   "meilleur_europeen": 0.16483,
    "meilleur": 0.28628,
    "dernier": 0.01755,
    "principes": {
@@ -621,6 +907,12 @@
      "part": 0.00765
     }
    ],
+   "europeennes": [],
+   "europeennes_note": {
+    "fr": "Aucune européenne ne distingue le NPA : ses voix sont comprises dans une nuance d'extrême gauche partagée avec Lutte ouvrière.",
+    "en": "No European cycle reports the NPA separately: its votes sit inside a far-left code shared with Lutte ouvrière."
+   },
+   "meilleur_europeen": null,
    "meilleur": 0.04248,
    "dernier": 0.00765,
    "principes": {
@@ -685,6 +977,20 @@
      "part": 0.00561
     }
    ],
+   "europeennes": [
+    {
+     "annee": 2019,
+     "liste": "LUTTE OUVRIÈRE",
+     "libelle": "ARTHAUD Nathalie",
+     "voix": 176339,
+     "part": 0.00778
+    }
+   ],
+   "europeennes_note": {
+    "fr": "Seule 2019 distingue Lutte ouvrière ; les autres scrutins regroupent toutes les listes d'extrême gauche sous une même nuance.",
+    "en": "Only 2019 reports Lutte ouvrière separately; the other cycles group every far-left list under a single code."
+   },
+   "meilleur_europeen": 0.00778,
    "meilleur": 0.0572,
    "dernier": 0.00561,
    "principes": {
@@ -718,6 +1024,12 @@
    },
    "lignee_contestee": false,
    "resultats": [],
+   "europeennes": [],
+   "europeennes_note": {
+    "fr": "Fondé en 2021, après le scrutin de 2019. En 2024, il s'est présenté au sein de la liste de la majorité présidentielle, dont le score est porté au compte de Renaissance.",
+    "en": "Founded in 2021, after the 2019 cycle. In 2024 it stood inside the presidential majority's list, whose figure is shown under Renaissance."
+   },
+   "meilleur_europeen": null,
    "meilleur": null,
    "dernier": null,
    "principes": {
@@ -751,6 +1063,12 @@
    },
    "lignee_contestee": false,
    "resultats": [],
+   "europeennes": [],
+   "europeennes_note": {
+    "fr": "Codirigeait les listes PS de 2019 et 2024, dont les scores sont portés au compte du Parti socialiste plutôt que comptés deux fois.",
+    "en": "Co-led the PS lists of 2019 and 2024, whose figures are shown under the Parti socialiste rather than counted twice."
+   },
+   "meilleur_europeen": null,
    "meilleur": null,
    "dernier": null,
    "principes": {
@@ -776,6 +1094,12 @@
    },
    "lignee_contestee": false,
    "resultats": [],
+   "europeennes": [],
+   "europeennes_note": {
+    "fr": "Fondée en septembre 2024, trois mois après la dernière européenne ; son fondateur siégeait alors avec Les Républicains.",
+    "en": "Founded in September 2024, three months after the most recent European election; its founder sat with Les Républicains for that campaign."
+   },
+   "meilleur_europeen": null,
    "meilleur": null,
    "dernier": null,
    "principes": {

@@ -27,6 +27,19 @@
 #      link so they can check the summary against the source, which is the
 #      whole point of including it.
 #
+# `europeennes` maps each party to the LIST GROUPING that carried it in each
+# European election (config/resultats_europeennes.yaml). Those are the cleanest
+# measure of party strength France produces - proportional representation with
+# party lists, so the vote attaches to an organisation rather than a
+# personality. The key is the Ministry's nuance code, except in 2019 which
+# publishes none and is keyed by list label.
+#
+# A MISSING YEAR IS DELIBERATE WHERE THE DATA CANNOT SEPARATE PARTIES: `LEXG`
+# is every far-left list at once, `LDVD` several right-wing ones. Those parties
+# carry an `europeennes_note` saying so, in BOTH LANGUAGES - it is shown on the
+# page, which runs in French and English. A dash on the page is honest; an
+# attribution that quietly lumps two parties together is not.
+#
 # `revu` is the date a person last checked a summary against what the party
 # actually publishes. Prose goes stale silently - a party changes line, or
 # finally publishes a 2027 manifesto - so the date is shown on the page and
@@ -70,6 +83,11 @@ partis:
       2012: LE PEN Marine
       2017: LE PEN Marine
       2022: LE PEN
+    europeennes:
+      2009: "LFN"
+      2014: "LFN"
+      2019: "PRENEZ LE POUVOIR"
+      2024: "LRN"
     principes:
       source: positions
       revu: 2026-10-06
@@ -104,6 +122,16 @@ partis:
       2012: MÉLENCHON Jean-Luc
       2017: MÉLENCHON Jean-Luc
       2022: MÉLENCHON
+    europeennes:
+      2019: "LA FRANCE INSOUMISE"
+      2024: "LFI"
+    europeennes_note:
+      fr: >-
+        LFI n'existait ni en 2009 ni en 2014 ; le Front de gauche de ces
+        années est porté au compte du PCF.
+      en: >-
+        LFI did not exist in 2009 or 2014; the Front de gauche of those
+        years is shown under the PCF.
     principes:
       source: positions
       revu: 2026-10-06
@@ -133,6 +161,20 @@ partis:
       2012: HOLLANDE François
       2017: HAMON Benoît
       2022: HIDALGO
+    europeennes:
+      2009: "LSOC"
+      2014: "LUG"
+      2019: "ENVIE D'EUROPE"
+      2024: "LUG"
+    europeennes_note:
+      fr: >-
+        2014, 2019 et 2024 sont des listes d'union de la gauche conduites
+        par le PS - en 2019 et 2024 avec Place publique, dont le score
+        n'apparaît donc pas séparément.
+      en: >-
+        2014, 2019 and 2024 were joint lists of the left led by the PS -
+        in 2019 and 2024 alongside Place publique, whose own figure is
+        therefore not shown separately.
     principes:
       source: positions
       revu: 2026-10-06
@@ -166,6 +208,18 @@ partis:
       2012: SARKOZY Nicolas
       2017: FILLON François
       2022: PÉCRESSE
+    europeennes:
+      2009: "LMAJ"
+      2014: "LUMP"
+      2019: "UNION DROITE-CENTRE"
+      2024: "LLR"
+    europeennes_note:
+      fr: >-
+        2009 est la « liste de la majorité » de l'UMP ; 2019 était une
+        liste commune avec le centre.
+      en: >-
+        2009 is the UMP's "liste de la majorité"; 2019 was a joint list
+        with the centre.
     principes:
       source: positions
       revu: 2026-10-06
@@ -192,6 +246,18 @@ partis:
     resultats:
       2017: MACRON Emmanuel
       2022: MACRON
+    europeennes:
+      2019: "RENAISSANCE"
+      2024: "LENS"
+    europeennes_note:
+      fr: >-
+        Fondé en 2016 : il n'a donc disputé ni 2009 ni 2014. Ses deux
+        scores sont ceux de la liste de la majorité présidentielle, qu'il
+        conduisait.
+      en: >-
+        Founded in 2016, so it contested neither the 2009 nor the 2014
+        cycle. Both its figures are the presidential majority's list,
+        which it led.
     principes:
       source: positions
       revu: 2026-10-06
@@ -220,6 +286,16 @@ partis:
         Founded in 2021 by Édouard Philippe. Has never contested a presidential
         election - which is not a detail: its leader is second in this forecast.
     resultats: {}
+    europeennes: {}
+    europeennes_note:
+      fr: >-
+        Fondé en 2021, après le scrutin de 2019. En 2024, il s'est
+        présenté au sein de la liste de la majorité présidentielle, dont
+        le score est porté au compte de Renaissance.
+      en: >-
+        Founded in 2021, after the 2019 cycle. In 2024 it stood inside the
+        presidential majority's list, whose figure is shown under
+        Renaissance.
     principes:
       source: positions
       revu: 2026-10-06
@@ -254,6 +330,11 @@ partis:
       2007: VOYNET Dominique
       2012: JOLY Eva
       2022: JADOT
+    europeennes:
+      2009: "LVEC"
+      2014: "LVEC"
+      2019: "EUROPE ÉCOLOGIE"
+      2024: "LVEC"
     principes:
       source: positions
       revu: 2026-10-06
@@ -283,6 +364,18 @@ partis:
       2002: HUE Robert
       2007: BUFFET Marie-George
       2022: ROUSSEL
+    europeennes:
+      2009: "LCOP"
+      2014: "LFG"
+      2019: "POUR L'EUROPE DES GENS"
+      2024: "LCOM"
+    europeennes_note:
+      fr: >-
+        2009 et 2014 correspondent au Front de gauche, l'alliance du PCF
+        avec le Parti de gauche.
+      en: >-
+        2009 and 2014 are the Front de gauche, the PCF's alliance with the
+        Parti de gauche.
     principes:
       source: positions
       revu: 2026-10-06
@@ -306,6 +399,13 @@ partis:
       en: Founded in 2021 by Éric Zemmour, for the 2022 election.
     resultats:
       2022: ZEMMOUR
+    europeennes:
+      2024: "LREC"
+    europeennes_note:
+      fr: >-
+        Fondé en 2021 ; 2024 était sa première européenne.
+      en: >-
+        Founded in 2021; 2024 was its first European election.
     principes:
       source: positions
       revu: 2026-10-06
@@ -331,6 +431,16 @@ partis:
       2012: DUPONT-AIGNAN Nicolas
       2017: DUPONT-AIGNAN Nicolas
       2022: DUPONT-AIGNAN
+    europeennes:
+      2019: "DEBOUT LA FRANCE"
+    europeennes_note:
+      fr: >-
+        En 2009, 2014 et 2024, ses voix sont comprises dans une nuance
+        mêlant plusieurs listes, impossible à séparer : seule 2019 peut
+        lui être attribuée.
+      en: >-
+        In 2009, 2014 and 2024 its votes fall inside a mixed nuance code
+        that cannot be split, so only 2019 can be attributed.
     principes:
       source: positions
       revu: 2026-10-06
@@ -359,6 +469,16 @@ partis:
       2012: ARTHAUD Nathalie
       2017: ARTHAUD Nathalie
       2022: ARTHAUD
+    europeennes:
+      2019: "LUTTE OUVRIÈRE"
+    europeennes_note:
+      fr: >-
+        Seule 2019 distingue Lutte ouvrière ; les autres scrutins
+        regroupent toutes les listes d'extrême gauche sous une même
+        nuance.
+      en: >-
+        Only 2019 reports Lutte ouvrière separately; the other cycles
+        group every far-left list under a single code.
     principes:
       source: positions
       revu: 2026-10-06
@@ -397,6 +517,14 @@ partis:
       2012: POUTOU Philippe
       2017: POUTOU Philippe
       2022: POUTOU
+    europeennes: {}
+    europeennes_note:
+      fr: >-
+        Aucune européenne ne distingue le NPA : ses voix sont comprises
+        dans une nuance d'extrême gauche partagée avec Lutte ouvrière.
+      en: >-
+        No European cycle reports the NPA separately: its votes sit inside
+        a far-left code shared with Lutte ouvrière.
     principes:
       source: positions
       revu: 2026-10-06
@@ -427,6 +555,17 @@ partis:
       2002: BAYROU Francois
       2007: BAYROU François
       2012: BAYROU François
+    europeennes:
+      2009: "LCMD"
+      2014: "LUC"
+    europeennes_note:
+      fr: >-
+        2014 était une liste commune UDI-MoDem. À partir de 2019, le MoDem
+        s'est présenté au sein de la liste de la majorité présidentielle :
+        il n'a donc pas de score propre.
+      en: >-
+        2014 was a joint UDI-MoDem list. From 2019 the MoDem stood inside
+        the presidential majority's list, so it has no separate figure.
     principes:
       source: positions
       revu: 2026-10-06
@@ -449,6 +588,14 @@ partis:
       fr: Fondé en 2018. N'a jamais présenté de candidat à une élection présidentielle.
       en: Founded in 2018. Has never contested a presidential election.
     resultats: {}
+    europeennes: {}
+    europeennes_note:
+      fr: >-
+        Codirigeait les listes PS de 2019 et 2024, dont les scores sont
+        portés au compte du Parti socialiste plutôt que comptés deux fois.
+      en: >-
+        Co-led the PS lists of 2019 and 2024, whose figures are shown
+        under the Parti socialiste rather than counted twice.
     principes:
       source: positions
       revu: 2026-10-06
@@ -477,6 +624,15 @@ partis:
         Founded in 2024 by Éric Ciotti after his break with Les Républicains.
         Has never contested a presidential election.
     resultats: {}
+    europeennes: {}
+    europeennes_note:
+      fr: >-
+        Fondée en septembre 2024, trois mois après la dernière européenne
+        ; son fondateur siégeait alors avec Les Républicains.
+      en: >-
+        Founded in September 2024, three months after the most recent
+        European election; its founder sat with Les Républicains for that
+        campaign.
     principes:
       source: positions
       revu: 2026-10-06

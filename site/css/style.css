@@ -616,6 +616,29 @@ main { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
   text-align: center;
   line-height: 1.15;
 }
+/* TWO ROWS, ONE SCALE. The bars share a width so their heights can be
+   compared directly - that comparison is the reason the European series is
+   here at all. The European row has four columns of a six-column grid, so the
+   shorter series reads as shorter rather than as stretched. */
+.party-series { display: grid; gap: 2px; }
+.party-series-label {
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+/* A European election measures a list under proportional representation, on
+   a far lower turnout - a different kind of measurement, so a lighter fill
+   than the presidential bars rather than the same solid block. */
+.party-bar-european { opacity: 0.68; }
+.party-euro-note {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  max-width: 72ch;
+}
+.party-euro-note .party-series-label { margin-right: 2px; }
+
 .party-reviewed {
   font-size: var(--fs-2xs);
   color: var(--text-faint);

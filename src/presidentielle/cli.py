@@ -130,17 +130,37 @@ def _write_parties(forecast: dict | None = None) -> dict:
 
 
 def cmd_partis(args) -> int:
-    """Rebuild the party section without refitting the model."""
+    """Rebuild the party section without refitting the model.
+
+    Both series are printed, because the second one is the point: a party's
+    European score and its presidential score can differ by a factor of three,
+    and an operator who sees only one row cannot tell a bad mapping from a real
+    divergence.
+    """
     payload = _write_parties()
     stood = [p for p in payload["partis"] if p["resultats"]]
+    euro = [p for p in payload["partis"] if p["europeennes"]]
+    years = payload["elections_europeennes"]
     print(f"{len(payload['partis'])} parties, {len(stood)} with a presidential record, "
           f"across {len(payload['elections'])} elections "
           f"({payload['elections'][0]['annee']}-{payload['elections'][-1]['annee']})")
+    print(f"{len(euro)} with a European record, across {len(years)} elections "
+          f"({years[0]['annee']}-{years[-1]['annee']})")
     for p in payload["partis"]:
         record = "  ".join(
             f"{r['annee']} {100 * r['part']:.1f}%" for r in p["resultats"]
         ) or "never contested a presidential election"
-        print(f"  {p['nom'][:32]:33} {record}")
+        print(f"  {p['nom'][:32]:33} P  {record}")
+        series = "  ".join(
+            f"{r['annee']} {100 * r['part']:.1f}%" for r in p["europeennes"]
+        )
+        if series:
+            print(f"  {'':33} E  {series}")
+        # The note is what distinguishes "did not stand" from "cannot be
+        # separated from another party's nuance code", so it prints too.
+        note = (p.get("europeennes_note") or {}).get("en")
+        if note and len(p["europeennes"]) < len(years):
+            print(f"  {'':33} .. {note}")
     return 0
 
 

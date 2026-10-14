@@ -28,7 +28,8 @@ Each dataset below is published under the Licence Ouverte (`fr-lo` in the
 data.gouv.fr metadata), which permits reuse with attribution. The attribution
 travels with the data, in the header of the file this writes.
 
-Run:  python scripts/extract_resultats_historiques.py
+Run:  pip install -e '.[extract]'
+      python scripts/extract_resultats_historiques.py
 """
 
 from __future__ import annotations
