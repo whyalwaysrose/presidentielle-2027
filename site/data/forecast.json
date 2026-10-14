@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "generated_at": "2026-10-13T13:04:08+00:00",
+ "generated_at": "2026-10-14T10:32:32+00:00",
  "as_of": "2026-10-08",
  "scenario": "modele",
  "model_fingerprint": "0afba050d426",
@@ -8,7 +8,7 @@
   "premier_tour": "2027-04-18",
   "second_tour": "2027-05-02",
   "cloture_candidatures": "2027-03-12",
-  "jours_restants": 187,
+  "jours_restants": 186,
   "field_is_known": false
  },
  "blocs": {
@@ -3006,7 +3006,7 @@
   "pinned_blocs": [],
   "couverture_commission": {
    "derniere_notice": "2026-10-12",
-   "notices_examinees": 169,
+   "notices_examinees": 170,
    "dans_le_flux": 49,
    "manquantes": [
     {
@@ -3698,7 +3698,8 @@
    "2026-09-03",
    "2026-09-09",
    "2026-09-10",
-   "2026-09-29"
+   "2026-09-29",
+   "2026-10-08"
   ],
   "series": {
    "MLP": [
@@ -3706,88 +3707,74 @@
     0.6279,
     0.662,
     0.6053,
-    0.5673
+    0.5673,
+    0.6498
    ],
    "EP": [
     0.1876,
     0.1876,
     0.1757,
     0.2196,
-    0.2508
+    0.2508,
+    0.1908
    ],
    "JLM": [
     0.067,
     0.0682,
     0.0606,
     0.0672,
-    0.0749
-   ],
-   "GA": [
-    0.0391,
-    0.0392,
-    0.0392,
-    0.0431,
-    0.0551
+    0.0749,
+    0.0827
    ],
    "RG": [
     0.0668,
     0.063,
     0.0461,
     0.0485,
-    0.041
+    0.041,
+    0.0358
+   ],
+   "GA": [
+    0.0391,
+    0.0392,
+    0.0392,
+    0.0431,
+    0.0551,
+    0.0303
    ]
   },
   "noms": {
    "MLP": "Marine Le Pen",
    "EP": "Édouard Philippe",
    "JLM": "Jean-Luc Mélenchon",
-   "GA": "Gabriel Attal",
-   "RG": "Raphaël Glucksmann"
+   "RG": "Raphaël Glucksmann",
+   "GA": "Gabriel Attal"
   },
   "blocs": {
    "MLP": "rn",
    "EP": "centre",
    "JLM": "gauche_radicale",
-   "GA": "centre",
-   "RG": "socialiste"
+   "RG": "socialiste",
+   "GA": "centre"
   },
   "model_changed": true,
-  "n_runs": 39
+  "n_runs": 40
  },
  "changement": {
   "has_previous": true,
-  "previous_run": "20261012T133649Z.json",
-  "previous_as_of": "2026-09-29",
+  "previous_run": "20261013T130408Z.json",
+  "previous_as_of": "2026-10-08",
   "model_changed": false,
-  "new_surveys": 1,
-  "same_data": false,
-  "moves": [
-   {
-    "id": "MLP",
-    "nom": "Marine Le Pen",
-    "p_win": 0.64977,
-    "delta": 0.0825
-   },
-   {
-    "id": "EP",
-    "nom": "Édouard Philippe",
-    "p_win": 0.1908,
-    "delta": -0.06
-   },
-   {
-    "id": "GA",
-    "nom": "Gabriel Attal",
-    "p_win": 0.0303,
-    "delta": -0.0248
-   }
-  ],
+  "new_surveys": 0,
+  "same_data": true,
+  "moves": [],
   "texte": {
-   "fr": "1 nouvelle enquête depuis la dernière mise à jour. Mouvements : Marine Le Pen +8 points, Édouard Philippe −6 points, Gabriel Attal −2 points.",
-   "en": "1 new survey since the last update. Movement: Marine Le Pen +8 points, Édouard Philippe −6 points, Gabriel Attal −2 points."
+   "fr": "Aucun nouveau sondage depuis le 8 octobre 2026 : les écarts éventuels relèvent du bruit de simulation, pas de l'opinion.",
+   "en": "No new polls since 8 October 2026; any movement is simulation noise rather than opinion."
   }
  },
  "commentaire": {
-  "fr": "À 187 jours du premier tour, le modèle s'appuie sur 54 enquêtes (228 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (65 %), devant Édouard Philippe (19 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 53 %, Édouard Philippe 33 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (49 % des simulations) ; Marine Le Pen l'emporte dans 84 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
-  "en": "With 187 days to the first round, the model uses 54 surveys (228 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (65%), ahead of Édouard Philippe (19%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 53%, Édouard Philippe 33%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (49% of simulations), won by Marine Le Pen in 84% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
+  "fr": "À 186 jours du premier tour, le modèle s'appuie sur 54 enquêtes (228 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (65 %), devant Édouard Philippe (19 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 53 %, Édouard Philippe 33 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (49 % des simulations) ; Marine Le Pen l'emporte dans 84 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
+  "en": "With 186 days to the first round, the model uses 54 surveys (228 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (65%), ahead of Édouard Philippe (19%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 53%, Édouard Philippe 33%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (49% of simulations), won by Marine Le Pen in 84% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
  }
 }
