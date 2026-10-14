@@ -9,22 +9,31 @@
 #
 # statut:
 #   manquante          a 2027 voting-intention poll the feed does not have
+#   ecartee_upstream   a voting-intention poll upstream has read and declined
 #   dans_le_flux       already in the feed, under another filename
 #   pas_une_intention  not a 2027 voting-intention poll
 #
 # Only add an entry after reading the notice itself, and say what it asks.
+#
+# `manquante` versus `ecartee_upstream`: the first is worth reporting upstream,
+# the second is not - they have seen it and said no, and filing it again would
+# relitigate their decision. Both stay visible, because either way it is a real
+# poll this forecast does not see.
 
 notices:
 
   # --- real gaps -------------------------------------------------------------
 
   9927-pres-toluna-hi-regards-30-avril.pdf:
-    statut: manquante
+    statut: ecartee_upstream
     note: >-
       Toluna Harris Interactive for Regards, fieldwork 24-25 April 2025, 1 189
-      respondents. First-round voting intentions, including "gauche unie"
-      hypotheses. No Harris poll in the feed between 15 April and 5 May 2025.
-      Read 2026-09-21.
+      respondents (1 035 registered voters). First-round voting intentions, but
+      its hypotheses name an unnamed "gauche unie" candidate rather than a
+      person. Upstream read it and declined to carry it for exactly that reason
+      (MieuxVoter/presidentielle2027#4, closed 2026-05-27: "je ne veux pas
+      inclure ce sondage car il ne designe pas des personnes"). Not a gap to
+      report again. Read 2026-09-21, rechecked 2026-10-14.
 
   10218-pres-election-2027-opinionway-le-figaro-3-juillet.pdf:
     statut: manquante
@@ -33,7 +42,11 @@ notices:
       voters. Second-round head-to-heads (Philippe, Attal, Retailleau each
       against Bardella and Melenchon), plus potential-vote items. The only
       OpinionWay polls in the feed around then are the 10-11 June JDD wave and
-      the 8-9 July Presitrack. Read 2026-09-21.
+      the 8-9 July Presitrack. The commissioner is Fondapol, not Le Figaro as
+      the filename suggests. Reported upstream as
+      MieuxVoter/presidentielle2027#260 on 2026-10-14, with the 13 duels
+      transcribed; their own automated issue #101 had been closed on
+      2026-07-16 without the data landing. Read 2026-09-21.
 
   # --- in the feed under another filename -----------------------------------
 
@@ -43,6 +56,16 @@ notices:
       Same Verian / L'Hemicycle poll (fieldwork 18-20 November 2025) that the
       feed already carries as 10024-pres-verian-lhemicycle-27-novembre.pdf -
       a re-filed notice, not a second poll.
+
+  10284-pres-barometre-election-v6-ifop-30-septembre.pdf:
+    statut: dans_le_flux
+    note: >-
+      Ifop-Fiducial for LCI, Le Figaro and Sud Radio, vague 6, fieldwork to
+      29 September 2026, nine first-round hypotheses. The catalog lists notice
+      10284 under TWO filenames; the feed carries the longer one,
+      10284-pres-barometre-election-presidentielle-v6-ifop-le-figaro-30-septembre.pdf.
+      Not a gap - the comparison is by filename, so the second spelling reads
+      as missing. Read 2026-10-14.
 
   10167-pres-odoxa-31-mars.pdf:
     statut: dans_le_flux

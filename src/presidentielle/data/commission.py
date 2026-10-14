@@ -183,6 +183,7 @@ class CoverageReport:
     missing_vote: list[dict] = field(default_factory=list)     # overdue: WARN
     pending_vote: list[dict] = field(default_factory=list)     # within grace
     known_gaps: list[dict] = field(default_factory=list)       # reviewed, still absent
+    declined: list[dict] = field(default_factory=list)         # upstream said no
     unreadable: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
 
@@ -199,6 +200,7 @@ class CoverageReport:
             "manquantes": self.missing_vote,
             "en_attente": self.pending_vote,
             "lacunes_connues": self.known_gaps,
+            "ecartees_upstream": self.declined,
             "illisibles": self.unreadable,
             "erreurs": self.errors,
         }
@@ -217,6 +219,9 @@ class CoverageReport:
             )
         for n in self.known_gaps:
             out.append(f"known gap (reviewed): {n['fichier']} - {n['note']}")
+        for n in self.declined:
+            out.append(f"declined upstream (not a gap to report): {n['fichier']} "
+                       f"- {n['note']}")
         for f in self.unreadable:
             out.append(f"could not read {f} - check it by hand, then record it in "
                        "config/notices_commission.yaml")
@@ -273,6 +278,13 @@ REVIEW_STATUSES = {
     "pas_une_intention": "not a 2027 voting-intention poll",
     "dans_le_flux": "already in the feed, under another filename",
     "manquante": "a voting-intention poll the feed does not have",
+    # Distinct from `manquante` because nothing will come of reporting it
+    # again: the upstream maintainers have read this poll and decided against
+    # carrying it. It stays visible rather than being silently dropped - it is
+    # a real poll this forecast does not see, which is a limitation of the
+    # data and belongs in the diagnostics - but it is not an open gap and
+    # never warns.
+    "ecartee_upstream": "a voting-intention poll upstream has declined to carry",
 }
 
 
@@ -317,12 +329,15 @@ def check(
         review = reviews.get(n.filename)
         if review:
             # A person has read it. That beats the classifier either way.
+            entry = {
+                "fichier": n.filename,
+                "publiee": n.published.isoformat(),
+                "note": review.get("note", ""),
+            }
             if review.get("statut") == "manquante":
-                report.known_gaps.append({
-                    "fichier": n.filename,
-                    "publiee": n.published.isoformat(),
-                    "note": review.get("note", ""),
-                })
+                report.known_gaps.append(entry)
+            elif review.get("statut") == "ecartee_upstream":
+                report.declined.append(entry)
             continue
         if re.match(r"^\d+-mun-", n.filename):
             # Municipal polls filed under "Pres" upstream. Not this election.

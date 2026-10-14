@@ -162,6 +162,29 @@ def test_a_reviewed_gap_is_reported_but_not_warned(sandbox):
     assert not any(a.startswith("::warning") for a in C.github_annotations(r))
 
 
+def test_a_poll_upstream_declined_is_shown_but_never_warned(sandbox):
+    """Different from a gap. The upstream maintainers read the Toluna/Regards
+    poll and decided against carrying it because its hypotheses name a "gauche
+    unie" candidate rather than a person. Reporting it again would relitigate
+    their decision - but it is still a real voting-intention poll this forecast
+    does not see, so it stays on the report rather than vanishing."""
+    sandbox(
+        [("104-pres-y.pdf", "2026-06-01", "Pres")],
+        scan={"104-pres-y.pdf": {"verdict": "vote", "extrait": ""}},
+        reviews={"104-pres-y.pdf": {
+            "statut": "ecartee_upstream", "note": "upstream declined it"}},
+    )
+    r = _run()
+    # Not an open gap, and nothing to act on...
+    assert not r.missing_vote and not r.known_gaps
+    assert r.ok
+    assert not any(a.startswith("::warning") for a in C.github_annotations(r))
+    # ...but still visible, with the reason, on the report and in the payload.
+    assert r.declined[0]["note"] == "upstream declined it"
+    assert any("declined upstream" in line for line in r.lines())
+    assert r.as_dict()["ecartees_upstream"][0]["fichier"] == "104-pres-y.pdf"
+
+
 def test_a_human_verdict_beats_the_classifier(sandbox):
     sandbox(
         [("103-pres-seconds-tours.pdf", "2026-06-01", "Pres")],
