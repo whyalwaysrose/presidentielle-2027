@@ -100,3 +100,44 @@ notices:
     note: >-
       CSA for CNews / Europe 1 / JDD, "Les attentes des Francais envers le
       futur president" - priorities for the next president.
+
+  # --- the Elabe notices --------------------------------------------------
+  # None of these four could be read by `commission.pdf_text`: Elabe embeds
+  # subset CID fonts, so the TJ operands are glyph ids rather than literal
+  # strings, and the reader - which deliberately does no font decoding - sees
+  # nothing. They were read by hand on 2026-10-14 (text layer extracted with
+  # pypdf). Every future Elabe notice will arrive the same way.
+
+  10169-pres-les-francais-et-le-president-ideal-elabe-18-avril.pdf:
+    statut: pas_une_intention
+    note: >-
+      Elabe for La Tribune Dimanche, fieldwork 14-15 April 2026, 1 000 people.
+      "Les Francais et le(la) president(e) ideal(e)": what PROFILE would make a
+      good president (politician, company head, academic...), which qualities,
+      what age, what political positioning. Names no candidate anywhere and
+      asks for no vote. Read by hand 2026-10-14.
+
+  10198-pres-observatoire-elabe-4-juin.pdf:
+    statut: pas_une_intention
+    note: >-
+      Elabe for Les Echos, "L'Observatoire Politique - Juin 2026", fieldwork
+      2-3 June 2026, 1 001 people. Trust in the President and the Prime
+      Minister, then positive/negative image for 31 personalities. An image
+      barometer, not a voting intention. Read by hand 2026-10-14.
+
+  10285-pres-observatoire-politique-elabe-1er-octobre.pdf:
+    statut: pas_une_intention
+    note: >-
+      Elabe for Les Echos, "L'Observatoire politique - Octobre 2026", fieldwork
+      29-30 September 2026, 1 000 people. The same two trust questions and the
+      same image battery, for 31 personalities. No vote question. Read by hand
+      2026-10-14.
+
+  10286-pres-budget-2027-elabe-1er-octobre.pdf:
+    statut: pas_une_intention
+    note: >-
+      Elabe for Les Echos, "Les Francais et le budget 2027", fieldwork 29-30
+      September 2026, 1 000 people. The 2027 state budget: where the deficit
+      effort should fall, whether oppositions should censure, and support for
+      a list of specific measures. "2027" here is a budget year, not a
+      ballot. Read by hand 2026-10-14.

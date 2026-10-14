@@ -98,7 +98,24 @@ _SKIP = (b"/Image", b"/FontFile", b"/Length1", b"/XObject")
 
 
 def pdf_text(data: bytes) -> str:
-    """Best-effort text of a notice PDF, whitespace collapsed."""
+    """Best-effort text of a notice PDF, whitespace collapsed.
+
+    BEST-EFFORT MEANS SOME NOTICES COME OUT EMPTY, and that is reported rather
+    than guessed at: an empty read becomes "illisible", which asks a person to
+    open the file and record a verdict in config/notices_commission.yaml.
+
+    The known case is Elabe, whose notices embed SUBSET CID FONTS. Their text
+    is there, but the TJ operands are glyph ids in hex - `[<0003>-0.83] TJ` -
+    rather than the literal `(...)` strings this reads. Turning those into
+    characters means parsing each font's ToUnicode CMap, which is a PDF
+    library's job, not a regex's. Four such notices were read by hand on
+    2026-10-14 and none was a voting-intention poll; the Observatoire ones
+    recur monthly, so expect more.
+
+    This stays a hand-rolled reader on purpose. It runs against arbitrary PDFs
+    fetched from the internet on a schedule, every pattern is linear and
+    bounded, and `test_a_hostile_stream_is_fast` holds that line.
+    """
     out: list[str] = []
     for m in _STREAM.finditer(data):
         header = m.group(1)
