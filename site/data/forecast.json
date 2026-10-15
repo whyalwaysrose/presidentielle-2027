@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "generated_at": "2026-10-14T10:32:32+00:00",
+ "generated_at": "2026-10-15T10:16:50+00:00",
  "as_of": "2026-10-08",
  "scenario": "modele",
  "model_fingerprint": "0afba050d426",
@@ -8,7 +8,7 @@
   "premier_tour": "2027-04-18",
   "second_tour": "2027-05-02",
   "cloture_candidatures": "2027-03-12",
-  "jours_restants": 186,
+  "jours_restants": 185,
   "field_is_known": false
  },
  "blocs": {
@@ -3010,36 +3010,30 @@
    "dans_le_flux": 49,
    "manquantes": [
     {
-     "fichier": "10284-pres-barometre-election-v6-ifop-30-septembre.pdf",
-     "publiee": "2026-10-02",
-     "extrait": "tes électorales interrogées, 1027 personnes ont exprimé une intention de vote. Sur toutes les personnes inscrites sur les listes voter in"
-    }
-   ],
-   "en_attente": [
-    {
      "fichier": "10297-pres-stature-presidentielle-v6-verian-le-figaro-magazine-8-octobre.pdf",
      "publiee": "2026-10-08",
      "extrait": "endre les décisions dont le pays a besoin TOTAL 15 15 18 16 Intention de vote présidentielle 2027 Fabien Roussel 21 27 33 33 Jean - Luc M"
     }
    ],
+   "en_attente": [],
    "lacunes_connues": [
-    {
-     "fichier": "9927-pres-toluna-hi-regards-30-avril.pdf",
-     "publiee": "2025-04-29",
-     "note": "Toluna Harris Interactive for Regards, fieldwork 24-25 April 2025, 1 189 respondents. First-round voting intentions, including \"gauche unie\" hypotheses. No Harris poll in the feed between 15 April and 5 May 2025. Read 2026-09-21."
-    },
     {
      "fichier": "10218-pres-election-2027-opinionway-le-figaro-3-juillet.pdf",
      "publiee": "2026-07-06",
-     "note": "OpinionWay for Fondapol, fieldwork 1-8 June 2026, 3 057 registered voters. Second-round head-to-heads (Philippe, Attal, Retailleau each against Bardella and Melenchon), plus potential-vote items. The only OpinionWay polls in the feed around then are the 10-11 June JDD wave and the 8-9 July Presitrack. Read 2026-09-21."
+     "note": "OpinionWay for Fondapol, fieldwork 1-8 June 2026, 3 057 registered voters. Second-round head-to-heads (Philippe, Attal, Retailleau each against Bardella and Melenchon), plus potential-vote items. The only OpinionWay polls in the feed around then are the 10-11 June JDD wave and the 8-9 July Presitrack. The commissioner is Fondapol, not Le Figaro as the filename suggests. Reported upstream as MieuxVoter/presidentielle2027#260 on 2026-10-14, with the 13 duels transcribed; their own automated issue #101 had been closed on 2026-07-16 without the data landing. Read 2026-09-21."
     }
    ],
-   "illisibles": [
-    "10169-pres-les-francais-et-le-president-ideal-elabe-18-avril.pdf",
-    "10198-pres-observatoire-elabe-4-juin.pdf",
-    "10285-pres-observatoire-politique-elabe-1er-octobre.pdf",
-    "10286-pres-budget-2027-elabe-1er-octobre.pdf"
+   "ecartees_upstream": [
+    {
+     "fichier": "9927-pres-toluna-hi-regards-30-avril.pdf",
+     "publiee": "2025-04-29",
+     "note": "Toluna Harris Interactive for Regards, fieldwork 24-25 April 2025, 1 189 respondents (1 035 registered voters). First-round voting intentions, but its hypotheses name an unnamed \"gauche unie\" candidate rather than a person. Upstream read it and declined to carry it for exactly that reason (MieuxVoter/presidentielle2027#4, closed 2026-05-27: \"je ne veux pas inclure ce sondage car il ne designe pas des personnes\"). Not a gap to report again. Read 2026-09-21, rechecked 2026-10-14."
+    }
    ],
+   "sans_date": [
+    "10251a-pres-barometre-cluster17-le-point-10-septembre.pdf"
+   ],
+   "illisibles": [],
    "erreurs": []
   }
  },
@@ -3758,11 +3752,11 @@
    "GA": "centre"
   },
   "model_changed": true,
-  "n_runs": 40
+  "n_runs": 41
  },
  "changement": {
   "has_previous": true,
-  "previous_run": "20261013T130408Z.json",
+  "previous_run": "20261014T103232Z.json",
   "previous_as_of": "2026-10-08",
   "model_changed": false,
   "new_surveys": 0,
@@ -3774,7 +3768,7 @@
   }
  },
  "commentaire": {
-  "fr": "À 186 jours du premier tour, le modèle s'appuie sur 54 enquêtes (228 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (65 %), devant Édouard Philippe (19 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 53 %, Édouard Philippe 33 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (49 % des simulations) ; Marine Le Pen l'emporte dans 84 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
-  "en": "With 186 days to the first round, the model uses 54 surveys (228 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (65%), ahead of Édouard Philippe (19%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 53%, Édouard Philippe 33%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (49% of simulations), won by Marine Le Pen in 84% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
+  "fr": "À 185 jours du premier tour, le modèle s'appuie sur 54 enquêtes (228 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (65 %), devant Édouard Philippe (19 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 53 %, Édouard Philippe 33 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (49 % des simulations) ; Marine Le Pen l'emporte dans 84 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
+  "en": "With 185 days to the first round, the model uses 54 surveys (228 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (65%), ahead of Édouard Philippe (19%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 53%, Édouard Philippe 33%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (49% of simulations), won by Marine Le Pen in 84% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
  }
 }
