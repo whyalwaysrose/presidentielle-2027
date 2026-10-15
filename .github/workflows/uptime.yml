@@ -1,0 +1,159 @@
+# Does the PUBLISHED site actually work?
+#
+# The daily run already reports its own failures. This asks a different
+# question, and the only one that matters to a reader: is the page they open
+# serving a current forecast? A green daily run and a broken site are not
+# mutually exclusive - Pages can fail to publish, a path can start returning
+# the 404 page, a JSON file can arrive truncated - and every one of those looks
+# fine from inside the pipeline.
+#
+# It fetches over the public internet, as a reader would, and checks CONTENT
+# rather than status codes alone. A 200 that returns HTML where JSON belongs is
+# exactly the failure that hides best: the file looks present, has the right
+# extension, and only its bytes give it away. (The upstream notice archive this
+# project reads has nine such files, saved under a .pdf name.)
+#
+# Not a true external monitor: this runs on GitHub, checking GitHub Pages, so a
+# full GitHub outage takes out both. It catches what actually goes wrong here.
+# A third-party monitor on the same URL would cover the rest.
+name: Uptime
+
+on:
+  schedule:
+    # Every six hours. Offset off the hour because the hour itself is the
+    # busiest slot on shared runners and the least likely to start promptly.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+permissions:
+  issues: write
+
+env:
+  SITE: https://whyalwaysrose.github.io/presidentielle-2027
+  # The threshold the page itself uses to warn readers that its numbers are
+  # old (STALE_DAYS in site/js/app.js). Past it, the site is already saying so.
+  STALE_DAYS: "3"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: The page, the forecast and the party data
+        id: probe
+        run: |
+          # Actions runs `bash -e` by default, which would stop at the first
+          # failed check. This collects them all instead and decides at the
+          # end: one run should report everything that is wrong, not just the
+          # first thing it tripped over.
+          set +e -u -o pipefail
+          : > failures.txt
+          fail() { printf '%s\n' "- $1" >> failures.txt; echo "FAIL: $1"; }
+
+          # --retry covers a transient blip, so one lost packet does not open
+          # an issue. Anything that survives three tries is real.
+          get() { curl -fsS --retry 3 --retry-delay 5 --max-time 30 "$1"; }
+
+          if ! get "$SITE/" > page.html; then
+            fail "the page did not load at all"
+          elif ! grep -q 'js/app.js' page.html; then
+            fail "the page loaded but is not the forecast page"
+          fi
+
+          forecast_ok=no
+          for name in forecast partis; do
+            if ! get "$SITE/data/$name.json" > "$name.json"; then
+              fail "data/$name.json did not load"
+              continue
+            fi
+            if ! python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$name.json" 2>/dev/null; then
+              fail "data/$name.json is not JSON (starts: $(head -c 40 "$name.json" | tr -d '\n'))"
+              continue
+            fi
+            [ "$name" = forecast ] && forecast_ok=yes
+          done
+
+          # Freshness, read from the PUBLISHED file rather than from the run
+          # that wrote it - that is the whole point of checking from outside.
+          # Only when it parsed: asking how old an error page is would add a
+          # second, uglier line about a problem already reported.
+          if [ "$forecast_ok" = yes ]; then
+            cat > age.py <<'PY'
+          import datetime as dt
+          import json
+          import os
+          import sys
+
+          limit = float(os.environ["STALE_DAYS"])
+          stamp = json.load(open(sys.argv[1])).get("generated_at")
+          if not stamp:
+              sys.exit("the published forecast has no generated_at")
+          age = (dt.datetime.now(dt.timezone.utc)
+                 - dt.datetime.fromisoformat(stamp)).total_seconds() / 86400
+          print(f"published forecast is {age:.1f} days old")
+          if age > limit:
+              sys.exit(f"the published forecast is {age:.1f} days old "
+                       f"(generated {stamp}, limit {limit:g})")
+          PY
+            if ! age=$(python3 age.py forecast.json 2>&1); then
+              fail "$(printf '%s' "$age" | tail -1)"
+            else
+              echo "$age"
+            fi
+          fi
+
+          if [ -s failures.txt ]; then
+            {
+              echo "failures<<GHEOF"
+              cat failures.txt
+              echo "GHEOF"
+            } >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "the published site is serving a current forecast"
+
+      - name: Open or close the failure issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RESULT: ${{ steps.probe.outcome }}
+          FAILURES: ${{ steps.probe.outputs.failures }}
+        run: |
+          set -euo pipefail
+          gh label create uptime --repo "$REPO" --color b60205 \
+            --description "The published site is not serving a current forecast" 2>/dev/null || true
+          open=$(gh issue list --repo "$REPO" --label uptime --state open --json number --jq '.[0].number // empty')
+
+          if [ "$RESULT" = success ]; then
+            for n in $open; do
+              gh issue close "$n" --repo "$REPO" \
+                --comment "Fixed: the published site checked out on $(date -u +%F). $RUN_URL"
+            done
+            exit 0
+          fi
+
+          body=$(cat <<EOF
+          The published site failed its check on $(date -u +%F).
+
+          $FAILURES
+
+          $RUN_URL
+
+          This checks the public URL, so it can fail while the daily run is green -
+          which would mean the forecast was built but never reached readers. If
+          there is also an open \`daily-run\` issue, fix that one first: this is
+          probably its symptom.
+          EOF
+          )
+          if [ -z "$open" ]; then
+            gh issue create --repo "$REPO" \
+              --title "The published site is not serving a current forecast" \
+              --label uptime --body "$body"
+          else
+            gh issue comment "$open" --repo "$REPO" --body "$body"
+          fi
