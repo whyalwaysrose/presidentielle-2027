@@ -74,10 +74,30 @@ jobs:
           git add site/data/forecast.json site/data/partis.json outputs/runs data/cache
           if git diff --staged --quiet; then
             echo "no change"
-          else
-            git commit -m "Forecast update $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+          git commit -m "Forecast update $(date -u +%Y-%m-%d)"
+
+          # The fit takes twenty minutes, and anything pushed to main in that
+          # window makes this push a non-fast-forward. That is not a conflict
+          # worth failing on: this commit only touches generated files that
+          # nobody edits by hand, so it rebases cleanly onto whatever landed.
+          # Before this retry, a single push during the run threw away the
+          # whole forecast - which is how 2026-10-19 was lost.
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push rejected; rebasing onto origin/main and retrying"
+            if ! git pull --rebase --autostash origin main; then
+              echo "::error::the forecast commit will not rebase onto main - look for a hand edit to a generated file"
+              exit 1
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push the forecast after three attempts"
+          exit 1
 
   # Deploys the forecast this run just committed. pages.yml cannot do it: a
   # commit made with GITHUB_TOKEN does not trigger other workflows. Shares the
