@@ -219,11 +219,12 @@ polled candidates, the highest ignored was Faure at **0.111** and the lowest
 corroborated was Attal at **0.561** — so the threshold could sit anywhere
 between those two and the forecast would be identical.
 
-`test_nobody_sits_near_the_corroboration_threshold` enforces that gap: it fails
-if any declared candidate comes within 0.10 of the line, and names them. The
-fix then is **not** to nudge the threshold, which would be fitting the rule to
-one person; it is to settle the close case explicitly in `field.overrides`,
-which outranks both signals.
+`test_the_corroboration_threshold_sits_in_an_empty_gap` enforces that gap: it
+fails if any declared candidate comes within 0.10 of the line, and names them.
+It reads the live feed rather than a fixed date, because its job is to notice
+when today's field drifts towards the line. The fix then is **not** to nudge
+the threshold, which would be fitting the rule to one person; it is to settle
+the close case explicitly in `field.overrides`, which outranks both signals.
 
 ### Institutes are not weighted by accuracy
 
