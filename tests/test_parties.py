@@ -227,18 +227,52 @@ def test_a_party_with_no_past_can_still_have_a_projection(payload):
 
 
 def test_every_summary_records_when_a_person_last_checked_it(payload):
-    """Prose about a party ages silently - it changes line, or finally
-    publishes a 2027 manifesto. The date is shown on the page, and `audit`
-    warns once it passes the threshold."""
+    """Every summary must carry a review date, and it must be a real one.
+
+    These two are structural: a summary with no date cannot be judged at all,
+    and a date in the future is a typo. Neither expires, so both stay hard
+    failures."""
     import datetime as dt
 
     for party in payload["partis"]:
         reviewed = party["principes"]["revu"]
         assert reviewed, f"{party['id']}: no review date"
-        assert dt.date.fromisoformat(reviewed) <= dt.date.today()
-        assert party["principes"]["perime"] is False, (
-            f"{party['id']}: summary last checked {reviewed} - re-read it "
-            "against what the party publishes now, then update `revu`"
+        assert dt.date.fromisoformat(reviewed) <= dt.date.today(), (
+            f"{party['id']}: reviewed {reviewed}, which is in the future"
+        )
+
+
+def test_a_stale_summary_warns_rather_than_failing(payload):
+    """Prose about a party ages silently - it changes line, or finally
+    publishes a 2027 manifesto - so somebody has to be told. But being TOLD is
+    the whole requirement, and this used to assert it instead.
+
+    That made a calendar date into a build failure. All fifteen summaries were
+    reviewed on 2026-10-06, so with a 182-day threshold the suite would have
+    begun failing on 2027-04-06 - twelve days before the first round, halting
+    publication exactly when the most people are reading. The daily run has
+    already been broken once by a test that expired on an arbitrary morning;
+    this one would have expired on the worst morning available.
+
+    It is a warning now, which is what `cli._print_party_reviews` says the
+    policy is: "a stale description of a party is a reason to look at it, not
+    a reason to stop publishing a forecast". Nothing is lost by the downgrade
+    - `presidentielle audit` prints the stale ones and emits a
+    `::notice` per party on the GitHub run, and the page itself labels them
+    "resume a reverifier" for readers."""
+    import warnings
+
+    stale = [
+        f"{p['nom']} (last checked {p['principes']['revu']})"
+        for p in payload["partis"] if p["principes"].get("perime")
+    ]
+    if stale:
+        warnings.warn(
+            f"{len(stale)} party summary/-ies are over "
+            f"{parties.STALE_AFTER_DAYS} days old - re-read them against what "
+            "the party now publishes, then update `revu` in "
+            "config/partis.yaml: " + "; ".join(stale),
+            stacklevel=2,
         )
 
 
