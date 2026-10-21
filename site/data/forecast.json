@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "generated_at": "2026-10-20T10:27:33+00:00",
+ "generated_at": "2026-10-21T10:42:18+00:00",
  "as_of": "2026-10-08",
  "scenario": "modele",
  "model_fingerprint": "0afba050d426",
@@ -8,7 +8,7 @@
   "premier_tour": "2027-04-18",
   "second_tour": "2027-05-02",
   "cloture_candidatures": "2027-03-12",
-  "jours_restants": 180,
+  "jours_restants": 179,
   "field_is_known": false
  },
  "blocs": {
@@ -66,7 +66,7 @@
    "bloc": "rn",
    "p_standing": 0.98399,
    "p_qualify": 0.96095,
-   "p_win": 0.68125,
+   "p_win": 0.6811,
    "share": {
     "q05": 0.2015,
     "q25": 0.27317,
@@ -82,7 +82,7 @@
    "bloc": "centre",
    "p_standing": 0.84818,
    "p_qualify": 0.31562,
-   "p_win": 0.1756,
+   "p_win": 0.17561,
    "share": {
     "q05": 0.0622,
     "q25": 0.10223,
@@ -98,7 +98,7 @@
    "bloc": "gauche_radicale",
    "p_standing": 1.0,
    "p_qualify": 0.55661,
-   "p_win": 0.07931,
+   "p_win": 0.07879,
    "share": {
     "q05": 0.07757,
     "q25": 0.12252,
@@ -114,7 +114,7 @@
    "bloc": "socialiste",
    "p_standing": 0.84934,
    "p_qualify": 0.07712,
-   "p_win": 0.03281,
+   "p_win": 0.03295,
    "share": {
     "q05": 0.04297,
     "q25": 0.06966,
@@ -130,7 +130,7 @@
    "bloc": "centre",
    "p_standing": 0.84825,
    "p_qualify": 0.05075,
-   "p_win": 0.02045,
+   "p_win": 0.02069,
    "share": {
     "q05": 0.02098,
     "q25": 0.04096,
@@ -146,7 +146,7 @@
    "bloc": "droite",
    "p_standing": 0.99795,
    "p_qualify": 0.03244,
-   "p_win": 0.00937,
+   "p_win": 0.00969,
    "share": {
     "q05": 0.03685,
     "q25": 0.05666,
@@ -162,7 +162,7 @@
    "bloc": "socialiste",
    "p_standing": 0.19911,
    "p_qualify": 0.00147,
-   "p_win": 0.0005,
+   "p_win": 0.00051,
    "share": {
     "q05": 0.00791,
     "q25": 0.01924,
@@ -178,7 +178,7 @@
    "bloc": "gauche_radicale",
    "p_standing": 0.95659,
    "p_qualify": 0.00309,
-   "p_win": 0.00039,
+   "p_win": 0.00035,
    "share": {
     "q05": 0.00478,
     "q25": 0.01114,
@@ -194,7 +194,7 @@
    "bloc": "droite",
    "p_standing": 0.09581,
    "p_qualify": 0.00026,
-   "p_win": 0.00013,
+   "p_win": 0.00011,
    "share": {
     "q05": 0.00825,
     "q25": 0.01851,
@@ -242,7 +242,7 @@
    "bloc": "ecologiste",
    "p_standing": 0.9118,
    "p_qualify": 0.00025,
-   "p_win": 3e-05,
+   "p_win": 4e-05,
    "share": {
     "q05": 0.01774,
     "q25": 0.02639,
@@ -611,7 +611,7 @@
    "nom_a": "Jean-Luc Mélenchon",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.52175,
-   "p_a_wins": 0.14231
+   "p_a_wins": 0.14142
   },
   {
    "a": "EP",
@@ -619,7 +619,7 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.28787,
-   "p_a_wins": 0.52679
+   "p_a_wins": 0.52675
   },
   {
    "a": "MLP",
@@ -627,7 +627,7 @@
    "nom_a": "Marine Le Pen",
    "nom_b": "Raphaël Glucksmann",
    "p_matchup": 0.06944,
-   "p_a_wins": 0.60504
+   "p_a_wins": 0.60324
   },
   {
    "a": "GA",
@@ -635,7 +635,7 @@
    "nom_a": "Gabriel Attal",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.04661,
-   "p_a_wins": 0.37436
+   "p_a_wins": 0.37865
   },
   {
    "a": "BR",
@@ -643,7 +643,7 @@
    "nom_a": "Bruno Retailleau",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.0293,
-   "p_a_wins": 0.26792
+   "p_a_wins": 0.27944
   },
   {
    "a": "EP",
@@ -651,7 +651,7 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Jean-Luc Mélenchon",
    "p_matchup": 0.02439,
-   "p_a_wins": 0.89288
+   "p_a_wins": 0.89236
   }
  ],
  "ballot": {
@@ -2947,10 +2947,10 @@
    "reconquete": 0.334,
    "rn": 0.335
   },
-  "delta_front_republicain": 0.096,
+  "delta_front_republicain": 0.095,
   "n_transferts_2022": 43,
   "n_duels_2024": 317,
-  "delta_legislatif": 0.599,
+  "delta_legislatif": 0.594,
   "gamma_legislatif_ratio": 0.659,
   "candidacy_facts": [
    "Bernard Cazeneuve: declared 2026-07-16 -> at least 85%",
@@ -2981,17 +2981,17 @@
    "Xavier Bertrand: declared 2024-02-03 -> at least 85%"
   ],
   "runoff_fit": {
-   "mae_points": 1.98,
-   "bias_points": -0.59,
+   "mae_points": 1.97,
+   "bias_points": -0.58,
    "worst_matchup": "Édouard Philippe vs Jordan Bardella",
-   "worst_error_points": -6.97,
+   "worst_error_points": -6.94,
    "max_rhat": 1.0,
-   "min_ess_bulk": 1138,
+   "min_ess_bulk": 1223,
    "tentatives": [
     {
      "seed": 20270419,
      "rhat": 1.0,
-     "ess": 1138
+     "ess": 1223
     }
    ]
   },
@@ -3074,7 +3074,7 @@
      "bloc": "rn",
      "p_standing": 1.0,
      "p_qualify": 0.98865,
-     "p_win": 0.78789,
+     "p_win": 0.78895,
      "share": {
       "q05": 0.22261,
       "q25": 0.29578,
@@ -3090,7 +3090,7 @@
      "bloc": "gauche_radicale",
      "p_standing": 1.0,
      "p_qualify": 0.65119,
-     "p_win": 0.08908,
+     "p_win": 0.08834,
      "share": {
       "q05": 0.0846,
       "q25": 0.13184,
@@ -3106,7 +3106,7 @@
      "bloc": "centre",
      "p_standing": 1.0,
      "p_qualify": 0.18409,
-     "p_win": 0.06876,
+     "p_win": 0.06831,
      "share": {
       "q05": 0.06188,
       "q25": 0.0895,
@@ -3122,7 +3122,7 @@
      "bloc": "socialiste",
      "p_standing": 1.0,
      "p_qualify": 0.12773,
-     "p_win": 0.04364,
+     "p_win": 0.04374,
      "share": {
       "q05": 0.05507,
       "q25": 0.08093,
@@ -3138,7 +3138,7 @@
      "bloc": "droite",
      "p_standing": 1.0,
      "p_qualify": 0.04381,
-     "p_win": 0.01019,
+     "p_win": 0.0102,
      "share": {
       "q05": 0.04254,
       "q25": 0.06243,
@@ -3154,7 +3154,7 @@
      "bloc": "gauche_radicale",
      "p_standing": 1.0,
      "p_qualify": 0.00381,
-     "p_win": 0.00041,
+     "p_win": 0.00042,
      "share": {
       "q05": 0.00514,
       "q25": 0.01187,
@@ -3235,7 +3235,7 @@
      "nom_a": "Jean-Luc Mélenchon",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.64069,
-     "p_a_wins": 0.13626
+     "p_a_wins": 0.13505
     },
     {
      "a": "GA",
@@ -3243,7 +3243,7 @@
      "nom_a": "Gabriel Attal",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.17796,
-     "p_a_wins": 0.35864
+     "p_a_wins": 0.35611
     },
     {
      "a": "MLP",
@@ -3251,7 +3251,7 @@
      "nom_a": "Marine Le Pen",
      "nom_b": "Raphaël Glucksmann",
      "p_matchup": 0.1229,
-     "p_a_wins": 0.67575
+     "p_a_wins": 0.67453
     },
     {
      "a": "BR",
@@ -3267,7 +3267,7 @@
      "nom_a": "Gabriel Attal",
      "nom_b": "Jean-Luc Mélenchon",
      "p_matchup": 0.00544,
-     "p_a_wins": 0.85747
+     "p_a_wins": 0.85287
     }
    ],
    "id": "sans_philippe",
@@ -3297,7 +3297,7 @@
      "bloc": "rn",
      "p_standing": 1.0,
      "p_qualify": 0.96589,
-     "p_win": 0.63176,
+     "p_win": 0.63328,
      "share": {
       "q05": 0.20514,
       "q25": 0.27595,
@@ -3313,7 +3313,7 @@
      "bloc": "centre",
      "p_standing": 1.0,
      "p_qualify": 0.49117,
-     "p_win": 0.26495,
+     "p_win": 0.26456,
      "share": {
       "q05": 0.0923,
       "q25": 0.1317,
@@ -3329,7 +3329,7 @@
      "bloc": "gauche_radicale",
      "p_standing": 1.0,
      "p_qualify": 0.45009,
-     "p_win": 0.06759,
+     "p_win": 0.06678,
      "share": {
       "q05": 0.07906,
       "q25": 0.12354,
@@ -3345,7 +3345,7 @@
      "bloc": "socialiste",
      "p_standing": 1.0,
      "p_qualify": 0.07029,
-     "p_win": 0.02902,
+     "p_win": 0.0287,
      "share": {
       "q05": 0.05155,
       "q25": 0.07593,
@@ -3361,7 +3361,7 @@
      "bloc": "droite",
      "p_standing": 1.0,
      "p_qualify": 0.02055,
-     "p_win": 0.00629,
+     "p_win": 0.00628,
      "share": {
       "q05": 0.04019,
       "q25": 0.05849,
@@ -3377,7 +3377,7 @@
      "bloc": "gauche_radicale",
      "p_standing": 1.0,
      "p_qualify": 0.00179,
-     "p_win": 0.00035,
+     "p_win": 0.00038,
      "share": {
       "q05": 0.00486,
       "q25": 0.01119,
@@ -3458,7 +3458,7 @@
      "nom_a": "Édouard Philippe",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.46008,
-     "p_a_wins": 0.51723
+     "p_a_wins": 0.51622
     },
     {
      "a": "JLM",
@@ -3466,7 +3466,7 @@
      "nom_a": "Jean-Luc Mélenchon",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.41931,
-     "p_a_wins": 0.15326
+     "p_a_wins": 0.15132
     },
     {
      "a": "MLP",
@@ -3474,7 +3474,7 @@
      "nom_a": "Marine Le Pen",
      "nom_b": "Raphaël Glucksmann",
      "p_matchup": 0.0654,
-     "p_a_wins": 0.60398
+     "p_a_wins": 0.60742
     },
     {
      "a": "EP",
@@ -3482,7 +3482,7 @@
      "nom_a": "Édouard Philippe",
      "nom_b": "Jean-Luc Mélenchon",
      "p_matchup": 0.02785,
-     "p_a_wins": 0.89408
+     "p_a_wins": 0.89587
     },
     {
      "a": "BR",
@@ -3490,7 +3490,7 @@
      "nom_a": "Bruno Retailleau",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.01928,
-     "p_a_wins": 0.29442
+     "p_a_wins": 0.29248
     }
    ],
    "id": "centre_uni",
@@ -3520,7 +3520,7 @@
      "bloc": "rn",
      "p_standing": 1.0,
      "p_qualify": 0.97523,
-     "p_win": 0.83179,
+     "p_win": 0.83159,
      "share": {
       "q05": 0.23739,
       "q25": 0.31647,
@@ -3536,7 +3536,7 @@
      "bloc": "centre",
      "p_standing": 1.0,
      "p_qualify": 0.32688,
-     "p_win": 0.11885,
+     "p_win": 0.11901,
      "share": {
       "q05": 0.07048,
       "q25": 0.11582,
@@ -3552,7 +3552,7 @@
      "bloc": "gauche_radicale",
      "p_standing": 1.0,
      "p_qualify": 0.64025,
-     "p_win": 0.03614,
+     "p_win": 0.03592,
      "share": {
       "q05": 0.11064,
       "q25": 0.15879,
@@ -3568,7 +3568,7 @@
      "bloc": "centre",
      "p_standing": 1.0,
      "p_qualify": 0.03068,
-     "p_win": 0.00813,
+     "p_win": 0.0082,
      "share": {
       "q05": 0.02318,
       "q25": 0.04444,
@@ -3584,7 +3584,7 @@
      "bloc": "droite",
      "p_standing": 1.0,
      "p_qualify": 0.02684,
-     "p_win": 0.0051,
+     "p_win": 0.00528,
      "share": {
       "q05": 0.0451,
       "q25": 0.06658,
@@ -3633,7 +3633,7 @@
      "nom_a": "Jean-Luc Mélenchon",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.61614,
-     "p_a_wins": 0.05498
+     "p_a_wins": 0.05455
     },
     {
      "a": "EP",
@@ -3641,7 +3641,7 @@
      "nom_a": "Édouard Philippe",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.30443,
-     "p_a_wins": 0.32434
+     "p_a_wins": 0.32504
     },
     {
      "a": "GA",
@@ -3649,7 +3649,7 @@
      "nom_a": "Gabriel Attal",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.02916,
-     "p_a_wins": 0.23618
+     "p_a_wins": 0.23961
     },
     {
      "a": "BR",
@@ -3657,7 +3657,7 @@
      "nom_a": "Bruno Retailleau",
      "nom_b": "Marine Le Pen",
      "p_matchup": 0.02536,
-     "p_a_wins": 0.15525
+     "p_a_wins": 0.16116
     },
     {
      "a": "EP",
@@ -3665,7 +3665,7 @@
      "nom_a": "Édouard Philippe",
      "nom_b": "Jean-Luc Mélenchon",
      "p_matchup": 0.0218,
-     "p_a_wins": 0.90367
+     "p_a_wins": 0.90195
     }
    ],
    "id": "gauche_unie",
@@ -3728,7 +3728,7 @@
     0.662,
     0.6053,
     0.5673,
-    0.6781
+    0.6813
    ],
    "EP": [
     0.1876,
@@ -3736,7 +3736,7 @@
     0.1757,
     0.2196,
     0.2508,
-    0.1798
+    0.1756
    ],
    "JLM": [
     0.067,
@@ -3744,7 +3744,7 @@
     0.0606,
     0.0672,
     0.0749,
-    0.0759
+    0.0793
    ],
    "RG": [
     0.0668,
@@ -3752,7 +3752,7 @@
     0.0461,
     0.0485,
     0.041,
-    0.0346
+    0.0328
    ],
    "GA": [
     0.0391,
@@ -3760,7 +3760,7 @@
     0.0392,
     0.0431,
     0.0551,
-    0.0231
+    0.0204
    ]
   },
   "noms": {
@@ -3778,11 +3778,11 @@
    "GA": "centre"
   },
   "model_changed": true,
-  "n_runs": 44
+  "n_runs": 45
  },
  "changement": {
   "has_previous": true,
-  "previous_run": "20261019T122124Z.json",
+  "previous_run": "20261020T102733Z.json",
   "previous_as_of": "2026-10-08",
   "model_changed": false,
   "new_surveys": 0,
@@ -3794,7 +3794,7 @@
   }
  },
  "commentaire": {
-  "fr": "À 180 jours du premier tour, le modèle s'appuie sur 55 enquêtes (230 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (68 %), devant Édouard Philippe (18 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 56 %, Édouard Philippe 32 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (52 % des simulations) ; Marine Le Pen l'emporte dans 86 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
-  "en": "With 180 days to the first round, the model uses 55 surveys (230 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (68%), ahead of Édouard Philippe (18%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 56%, Édouard Philippe 32%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (52% of simulations), won by Marine Le Pen in 86% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
+  "fr": "À 179 jours du premier tour, le modèle s'appuie sur 55 enquêtes (230 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (68 %), devant Édouard Philippe (18 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 56 %, Édouard Philippe 32 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (52 % des simulations) ; Marine Le Pen l'emporte dans 86 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
+  "en": "With 179 days to the first round, the model uses 55 surveys (230 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (68%), ahead of Édouard Philippe (18%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 56%, Édouard Philippe 32%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (52% of simulations), won by Marine Le Pen in 86% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
  }
 }
