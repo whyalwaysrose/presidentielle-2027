@@ -1,9 +1,9 @@
 {
  "schema_version": 2,
- "generated_at": "2026-10-25T10:18:41+00:00",
+ "generated_at": "2026-10-25T17:08:56+00:00",
  "as_of": "2026-10-08",
  "scenario": "modele",
- "model_fingerprint": "0afba050d426",
+ "model_fingerprint": "8374e7cbcd2c",
  "election": {
   "premier_tour": "2027-04-18",
   "second_tour": "2027-05-02",
@@ -611,7 +611,10 @@
    "nom_a": "Jean-Luc Mélenchon",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.52175,
-   "p_a_wins": 0.14142
+   "p_a_wins": 0.14142,
+   "part_a": 0.39854,
+   "part_a_q05": 0.25384,
+   "part_a_q95": 0.55298
   },
   {
    "a": "EP",
@@ -619,7 +622,10 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.28787,
-   "p_a_wins": 0.52675
+   "p_a_wins": 0.52675,
+   "part_a": 0.50666,
+   "part_a_q05": 0.34766,
+   "part_a_q95": 0.65139
   },
   {
    "a": "MLP",
@@ -627,7 +633,10 @@
    "nom_a": "Marine Le Pen",
    "nom_b": "Raphaël Glucksmann",
    "p_matchup": 0.06944,
-   "p_a_wins": 0.60324
+   "p_a_wins": 0.60324,
+   "part_a": 0.52474,
+   "part_a_q05": 0.37427,
+   "part_a_q95": 0.6775
   },
   {
    "a": "GA",
@@ -635,7 +644,10 @@
    "nom_a": "Gabriel Attal",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.04661,
-   "p_a_wins": 0.37865
+   "p_a_wins": 0.37865,
+   "part_a": 0.47236,
+   "part_a_q05": 0.32121,
+   "part_a_q95": 0.61736
   },
   {
    "a": "BR",
@@ -643,7 +655,10 @@
    "nom_a": "Bruno Retailleau",
    "nom_b": "Marine Le Pen",
    "p_matchup": 0.0293,
-   "p_a_wins": 0.27944
+   "p_a_wins": 0.27944,
+   "part_a": 0.44204,
+   "part_a_q05": 0.28088,
+   "part_a_q95": 0.5881
   },
   {
    "a": "EP",
@@ -651,7 +666,10 @@
    "nom_a": "Édouard Philippe",
    "nom_b": "Jean-Luc Mélenchon",
    "p_matchup": 0.02439,
-   "p_a_wins": 0.89236
+   "p_a_wins": 0.89236,
+   "part_a": 0.58831,
+   "part_a_q05": 0.46439,
+   "part_a_q95": 0.69207
   }
  ],
  "ballot": {
@@ -3076,6 +3094,84 @@
    ],
    "illisibles": [],
    "erreurs": []
+  },
+  "second_tour": {
+   "duels": [
+    {
+     "a": "JLM",
+     "b": "MLP",
+     "nom_a": "Jean-Luc Mélenchon",
+     "nom_b": "Marine Le Pen",
+     "p_duel": 0.52175,
+     "part_modele_a": 0.39854,
+     "part_sondages_a": 0.33267,
+     "n_sondages": 12,
+     "ecart_a": 0.06587,
+     "ecart_rn": -0.06587
+    },
+    {
+     "a": "EP",
+     "b": "MLP",
+     "nom_a": "Édouard Philippe",
+     "nom_b": "Marine Le Pen",
+     "p_duel": 0.28787,
+     "part_modele_a": 0.50666,
+     "part_sondages_a": 0.46142,
+     "n_sondages": 12,
+     "ecart_a": 0.04524,
+     "ecart_rn": -0.04524
+    },
+    {
+     "a": "MLP",
+     "b": "RG",
+     "nom_a": "Marine Le Pen",
+     "nom_b": "Raphaël Glucksmann",
+     "p_duel": 0.06944,
+     "part_modele_a": 0.52474,
+     "part_sondages_a": 0.5708,
+     "n_sondages": 5,
+     "ecart_a": -0.04606,
+     "ecart_rn": -0.04606
+    },
+    {
+     "a": "GA",
+     "b": "MLP",
+     "nom_a": "Gabriel Attal",
+     "nom_b": "Marine Le Pen",
+     "p_duel": 0.04661,
+     "part_modele_a": 0.47236,
+     "part_sondages_a": 0.44225,
+     "n_sondages": 8,
+     "ecart_a": 0.03011,
+     "ecart_rn": -0.03011
+    },
+    {
+     "a": "BR",
+     "b": "MLP",
+     "nom_a": "Bruno Retailleau",
+     "nom_b": "Marine Le Pen",
+     "p_duel": 0.0293,
+     "part_modele_a": 0.44204,
+     "part_sondages_a": 0.42967,
+     "n_sondages": 3,
+     "ecart_a": 0.01237,
+     "ecart_rn": -0.01237
+    },
+    {
+     "a": "EP",
+     "b": "JLM",
+     "nom_a": "Édouard Philippe",
+     "nom_b": "Jean-Luc Mélenchon",
+     "p_duel": 0.02439,
+     "part_modele_a": 0.58831,
+     "part_sondages_a": 0.61,
+     "n_sondages": 1,
+     "ecart_a": -0.02169,
+     "ecart_rn": null
+    }
+   ],
+   "reference_2022": 0.03792,
+   "n_sondages_2022": 53
   }
  },
  "n_simulations": 80000,
@@ -3743,7 +3839,7 @@
     0.662,
     0.6053,
     0.5673,
-    0.6781
+    0.6811
    ],
    "EP": [
     0.1876,
@@ -3751,7 +3847,7 @@
     0.1757,
     0.2196,
     0.2508,
-    0.1798
+    0.1756
    ],
    "JLM": [
     0.067,
@@ -3759,7 +3855,7 @@
     0.0606,
     0.0672,
     0.0749,
-    0.0759
+    0.0788
    ],
    "RG": [
     0.0668,
@@ -3767,7 +3863,7 @@
     0.0461,
     0.0485,
     0.041,
-    0.0346
+    0.033
    ],
    "GA": [
     0.0391,
@@ -3775,7 +3871,7 @@
     0.0392,
     0.0431,
     0.0551,
-    0.0231
+    0.0207
    ]
   },
   "noms": {
@@ -3793,19 +3889,19 @@
    "GA": "centre"
   },
   "model_changed": true,
-  "n_runs": 49
+  "n_runs": 50
  },
  "changement": {
   "has_previous": true,
-  "previous_run": "20261024T095702Z.json",
+  "previous_run": "20261025T101841Z.json",
   "previous_as_of": "2026-10-08",
-  "model_changed": false,
+  "model_changed": true,
   "new_surveys": 0,
   "same_data": true,
   "moves": [],
   "texte": {
-   "fr": "Aucun nouveau sondage depuis le 8 octobre 2026 : les écarts éventuels relèvent du bruit de simulation, pas de l'opinion.",
-   "en": "No new polls since 8 October 2026; any movement is simulation noise rather than opinion."
+   "fr": "Le modèle lui-même a été modifié depuis la dernière mise à jour : les écarts ci-dessous ne peuvent pas être attribués aux sondages.",
+   "en": "The model itself was changed since the last update, so the movement below cannot be attributed to new polling."
   }
  },
  "commentaire": {
