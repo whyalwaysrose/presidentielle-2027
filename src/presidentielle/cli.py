@@ -944,6 +944,15 @@ def cmd_run(args) -> int:
     payload["diagnostics"]["couverture_commission"] = (
         coverage.as_dict() if coverage else None
     )
+    # How far the transfer model has moved each duel away from the runoff
+    # polls, in points. The single biggest judgement in the forecast, and
+    # until this it could only be inferred from a win probability.
+    from . import secondround
+
+    transfers = secondround.compare(
+        payload["duels"], roster, hyps, as_of=as_of
+    )
+    payload["diagnostics"]["second_tour"] = secondround.as_dict(transfers)
 
     write_json(payload, paths.SITE_DATA / "forecast.json")
     # The party records are static - they change when a config changes, not
@@ -969,7 +978,12 @@ def cmd_run(args) -> int:
     print("most likely runoffs:")
     for d in payload["duels"][:5]:
         print(f"  {d['nom_a']} vs {d['nom_b']}: {d['p_matchup']:.0%} likely, "
-              f"{d['nom_a']} wins {d['p_a_wins']:.0%}")
+              f"{d['nom_a']} wins {d['p_a_wins']:.0%}, "
+              f"{d['nom_a']} on {d['part_a']:.1%}")
+    print()
+    print("second round, model against the polls it departs from:")
+    for line in transfers.lines():
+        print(f"  {line}")
     print()
     print(f"max R-hat {diag['max_rhat']:.3f}, min ESS {diag['min_ess_bulk']:.0f}")
     return 0

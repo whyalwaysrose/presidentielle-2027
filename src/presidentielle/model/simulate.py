@@ -223,7 +223,17 @@ def _predict_rowwise(positions, gamma, delta, abstain, pair_bloc, source, own, r
 
 
 def matchup_table(result: SimulationResult, min_prob: float = 0.005) -> list[dict]:
-    """Every runoff pairing the simulation actually produced, with its odds."""
+    """Every runoff pairing the simulation actually produced, with its odds.
+
+    Each row also carries the SHARE the model implies for candidate `a`, not
+    just how often `a` wins. The two are not interchangeable and the share is
+    the one that can be checked: runoff polls report shares, so publishing it
+    is what lets anyone see how far the transfer model has moved away from
+    them, and in which direction. A win probability hides that behind a
+    threshold - 52% of simulations won and a 50.3% central share are the same
+    number wearing different clothes, and only one of them can be compared
+    with a poll.
+    """
     pairs: dict[tuple[int, int], list[int]] = {}
     for s in range(result.n_sims):
         a, b = result.finalists[s]
@@ -235,13 +245,24 @@ def matchup_table(result: SimulationResult, min_prob: float = 0.005) -> list[dic
         p = len(idx) / result.n_sims
         if p < min_prob:
             continue
-        wins_a = sum(1 for s in idx if result.winner[s] == a)
+        sims = np.asarray(idx)
+        wins_a = int((result.winner[sims] == a).sum())
+        # `runoff_share` is the WINNER's share, so a's share is its complement
+        # in the simulations a lost.
+        share_a = np.where(
+            result.winner[sims] == a,
+            result.runoff_share[sims],
+            1.0 - result.runoff_share[sims],
+        )
         rows.append(
             {
                 "a": result.candidate_ids[a],
                 "b": result.candidate_ids[b],
                 "p_matchup": p,
                 "p_a_wins": wins_a / len(idx),
+                "part_a": float(np.median(share_a)),
+                "part_a_q05": float(np.quantile(share_a, 0.05)),
+                "part_a_q95": float(np.quantile(share_a, 0.95)),
                 "n": len(idx),
             }
         )

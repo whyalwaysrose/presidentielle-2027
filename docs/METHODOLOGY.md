@@ -404,6 +404,37 @@ second legislative election to compare against — the same shortage that stops
 `bloc_error_corr` being fitted. And a duel is an aggregate flow, so this is
 ecological inference: it says where a bloc's votes went, never who moved.
 
+### How far the transfer model departs from the runoff polls
+
+Every other large judgement here is measured and published. This one was not,
+and it moves the headline more than any of them: runoff polls currently have
+Marine Le Pen **beating** Édouard Philippe, and the model makes him the
+favourite. That is the *front républicain* doing its work, and until recently
+the only way to see how hard it was working was to infer it from a win
+probability — which is a threshold, not a share, and cannot be held against a
+poll.
+
+So each likely duel now reports the **share** it implies alongside the polls
+for that pairing, and the gap between them in points
+(`diagnostics.second_tour`, printed by `presidentielle run`). A reader who
+thinks the *front républicain* has weakened can see exactly how much of the
+forecast rests on it holding.
+
+**The one check available.** 2022 is the only presidential runoff for which
+this repository holds both the final polls and the result. Across the 53 polls
+of the final fortnight, Le Pen averaged 45.2% and took 41.5% — the polls
+**overstated the RN by 3.8 points**. That is the reference the diagnostic
+prints beside the current correction.
+
+**It is a reference, not a target, and nothing fits to it.** One election
+cannot establish a rate. 2022 also had an incumbent president on the other
+side of the ballot, and the *front républicain* of 2022 is not self-evidently
+that of 2027 — the RN has been normalising throughout, which would push the
+true correction down, while the 2024 duels showed it can still be ferocious in
+the right conditions, which would push it up. The diagnostic exists so that
+this tension is visible and arguable rather than buried in a parameter. Reading
+it back into the model would be circular, and is not done.
+
 These duels are **excluded from the backtest**, which replays 2022. They
 happened two years later.
 

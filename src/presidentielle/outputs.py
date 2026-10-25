@@ -93,6 +93,11 @@ def build_forecast(
                 "nom_b": roster.candidats[row["b"]].nom,
                 "p_matchup": _clean(row["p_matchup"]),
                 "p_a_wins": _clean(row["p_a_wins"]),
+                # The share, not just the odds: this is the number a runoff
+                # poll can be held against. See secondround.py.
+                "part_a": _clean(row["part_a"]),
+                "part_a_q05": _clean(row["part_a_q05"]),
+                "part_a_q95": _clean(row["part_a_q95"]),
             }
         )
 
