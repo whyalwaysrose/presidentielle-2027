@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "generated_at": "2026-10-25T17:08:56+00:00",
+ "generated_at": "2026-10-26T11:39:53+00:00",
  "as_of": "2026-10-08",
  "scenario": "modele",
  "model_fingerprint": "8374e7cbcd2c",
@@ -8,7 +8,7 @@
   "premier_tour": "2027-04-18",
   "second_tour": "2027-05-02",
   "cloture_candidatures": "2027-03-12",
-  "jours_restants": 175,
+  "jours_restants": 174,
   "field_is_known": false
  },
  "blocs": {
@@ -3046,14 +3046,14 @@
      "fichier": "10324-pres-iv-elabe-17-octobre.pdf",
      "publiee": "2026-10-17",
      "extrait": "on de 1 553 personnes inscrites sur les listes issement des intentions de vote. : Les répondants ont été interrogés en ligne \\(Internet\\)."
-    }
-   ],
-   "en_attente": [
+    },
     {
      "fichier": "10325-pres-focus-droite-et-centre-cluster17-le-point-18-octobre.pdf",
      "publiee": "2026-10-19",
      "extrait": "n française . Parmi elles, 1 105 répondants ont exprimé une intention de vote pour le scénario 1 , 1 083 répondants ont exprimé une inten"
-    },
+    }
+   ],
+   "en_attente": [
     {
      "fichier": "10327-pres-barometre-election-v7-ifop-20-octobre.pdf",
      "publiee": "2026-10-20",
@@ -3889,23 +3889,23 @@
    "GA": "centre"
   },
   "model_changed": true,
-  "n_runs": 50
+  "n_runs": 51
  },
  "changement": {
   "has_previous": true,
-  "previous_run": "20261025T101841Z.json",
+  "previous_run": "20261025T170856Z.json",
   "previous_as_of": "2026-10-08",
-  "model_changed": true,
+  "model_changed": false,
   "new_surveys": 0,
   "same_data": true,
   "moves": [],
   "texte": {
-   "fr": "Le modèle lui-même a été modifié depuis la dernière mise à jour : les écarts ci-dessous ne peuvent pas être attribués aux sondages.",
-   "en": "The model itself was changed since the last update, so the movement below cannot be attributed to new polling."
+   "fr": "Aucun nouveau sondage depuis le 8 octobre 2026 : les écarts éventuels relèvent du bruit de simulation, pas de l'opinion.",
+   "en": "No new polls since 8 October 2026; any movement is simulation noise rather than opinion."
   }
  },
  "commentaire": {
-  "fr": "À 175 jours du premier tour, le modèle s'appuie sur 55 enquêtes (230 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (68 %), devant Édouard Philippe (18 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 56 %, Édouard Philippe 32 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (52 % des simulations) ; Marine Le Pen l'emporte dans 86 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
-  "en": "With 175 days to the first round, the model uses 55 surveys (230 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (68%), ahead of Édouard Philippe (18%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 56%, Édouard Philippe 32%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (52% of simulations), won by Marine Le Pen in 86% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
+  "fr": "À 174 jours du premier tour, le modèle s'appuie sur 55 enquêtes (230 hypothèses de premier tour) publiées jusqu'au 8 octobre 2026. Marine Le Pen est le candidat le plus susceptible d'être élu (68 %), devant Édouard Philippe (18 %) et Jean-Luc Mélenchon (8 %). Se qualifier pour le second tour est une question distincte de le remporter : Marine Le Pen 96 %, Jean-Luc Mélenchon 56 %, Édouard Philippe 32 %. Le duel le plus probable oppose Jean-Luc Mélenchon à Marine Le Pen (52 % des simulations) ; Marine Le Pen l'emporte dans 86 % de ces cas. La composition du bulletin n'est pas encore fixée : les candidatures ne sont closes que le 12 mars 2027. Le modèle simule qui se présente au lieu de le supposer, et la probabilité d'être élu intègre donc celle de figurer sur le bulletin.",
+  "en": "With 174 days to the first round, the model uses 55 surveys (230 first-round hypotheses) published up to 8 October 2026. Marine Le Pen is the most likely winner (68%), ahead of Édouard Philippe (18%) and Jean-Luc Mélenchon (8%). Reaching the runoff is a separate question from winning it: Marine Le Pen 96%, Jean-Luc Mélenchon 56%, Édouard Philippe 32%. The most likely runoff is Jean-Luc Mélenchon against Marine Le Pen (52% of simulations), won by Marine Le Pen in 86% of those. The ballot is not yet settled - candidacies do not close until 12 March 2027. The model simulates who stands rather than assuming it, so a candidate's probability of winning includes the probability of being on the ballot at all."
  }
 }
