@@ -21,7 +21,11 @@
      Three days rather than two: a single infrastructure hiccup at GitHub (a
      job no runner picks up) should not put a warning on a correct forecast. */
   var STALE_DAYS = 3;
-  var BUILD = '2026-10-14.3';
+  /* Institutes publish several presidential polls a week in a campaign year,
+     so a fortnight with no new fieldwork is not a quiet patch - it means the
+     feed has stopped reaching us. */
+  var STALE_POLLS_DAYS = 14;
+  var BUILD = '2026-11-04.1';
 
   var state = { data: null, scenario: null };
 
@@ -848,19 +852,50 @@
   }
 
   /* --- is this forecast still current? ---------------------------------- */
+  /* TWO CLOCKS, AND THE SECOND ONE MATTERS MORE.
+     `generated_at` says when the model last ran. `as_of` says how recent the
+     polling behind it is. They come apart, and when they do the page looked
+     its most trustworthy at its least: in October 2026 the upstream feed
+     stopped ingesting for four weeks while the daily run kept rebuilding the
+     same numbers, so a reader saw a forecast generated hours ago from polls a
+     month old, with nothing to say so.
+
+     A stopped run is the easier failure - it at least freezes a forecast that
+     was honest when it was made. A fresh run on stale polls actively misleads,
+     so it gets the louder notice of the two when both are true. */
   function renderStale(data) {
     var el = document.getElementById('stale-banner');
-    var stamp = Date.parse(data.generated_at);
-    if (!stamp) { el.hidden = true; return; }
-    var days = Math.floor((Date.now() - stamp) / 86400000);
-    if (days < STALE_DAYS) { el.hidden = true; el.textContent = ''; return; }
-    // Rendered from the data's own timestamp, so it cannot disagree with the
+    var now = Date.now();
+
+    var pollDays = null;
+    if (data.as_of) {
+      var pollStamp = Date.parse(data.as_of + 'T00:00:00Z');
+      if (!isNaN(pollStamp)) pollDays = Math.floor((now - pollStamp) / 86400000);
+    }
+    var runDays = null;
+    var runStamp = Date.parse(data.generated_at);
+    if (!isNaN(runStamp)) runDays = Math.floor((now - runStamp) / 86400000);
+
+    // Rendered from the data's own timestamps, so it cannot disagree with the
     // numbers on screen, and it is rebuilt on a language switch like the rest.
-    el.hidden = false;
-    el.textContent = I18n.t('stale.warning', {
-      date: I18n.date(data.generated_at.slice(0, 10)),
-      days: days
-    });
+    if (pollDays !== null && pollDays >= STALE_POLLS_DAYS) {
+      el.hidden = false;
+      el.textContent = I18n.t('stale.polls', {
+        date: I18n.date(data.as_of),
+        days: pollDays
+      });
+      return;
+    }
+    if (runDays !== null && runDays >= STALE_DAYS) {
+      el.hidden = false;
+      el.textContent = I18n.t('stale.warning', {
+        date: I18n.date(data.generated_at.slice(0, 10)),
+        days: runDays
+      });
+      return;
+    }
+    el.hidden = true;
+    el.textContent = '';
   }
 
   function renderAll() {

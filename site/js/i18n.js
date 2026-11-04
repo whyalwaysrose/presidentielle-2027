@@ -134,6 +134,13 @@
           ' jours. La mise à jour quotidienne ne s’exécute plus : les chiffres ' +
           'ci-dessous ne tiennent pas compte des sondages publiés depuis.';
       },
+      'stale.polls': function (a) {
+        return 'Le sondage le plus récent pris en compte date du ' + a.date +
+          ', soit il y a ' + a.days + ' jours. La prévision est bien recalculée ' +
+          'chaque jour, mais sur des sondages qui ne bougent plus : des enquêtes ' +
+          'publiées depuis ne nous parviennent pas. Les chiffres ci-dessous sont ' +
+          'donc plus anciens qu’ils n’en ont l’air.';
+      },
       'error.load': 'Impossible de charger les données de la prévision.',
       'error.schema': 'Cette page attend une version de données différente. Videz le cache et rechargez.'
     },
@@ -252,6 +259,12 @@
         return 'This forecast is from ' + a.date + ', ' + a.days + ' days ago. ' +
           'The daily update has stopped running, so the figures below do not ' +
           'reflect any poll published since.';
+      },
+      'stale.polls': function (a) {
+        return 'The most recent poll behind this forecast is from ' + a.date +
+          ', ' + a.days + ' days ago. The forecast is still being recalculated ' +
+          'daily, but on polling that has stopped moving: surveys published ' +
+          'since are not reaching us. The figures below are older than they look.';
       },
       'error.load': 'Could not load the forecast data.',
       'error.schema': 'This page expects a different data version. Clear the cache and reload.'

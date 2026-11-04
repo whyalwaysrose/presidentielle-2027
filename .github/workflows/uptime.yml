@@ -34,9 +34,11 @@ permissions:
 
 env:
   SITE: https://whyalwaysrose.github.io/presidentielle-2027
-  # The threshold the page itself uses to warn readers that its numbers are
-  # old (STALE_DAYS in site/js/app.js). Past it, the site is already saying so.
+  # The thresholds the page itself uses to warn readers (STALE_DAYS and
+  # STALE_POLLS_DAYS in site/js/app.js). Past either, the site is already
+  # saying so to readers, and this says so to us.
   STALE_DAYS: "3"
+  STALE_POLLS_DAYS: "14"
 
 jobs:
   check:
@@ -87,16 +89,42 @@ jobs:
           import os
           import sys
 
+          # TWO CLOCKS. `generated_at` is when the model last ran; `as_of` is
+          # how recent the polling behind it is. Watching only the first is how
+          # a four-week feed outage went unreported in October 2026: the run
+          # rebuilt the same month-old numbers every morning and every check
+          # here went green. The second clock is the one a reader is misled by.
           limit = float(os.environ["STALE_DAYS"])
-          stamp = json.load(open(sys.argv[1])).get("generated_at")
+          polls_limit = float(os.environ["STALE_POLLS_DAYS"])
+          payload = json.load(open(sys.argv[1]))
+          problems = []
+
+          stamp = payload.get("generated_at")
           if not stamp:
-              sys.exit("the published forecast has no generated_at")
-          age = (dt.datetime.now(dt.timezone.utc)
-                 - dt.datetime.fromisoformat(stamp)).total_seconds() / 86400
-          print(f"published forecast is {age:.1f} days old")
-          if age > limit:
-              sys.exit(f"the published forecast is {age:.1f} days old "
-                       f"(generated {stamp}, limit {limit:g})")
+              problems.append("the published forecast has no generated_at")
+          else:
+              age = (dt.datetime.now(dt.timezone.utc)
+                     - dt.datetime.fromisoformat(stamp)).total_seconds() / 86400
+              print(f"published forecast is {age:.1f} days old")
+              if age > limit:
+                  problems.append(f"the published forecast is {age:.1f} days "
+                                  f"old (generated {stamp}, limit {limit:g})")
+
+          as_of = payload.get("as_of")
+          if not as_of:
+              problems.append("the published forecast has no as_of")
+          else:
+              poll_age = (dt.date.today() - dt.date.fromisoformat(as_of)).days
+              print(f"most recent poll behind it is {poll_age} days old")
+              if poll_age > polls_limit:
+                  problems.append(
+                      f"the most recent poll behind the forecast is {poll_age} "
+                      f"days old (as_of {as_of}, limit {polls_limit:g}) - the "
+                      "run is still publishing, but on polling that has stopped "
+                      "arriving; check the feed against the Commission catalog")
+
+          if problems:
+              sys.exit("; ".join(problems))
           PY
             if ! age=$(python3 age.py forecast.json 2>&1); then
               fail "$(printf '%s' "$age" | tail -1)"
