@@ -95,6 +95,19 @@ notices:
       Ifop for Marianne, "Les seconds tours souhaites": which runoff people
       WANT to see, not how they would vote in one.
 
+  10297-pres-stature-presidentielle-v6-verian-le-figaro-magazine-8-octobre.pdf:
+    statut: pas_une_intention
+    note: >-
+      Verian for Le Figaro Magazine, "La stature presidentielle de candidats
+      potentiels", vague 6. A FALSE POSITIVE of the classifier, and an
+      instructive one: the notice does contain the words "Intention de vote
+      presidentielle 2027", but as a CROSSTAB HEADER. The rows under it are
+      each personality's stature scores broken down by the respondent's vote
+      intention, exactly like the "Taille d'unite urbaine" block above it -
+      Melenchon at 82/82/87/91 is not a vote share. Upstream labelled their
+      own issue #251 `bug` rather than `avec-intentions-de-vote` and were
+      right to. Read by hand 2026-11-04.
+
   10255-pres-csa-cnews-8-septembre.pdf:
     statut: pas_une_intention
     note: >-
